@@ -2,7 +2,7 @@ import React from 'react'
 import { action as MetaAction, AppLoader } from 'mk-meta-engine'
 import config from './config'
 import * as util from './util'
-import { Tree } from 'mk-component'
+import { Tree,Input ,DataGrid} from 'mk-component'
 const TreeNode = Tree.TreeNode
 
 class action {
@@ -74,6 +74,59 @@ class action {
         let types = this.metaAction.gf('data.tree').toJS()
 
         return this.getTreeNode(types)
+    }
+    nameChange =(ps)=>{
+        console.log(ps)
+    }
+    isFocusCell = (ps, columnKey) => {
+        const focusCellInfo = this.metaAction.gf('data.interface.other.focusCellInfo')
+        if (!focusCellInfo)
+            return false
+        return focusCellInfo.columnKey == columnKey && focusCellInfo.rowIndex == ps.rowIndex
+    }
+    cellClick = (ps, columnKey) => (e) => {
+        e.stopPropagation()
+
+        this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
+
+        if (columnKey == 'name') {
+            setTimeout(() => {
+                const dom = ReactDOM.findDOMNode(this.refName)
+                dom.select()
+            }, 0)
+        }
+        else if (columnKey == 'mobile'){
+            setTimeout(() => {
+                const dom = ReactDOM.findDOMNode(this.refMobile)
+                dom.select()
+            }, 0)
+        }
+
+    }
+    handleChange = (a,b,c,d)=>{
+        console.log(a,b,c,d)
+    }
+    cellGetter = (columnKey) => (ps) => {
+        var cellValue = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`)
+        var showValue = cellValue
+
+        if (!this.isFocusCell(ps, columnKey)) {
+            return (
+                <DataGrid.TextCell
+                    onClick={this.cellClick(ps, columnKey)}
+                    value={showValue}
+                />
+            )
+        }
+
+        return (
+                <Input
+                   className='mk-app-editable-table-cell'
+                   onChange={this.nameChange(ps)}
+                   value={cellValue}
+                   ref={o => this.refName = o}
+                />
+            )
     }
 }
 

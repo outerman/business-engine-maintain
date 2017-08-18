@@ -1,8 +1,11 @@
 .acm-voucher{
 	display: flex;
-	flex-direction: column;
+	width: 1120px;
+	margin: 0 auto;
 	&-left{
 		width:190px;
+		overflow-y: auto;
+		overflow-x: hidden;
 		.ant-card-body {
 		    padding: 12px;
 		    zoom: 1;
@@ -34,4 +37,104 @@
 	.ant-tree li .ant-tree-node-content-wrapper:hover{
 		background-color: #fff;
 	}
+
+
+	&-right{
+		flex:1;
+		&-header{
+			display: flex;
+			padding: 10px;
+			border-bottom: 1px solid #dedede;
+		}
+		&-header-l,&-header-r{
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			li{
+				display: flex;
+				margin:5px 0;
+			}
+			li span,li input,.ant-select{
+				margin-left:10px;
+			}
+			li input{
+				width:auto;
+			}
+
+		}
+		.ant-card-body{
+			padding:0;
+		}
+	}
+	&-interface{
+		height: 240px;
+		display: flex;
+		flex-direction: column;
+		&-header{
+			display: flex;
+			padding:10px;
+			justify-content: space-between;
+		}
+		&-table{
+			flex:1;
+		}
+	}
+	// &-interface-table{
+	// 	flex:1;
+	// 	.ant-spin-nested-loading,.ant-spin-container,.ant-table ,.ant-table-content{
+	// 		height: 100%;
+	//
+	// 	}
+	// 	.ant-table-scroll{
+	// 		height: 100%;
+	// 		display: flex;
+	// 		flex-direction: column;
+	// 	}
+	// }
+	// .ant-table-body{
+	// 	flex: 1;
+	// }
+	// .ant-table-scroll{
+	// 	width:920px;
+	// }
+	// .ant-table-scroll table{//
+	// 	width: 917px;
+	// }
+	.mk-app-editable-table{
+	    width: 100%;
+	    height: 100%;
+
+	    &-header{
+		    height: 50px;
+			flex: 0 0 50px;
+	        padding: 0 10px;
+	        flex-direction: row;
+	        justify-content: flex-end;
+	        align-items: center;
+	        overflow: hidden;
+	    }
+
+	    &-cell{
+	        width: 100%;
+	        height: 100%;
+
+	        input{
+	            height: 30px;
+	        }
+
+	        .ant-select-selection{
+	            height: 100%
+	        }
+
+	        .ant-select-selection__rendered{
+	            height: 100%
+	        }
+
+	        .ant-select-selection-selected-value{
+	            line-height: 30px;
+	        }
+
+	    }
+	}
+
 }
