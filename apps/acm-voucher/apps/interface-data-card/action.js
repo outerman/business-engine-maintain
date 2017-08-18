@@ -17,6 +17,24 @@ class action {
     btnClick = () => {
         this.injections.reduce('modifyContent')
     }
+    invoiceTypeChange = (data)=>{
+
+    }
+    normalTaxerChange =(data)=>{
+
+    }
+    industryChange =(data)=>{
+
+    }
+    tabsChange = (key)=>{
+
+    }
+    amountRadioChange = (e)=>{
+
+    }
+    taxNormalSelect = ()=>{
+
+    }
 }
 
 export default function creator(option) {

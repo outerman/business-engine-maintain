@@ -177,6 +177,7 @@ function getInterfaceMeta(){
 			name:'add-invoice',
 			component:'Button',
 			className:'acm-voucher-add-btn',
+			onClick:'{{$addInvoiceType}}',
 			children:'新增发票类型'
 		}]
 	},{

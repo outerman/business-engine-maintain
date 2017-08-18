@@ -158,6 +158,28 @@ class action {
                 />
             )
     }
+
+    // 弹框
+    addInvoiceType = async () => {
+        const ret = await this.metaAction.modal('show', {
+            title: '新增/编辑界面元数据',
+            width:900,
+            children: this.metaAction.loadApp('interface-data-card', {
+                store: this.component.props.store,
+            })
+        })
+
+        if (ret) {
+            const response = await this.webapi.education.query()
+            this.metaAction.sfs({
+                'data.other.educationDataSource': fromJS(response),
+                'data.form.education': fromJS(ret)
+            })
+        }
+
+    }
+
+
 }
 
 export default function creator(option) {
