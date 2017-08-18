@@ -2,6 +2,7 @@ import { config, start, componentFactory } from 'mk-meta-engine'
 import * as mkComponents from 'mk-component'
 import myConfig  from './config'
 
+import interface_data_card from './apps/acm-voucher/apps/interface-data-card/index.js'
 import acm_voucher from './apps/acm-voucher/index.js'
 import mk_app_login from './apps/login/index.js'
 import mk_app_complex_table from './apps/mk-app-complex-table/index.js'
@@ -13,6 +14,7 @@ import mk_app_root from './apps/root/index.js'
 
 const apps = {
 		
+	[interface_data_card.name]: interface_data_card,	
 	[acm_voucher.name]: acm_voucher,	
 	[mk_app_login.name]: mk_app_login,	
 	[mk_app_complex_table.name]: mk_app_complex_table,	

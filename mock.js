@@ -1,4 +1,5 @@
 
+import './apps/acm-voucher/apps/interface-data-card/mock.js';
 import './apps/acm-voucher/mock.js';
 import './apps/login/mock.js';
 import './apps/mk-app-complex-table/mock.js';
