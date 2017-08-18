@@ -76,35 +76,65 @@ class action {
         return this.getTreeNode(types)
     }
     nameChange =(ps)=>{
-        console.log(ps)
+        // console.log(ps)
     }
-    isFocusCell = (ps, columnKey) => {
-        const focusCellInfo = this.metaAction.gf('data.interface.other.focusCellInfo')
+    isFocusCell = (ps, columnKey,type) => {
+        const focusCellInfo = type == 'rule'?
+        this.metaAction.gf('data.rule.other.focusCellInfo'):
+        this.metaAction.gf('data.interface.other.focusCellInfo')
+
         if (!focusCellInfo)
             return false
         return focusCellInfo.columnKey == columnKey && focusCellInfo.rowIndex == ps.rowIndex
     }
-    cellClick = (ps, columnKey) => (e) => {
+    cellClick = (ps, columnKey,type) => (e) => {
         e.stopPropagation()
+        if(type == 'rule'){
 
-        this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
+            this.metaAction.sf('data.interface.rule.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
+        }else{
+            this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
 
-        if (columnKey == 'name') {
-            setTimeout(() => {
-                const dom = ReactDOM.findDOMNode(this.refName)
-                dom.select()
-            }, 0)
         }
-        else if (columnKey == 'mobile'){
-            setTimeout(() => {
-                const dom = ReactDOM.findDOMNode(this.refMobile)
-                dom.select()
-            }, 0)
-        }
+
+        // if (columnKey == 'name') {
+        //     setTimeout(() => {
+        //         const dom = ReactDOM.findDOMNode(this.refName)
+        //         dom.select()
+        //     }, 0)
+        // }
+        // else if (columnKey == 'mobile'){
+        //     setTimeout(() => {
+        //         const dom = ReactDOM.findDOMNode(this.refMobile)
+        //         dom.select()
+        //     }, 0)
+        // }
 
     }
     handleChange = (a,b,c,d)=>{
-        console.log(a,b,c,d)
+        // console.log(a,b,c,d)
+    }
+    cellGetterRule = (columnKey) => (ps) => {
+        var cellValue = this.metaAction.gf(`data.rule.list.${ps.rowIndex}.${columnKey}`)
+        var showValue = cellValue
+
+        if (!this.isFocusCell(ps, columnKey,'rule')) {
+            return (
+                <DataGrid.TextCell
+                    onClick={this.cellClick(ps, columnKey,'rule')}
+                    value={showValue}
+                />
+            )
+        }
+
+        return (
+                <Input
+                   className='mk-app-editable-table-cell'
+                   onChange={this.nameChange(ps)}
+                   value={cellValue}
+                   ref={o => this.refName = o}
+                />
+            )
     }
     cellGetter = (columnKey) => (ps) => {
         var cellValue = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`)

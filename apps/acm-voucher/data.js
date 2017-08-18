@@ -79,7 +79,7 @@ export function getMeta() {
 							width:100,
 							value:'销售商品'
 						}]
-					},{
+					}/*,{
 						name:'item4',
 						component:'::li',
 						children:['涉税属性:',{
@@ -110,7 +110,7 @@ export function getMeta() {
 								children:'无形资产'
 							}]
 						}]
-					}]
+					}*/]
 				},{
 					name:'right-header-r',
 					className:'acm-voucher-right-header-r',
@@ -140,6 +140,24 @@ export function getMeta() {
 					className:'acm-voucher-interface',
 					component:'::div',
 					children:getInterfaceMeta()
+				},{
+					name:'rule',
+					className:'acm-voucher-rule',
+					component:'::div',
+					children:getRuleMeta()
+				}]
+			},{
+				name:'right-footer',
+				component:'::div',
+				className:'acm-voucher-right-foooter',
+				children:[{
+					name:'preview',
+					component:'Button',
+					children:'预览'
+				},{
+					name:'save',
+					component:'Button',
+					children:'保存'
 				}]
 			}]
 		}]
@@ -541,6 +559,230 @@ function getInterfaceMeta(){
 		}]
 	}]
 }
+function getRuleMeta(){
+	return [{
+		name:'rule-header',
+		component:'::div',
+		className:'acm-voucher-rule-header',
+		children:[{
+			name:'title',
+			component:'::span',
+			children:'凭证生成规则:'
+		},{
+			name:'adds',
+			component:'::div',
+			children:[{
+				name:'add-invoice1',
+				component:'Button',
+				className:'acm-voucher-add-btn',
+				children:'新增凭证规则1'
+			},{
+				name:'add-invoice2',
+				component:'Button',
+				className:'acm-voucher-add-btn',
+				children:'新增凭证规则2'
+			}]
+		}]
+	},{
+		name:'rule-tab',
+		className: 'acm-voucher-rule-table',
+		component: 'Layout',
+		children:[{
+			name: 'table',
+			component:'DataGrid',
+			headerHeight: 40,
+			rowsCount: '{{data.rule.list.length}}',
+			rowHeight: 40,
+			readonly: false,
+			// enableSequence: true,
+			// enableAddDelrow: true,
+			// startSequence: 1,
+			// onAddrow: '{{$addrow}}',
+			// onDelrow: '{{$delrow}}',
+			columns:[{
+				name: 'subjectGroup',
+				component: 'DataGrid.Column',
+				columnKey: 'subjectGroup',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '科目分组'
+				},
+				cell: "{{$cellGetterRule('subjectGroup')}}",
+			},{
+				name: 'factors',
+				component: 'DataGrid.Column',
+				columnKey: 'factors',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '影响因素'
+				},
+				cell: "{{$cellGetter('factors')}}",
+			},{
+				name: 'taxpayer',
+				component: 'DataGrid.Column',
+				columnKey: 'taxpayer',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '纳税人身份'
+				},
+				cell: "{{$cellGetter('taxpayer')}}",
+			},{
+				name: 'departmentStatus',
+				component: 'DataGrid.Column',
+				columnKey: 'departmentStatus',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '部门属性'
+				},
+				cell: "{{$cellGetter('departmentStatus')}}",
+			},{
+				name: 'employeeStatus',
+				component: 'DataGrid.Column',
+				columnKey: 'employeeStatus',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '人员属性'
+				},
+				cell: "{{$cellGetter('employeeStatus')}}",
+			},{
+				name: 'goodsStatus',
+				component: 'DataGrid.Column',
+				columnKey: 'goodsStatus',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '存货属性'
+				},
+				cell: "{{$cellGetter('goodsStatus')}}",
+			},{
+				name: 'taxType',
+				component: 'DataGrid.Column',
+				columnKey: 'taxType',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '计税方式'
+				},
+				cell: "{{$cellGetter('taxType')}}",
+			},{
+				name: 'certification',
+				component: 'DataGrid.Column',
+				columnKey: 'certification',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '认证'
+				},
+				cell: "{{$cellGetter('certification')}}",
+			},{
+				name: 'extStatus',
+				component: 'DataGrid.Column',
+				columnKey: 'extStatus',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '扩展影响因素'
+				},
+				cell: "{{$cellGetter('extStatus')}}",
+			},{
+				name: 'direction',
+				component: 'DataGrid.Column',
+				columnKey: 'direction',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '借贷方'
+				},
+				cell: "{{$cellGetter('direction')}}",
+			},{
+				name: 'amountType',
+				component: 'DataGrid.Column',
+				columnKey: 'amountType',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '金额来源'
+				},
+				cell: "{{$cellGetter('amountType')}}",
+			},{
+				name: 'amountTypeDetail',
+				component: 'DataGrid.Column',
+				columnKey: 'amountTypeDetail',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '金额来源说明'
+				},
+				cell: "{{$cellGetter('amountTypeDetail')}}",
+			},{
+				name: 'subjectCode',
+				component: 'DataGrid.Column',
+				columnKey: 'subjectCode',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '科目编码'
+				},
+				cell: "{{$cellGetter('subjectCode')}}",
+			},{
+				name: 'subjectName',
+				component: 'DataGrid.Column',
+				columnKey: 'subjectName',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '科目名称'
+				},
+				cell: "{{$cellGetter('subjectName')}}",
+			},{
+				name: 'subjectSrc',
+				component: 'DataGrid.Column',
+				columnKey: 'subjectSrc',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '对方科目来源'
+				},
+				cell: "{{$cellGetter('subjectSrc')}}",
+			}]
+		}]
+	}]
+}
 
 
 
@@ -562,6 +804,20 @@ export function getInitState() {
 					invoiceType:'农产品发票'
 				},{
 					invoiceType:'其他发票'
+				}]
+			},
+			rule:{
+				other:{
+					focusCellInfo:undefined
+				},
+				list:[{
+					subjectGroup:'A'
+				},{
+					subjectGroup:'B'
+				},{
+					subjectGroup:'C'
+				},{
+					subjectGroup:'A'
 				}]
 			}
 		}
