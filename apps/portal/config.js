@@ -9,7 +9,7 @@ var _options = {
 	},
 	menu: [{
 		key: '1',
-		name: 'about',
+		name: '关于',
 		appName: 'mk-app-portal-about',
 		isDefault: true
 	}, {

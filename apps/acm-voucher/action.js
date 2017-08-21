@@ -159,7 +159,7 @@ class action {
             )
     }
 
-    // 弹框
+    // 弹框 界面元数据
     addInvoiceType = async () => {
         const ret = await this.metaAction.modal('show', {
             title: '新增/编辑界面元数据',
@@ -177,6 +177,42 @@ class action {
             })
         }
 
+    }
+    // 弹框 新增规则1
+    newInvoiceRule = async ()=>{
+        const ret = await this.metaAction.modal('show', {
+            title: '新增/编辑凭证规则：',
+            width:900,
+            children: this.metaAction.loadApp('invoice-rule', {
+                store: this.component.props.store,
+            })
+        })
+
+        if (ret) {
+            const response = await this.webapi.education.query()
+            this.metaAction.sfs({
+                'data.other.educationDataSource': fromJS(response),
+                'data.form.education': fromJS(ret)
+            })
+        }
+    }
+    // 弹框 新增规则2
+    newInvoiceRule2 = async ()=>{
+        const ret = await this.metaAction.modal('show', {
+            title: '新增/编辑凭证规则2：',
+            width:400,
+            children: this.metaAction.loadApp('invoice-rule2', {
+                store: this.component.props.store,
+            })
+        })
+
+        if (ret) {
+            const response = await this.webapi.education.query()
+            this.metaAction.sfs({
+                'data.other.educationDataSource': fromJS(response),
+                'data.form.education': fromJS(ret)
+            })
+        }
     }
 
 

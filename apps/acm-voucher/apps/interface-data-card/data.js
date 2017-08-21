@@ -1022,7 +1022,7 @@ for(let i=0 ; i< 10;i++){
 			name:'ext'+i+'Title',
 			component:'::span',
 			className:'settingLabel',
-			children:'数值扩展1:'
+			children:'数值扩展'+i+':'
 		},{
 			name:'ext'+i+'Radio',
 			component:'Radio.Group',
@@ -1067,13 +1067,13 @@ for(let i=0; i<5;i++){
 			name:'stringExt'+i+'Title',
 			component:'::span',
 			className:'settingLabel',
-			children:'数值扩展1:'
+			children:'字符扩展'+i+':'
 		},{
 			name:'stringExt'+i+'Radio',
 			component:'Radio.Group',
 			// onChange:'{{$DCRadioChange}}',
 			children:[{
-				name:'stringExt'+0+'Radio0',
+				name:	'stringExt'+0+'Radio0',
 				component:'Radio',
 				children:'必填',
 				value:'0'

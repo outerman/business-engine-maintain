@@ -575,11 +575,13 @@ function getRuleMeta(){
 			children:[{
 				name:'add-invoice1',
 				component:'Button',
+				onClick:'{{$newInvoiceRule}}',
 				className:'acm-voucher-add-btn',
 				children:'新增凭证规则1'
 			},{
 				name:'add-invoice2',
 				component:'Button',
+				onClick:'{{$newInvoiceRule2}}',
 				className:'acm-voucher-add-btn',
 				children:'新增凭证规则2'
 			}]

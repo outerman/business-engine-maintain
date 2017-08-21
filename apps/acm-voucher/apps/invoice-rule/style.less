@@ -1,0 +1,39 @@
+.invoice-rule{
+    width: 100%;
+    height: 300px;
+
+    &-header{
+	    height: 50px;
+		flex: 0 0 50px;
+        padding: 0 10px;
+        flex-direction: row;
+        // justify-content: flex-end;
+        align-items: center;
+        overflow: hidden;
+        .ant-select-selection{
+            margin-right: 20px;
+        }
+    }
+
+    &-cell{
+        width: 100%;
+        height: 100%;
+
+        input{
+            height: 50px;
+        }
+
+        .ant-select-selection{
+            height: 100%
+        }
+
+        .ant-select-selection__rendered{
+            height: 100%
+        }
+
+        .ant-select-selection-selected-value{
+            line-height: 50px;
+        }
+
+    }
+}
