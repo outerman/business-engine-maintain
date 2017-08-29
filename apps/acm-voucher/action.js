@@ -1,6 +1,7 @@
 import React from 'react'
 import { action as MetaAction, AppLoader } from 'mk-meta-engine'
 import config from './config'
+import * as consts from './consts'
 import * as util from './util'
 import { Tree,Input ,DataGrid} from 'mk-component'
 const TreeNode = Tree.TreeNode
@@ -19,16 +20,19 @@ class action {
         this.queryTree()
     }
     queryTree = async () => {
-        const response = await this.webapi.tree.query()
-        let ret = {}
+        let response = await this.webapi.businessTypeTemplate.init(),
+            ret = {}
+
         //收支数据
-        ret.incomeTypes = util.enumToArray(response.paymentsType)
+        ret.incomeTypes = util.enumToArray(response.paymentsTypeList)
         //业务类型
-        ret.bizTypes = util.enumToArray(response.businessType)
+        ret.bizTypes = util.enumToArray(response.businessTypeList)
         //左树数据
-        ret.types = util.typesToTree(response.businessType)
+        ret.types = util.typesToTree(response.businessTypeList)
         // response.filter = filter
+
         this.injections.reduce('initTree', ret)
+        this.injections.reduce('saveData',response)
     }
     btnClick = () => {
         this.injections.reduce('modifyContent')
@@ -39,11 +43,80 @@ class action {
     onSearch = (val)=>{
         console.log(val)
     }
-    handleSelect=(a,b)=>{
-        // console.log(a,b,c,d,e,f,g)
+    handleSelect=(checkedNode,selectedNode)=>{
+        // console.log(a,b)
+        let code = selectedNode.node.props['data-code']
+        this.queryTemplate(code)
+    }
+    queryTemplate = async (code)=>{
+        let response = await this.webapi.businessTypeTemplate.query({code})
+        // console.log(response)
+        switch (response.businessType.code.substr(0,1)) {
+            case '1':
+                response.businessType.typeName = '收入'
+                break;
+            case '2':
+                response.businessType.typeName = '支出'
+                break;
+            case '3':
+                response.businessType.typeName = '成本/折旧和摊销'
+                break;
+            case '4':
+                response.businessType.typeName = '存取现金/内部账户互转'
+                break;
+            case '5':
+                response.businessType.typeName = '收款/付款'
+                break;
+            case '6':
+                response.businessType.typeName = '请会计处理'
+                break;
+            default:
 
+        }
+
+        this.injections.reduce('initTemplate',response)
+        this.injections.reduce('initForm',this.transData4List(response))
     }
     handleCheck = () => {
+
+    }
+    transData4List = (res)=> {
+        let interfaceData = res.tacticsList,
+            ruleData = res.docTemplateList,
+            interfaceDataList = [],
+            resData = {}
+            debugger
+        interfaceData.map(o=>{
+            let item = {}
+            item.invoiceType =consts.ticketType.filter(obj=>{
+                return obj.id ==  o.invoiceId
+            })[0].name
+
+
+            for (let attr in consts.columns){
+                let temp = o.details.filter( oo =>{
+                    return oo.columnsId ==  consts.columns[attr].id
+                })[0] || {}
+                item[attr] = temp.flag||''
+            }
+            interfaceDataList.push(item)
+        })
+
+
+        resData.interface = {
+            other:{
+                focusCellInfo:undefined
+            },
+            list: interfaceDataList
+        }
+        // let ruleDataList = ruleData.map(o=>{return o.details})
+        resData.rule = {
+            other:{
+                focusCellInfo:undefined
+            },
+            list:ruleData[0].details
+        }
+        return resData
 
     }
     getTreeNode = (types) =>{
@@ -53,13 +126,13 @@ class action {
                 if(o.subTypes){
 
                     ret.push(
-                        <TreeNode title={o.name} key={o.id} data-code = {o.code}>
+                        <TreeNode  className = 'z-tree-parent' title={o.name} key={o.id} data-code = {o.code}>
                             {parseNade(o.subTypes)}
                         </TreeNode>
                     )
                 }else{
                     ret.push(
-                        <TreeNode  className = 'z-tree-leaf' title={o.name} key={o.id} data-key =   {o.code}>
+                        <TreeNode  className = 'z-tree-leaf' title={o.name} key={o.id} data-code = {o.code}>
                         </TreeNode>
                     )
                 }

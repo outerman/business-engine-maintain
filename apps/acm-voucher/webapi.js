@@ -7,6 +7,11 @@
 import { fetch } from 'mk-utils'
 
 export default {
+    businessTypeTemplate: {
+        init:()=> fetch.post('/v1/web/businessTypeTemplate/init',{}),
+        query:(option)=> fetch.post('/v1/businessTypeTemplate/query',option)
+
+    },
 
     tree: {
         query: (option) => fetch.post('/v1/tree/query', option)

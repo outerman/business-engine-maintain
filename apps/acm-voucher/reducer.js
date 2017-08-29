@@ -26,6 +26,19 @@ class reducer {
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
         return state
     }
+    saveData = (state,data) =>{
+        state = this.metaReducer.sf(state,'data.store',fromJS(data))
+        return state
+    }
+    initTemplate = (state,templateData) =>{
+        return this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
+    }
+    initForm = (state,data) =>{
+        debugger
+        state = this.metaReducer.sf(state,'data.interface.list',fromJS(data.interface.list))
+        state = this.metaReducer.sf(state,'data.rule.list',fromJS(data.rule.list))
+        return state
+    }
 }
 
 export default function creator(option) {

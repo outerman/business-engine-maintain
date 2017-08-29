@@ -16,6 +16,12 @@ class action {
         injections.reduce('init')
 
         this.load()
+        try {
+            sessionStorage['_accessToken'] = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbMTAwMDAwMDQwLDI5OTUyMDYyNzM3NjIzMDQsbnVsbCwxMDBdIiwiZXhwIjoxNTA0NDA5MjYyLCJpYXQiOjE1MDM5NzcyNjJ9.-ValkC-7luaqSYballr3tXcDqAYCgiBfcFmn2e-gmDxjTmcvmJcVtmUXVN5RBWyFkyAUGgTQta6h9a38Xy2bkA';
+        } catch (e) {
+            console.log(e)
+        }
+
     }
 
     load = async () => {

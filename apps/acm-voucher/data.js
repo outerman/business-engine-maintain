@@ -59,7 +59,7 @@ export function getMeta() {
 						children:['业务编码:',{
 							name:'itme1-1',
 							component:'::span',
-							children:'201000'
+							children:'{{data.templateData.businessType.code}}'
 						}]
 					},{
 						name:'item2',
@@ -67,7 +67,7 @@ export function getMeta() {
 						children:['业务类型:',{
 							name:'itme2-1',
 							component:'::span',
-							children:'收入'
+							children:'{{data.templateData.businessType.typeName}}'
 						}]
 					},{
 						name:'item3',
@@ -77,7 +77,7 @@ export function getMeta() {
 							component:'Input',
 							size:'small',
 							width:100,
-							value:'销售商品'
+							value:'{{data.templateData.businessType.name}}'
 						}]
 					}/*,{
 						name:'item4',
@@ -120,15 +120,19 @@ export function getMeta() {
 						component:'::li',
 						children:[{
 							name:'item-r-1-1',
-							component:'Radio'
-						},'隐藏业务']
+							component:'Checkbox',
+							// onChange:'{{$onChange}}',
+							children:'隐藏业务'
+						}]
 					},{
 						name:'item-r-2',
 						component:'::li',
 						children:[{
 							name:'item-r-2-1',
-							component:'Radio'
-						},'需要结算']
+							component:'Checkbox',
+							// onChange:'{{$onChange}}',
+							children:'需要结算'
+						}]
 					}]
 				}]
 			},{
@@ -180,7 +184,8 @@ function getInterfaceMeta(){
 			onClick:'{{$addInvoiceType}}',
 			children:'新增发票类型'
 		}]
-	},{
+	}
+	,{
 		name:'interface-tab',
 		className: 'acm-voucher-interface-table',
 		component: 'Layout',
@@ -209,9 +214,9 @@ function getInterfaceMeta(){
 				},
 				cell: "{{$cellGetter('invoiceType')}}",
 			},{
-				name: 'amountNotax',
+				name: 'noTaxAmount',
 				component: 'DataGrid.Column',
-				columnKey: 'amountNotax',
+				columnKey: 'noTaxAmount',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -219,91 +224,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '金额'
 				},
-				cell: "{{$cellGetter('amountNotax')}}",
-			},{
-				name: 'tax',
-				component: 'DataGrid.Column',
-				columnKey: 'tax',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '税额'
-				},
-				cell: "{{$cellGetter('tax')}}",
-			},{
-				name: 'invoiceDate',
-				component: 'DataGrid.Column',
-				columnKey: 'invoiceDate',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '开票日期'
-				},
-				cell: "{{$cellGetter('invoiceDate')}}",
-			},{
-				name: 'certification',
-				component: 'DataGrid.Column',
-				columnKey: 'certification',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '认证'
-				},
-				cell: "{{$cellGetter('certification')}}",
-			},{
-				name: 'certificationDate',
-				component: 'DataGrid.Column',
-				columnKey: 'certificationDate',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '认证月份'
-				},
-				cell: "{{$cellGetter('certificationDate')}}",
-			},{
-				name: 'deductibleAmount',
-				component: 'DataGrid.Column',
-				columnKey: 'deductibleAmount',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '可抵扣进项税额'
-				},
-				cell: "{{$cellGetter('deductibleAmount')}}",
-			},{
-				name: 'deductible',
-				component: 'DataGrid.Column',
-				columnKey: 'deductible',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '抵扣'
-				},
-				cell: "{{$cellGetter('deductible')}}",
-			},{
-				name: 'taxRate',
-				component: 'DataGrid.Column',
-				columnKey: 'taxRate',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '税率（征收率）'
-				},
-				cell: "{{$cellGetter('taxRate')}}",
+				cell: "{{$cellGetter('noTaxAmount')}}",
 			},{
 				name: 'amount',
 				component: 'DataGrid.Column',
@@ -316,6 +237,18 @@ function getInterfaceMeta(){
 					children: '价税合计'
 				},
 				cell: "{{$cellGetter('amount')}}",
+			},{
+				name: 'tax',
+				component: 'DataGrid.Column',
+				columnKey: 'tax',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '税额'
+				},
+				cell: "{{$cellGetter('tax')}}",
 			},{
 				name: 'department',
 				component: 'DataGrid.Column',
@@ -337,13 +270,13 @@ function getInterfaceMeta(){
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
-					children: '业务员'
+					children: '人员'
 				},
 				cell: "{{$cellGetter('employee')}}",
 			},{
-				name: 'client',
+				name: 'customer',
 				component: 'DataGrid.Column',
-				columnKey: 'client',
+				columnKey: 'customer',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -351,7 +284,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '客户'
 				},
-				cell: "{{$cellGetter('client')}}",
+				cell: "{{$cellGetter('customer')}}",
 			},{
 				name: 'goods',
 				component: 'DataGrid.Column',
@@ -413,6 +346,114 @@ function getInterfaceMeta(){
 				},
 				cell: "{{$cellGetter('price')}}",
 			},{
+				name: 'settlement',
+				component: 'DataGrid.Column',
+				columnKey: 'settlement',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '结算方式'
+				},
+				cell: "{{$cellGetter('settlement')}}",
+			},{
+				name: 'abstract',
+				component: 'DataGrid.Column',
+				columnKey: 'abstract',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '摘要'
+				},
+				cell: "{{$cellGetter('abstract')}}",
+			},{
+				name: 'bankAccount',
+				component: 'DataGrid.Column',
+				columnKey: 'bankAccount',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '银行账号'
+				},
+				cell: "{{$cellGetter('bankAccount')}}",
+			},{
+				name: 'incomeAccount',
+				component: 'DataGrid.Column',
+				columnKey: 'incomeAccount',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '银行账号(对方)'
+				},
+				cell: "{{$cellGetter('incomeAccount')}}",
+			},{
+				name: 'billNumber',
+				component: 'DataGrid.Column',
+				columnKey: 'billNumber',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '票据号'
+				},
+				cell: "{{$cellGetter('billNumber')}}",
+			},{
+				name: 'taxRate',
+				component: 'DataGrid.Column',
+				columnKey: 'taxRate',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '税率（征收率）'
+				},
+				cell: "{{$cellGetter('taxRate')}}",
+			},{
+				name: 'isDeduct',
+				component: 'DataGrid.Column',
+				columnKey: 'isDeduct',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '抵扣'
+				},
+				cell: "{{$cellGetter('isDeduct')}}",
+			},{
+				name: 'investmentObject',
+				component: 'DataGrid.Column',
+				columnKey: 'investmentObject',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '投资对象'
+				},
+				cell: "{{$cellGetter('investmentObject')}}",
+			},{
+				name: 'investmentType',
+				component: 'DataGrid.Column',
+				columnKey: 'investmentType',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '投资类别'
+				},
+				cell: "{{$cellGetter('investmentType')}}",
+			},{
 				name: 'investor',
 				component: 'DataGrid.Column',
 				columnKey: 'investor',
@@ -449,30 +490,6 @@ function getInterfaceMeta(){
 				},
 				cell: "{{$cellGetter('obligor')}}",
 			},{
-				name: 'bankAccount',
-				component: 'DataGrid.Column',
-				columnKey: 'bankAccount',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '银行账号'
-				},
-				cell: "{{$cellGetter('bankAccount')}}",
-			},{
-				name: 'bankAccountOther',
-				component: 'DataGrid.Column',
-				columnKey: 'bankAccountOther',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '银行账号(对方)'
-				},
-				cell: "{{$cellGetter('bankAccountOther')}}",
-			},{
 				name: 'penaltyType',
 				component: 'DataGrid.Column',
 				columnKey: 'penaltyType',
@@ -496,18 +513,6 @@ function getInterfaceMeta(){
 					children: '借款期限'
 				},
 				cell: "{{$cellGetter('loanTerm')}}",
-			},{
-				name: 'abstract',
-				component: 'DataGrid.Column',
-				columnKey: 'abstract',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '摘要'
-				},
-				cell: "{{$cellGetter('abstract')}}",
 			},{
 				name: 'project',
 				component: 'DataGrid.Column',
@@ -533,9 +538,57 @@ function getInterfaceMeta(){
 				},
 				cell: "{{$cellGetter('invoiceNO')}}",
 			},{
-				name: 'ext',
+				name: 'invoiceDate',
 				component: 'DataGrid.Column',
-				columnKey: 'ext',
+				columnKey: 'invoiceDate',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '开票日期'
+				},
+				cell: "{{$cellGetter('invoiceDate')}}",
+			},{
+				name: 'isQualification',
+				component: 'DataGrid.Column',
+				columnKey: 'isQualification',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '认证'
+				},
+				cell: "{{$cellGetter('isQualification')}}",
+			},{
+				name: 'certificationMonth',
+				component: 'DataGrid.Column',
+				columnKey: 'certificationMonth',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '认证月份'
+				},
+				cell: "{{$cellGetter('certificationMonth')}}",
+			},{
+				name: 'deductibleInputTax',
+				component: 'DataGrid.Column',
+				columnKey: 'deductibleInputTax',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '可抵扣进项税额'
+				},
+				cell: "{{$cellGetter('deductibleInputTax')}}",
+			},{
+				name: 'ext0',
+				component: 'DataGrid.Column',
+				columnKey: 'ext0',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -543,7 +596,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展'
 				},
-				cell: "{{$cellGetter('ext')}}",
+				cell: "{{$cellGetter('ext0')}}",
 			},{
 				name: 'stringExt',
 				component: 'DataGrid.Column',
@@ -603,9 +656,9 @@ function getRuleMeta(){
 			// onAddrow: '{{$addrow}}',
 			// onDelrow: '{{$delrow}}',
 			columns:[{
-				name: 'subjectGroup',
+				name: 'flag',
 				component: 'DataGrid.Column',
-				columnKey: 'subjectGroup',
+				columnKey: 'flag',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -613,11 +666,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '科目分组'
 				},
-				cell: "{{$cellGetterRule('subjectGroup')}}",
+				cell: "{{$cellGetterRule('flag')}}",
 			},{
-				name: 'factors',
+				name: 'influence',
 				component: 'DataGrid.Column',
-				columnKey: 'factors',
+				columnKey: 'influence',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -625,11 +678,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '影响因素'
 				},
-				cell: "{{$cellGetter('factors')}}",
+				cell: "{{$cellGetterRule('influence')}}",
 			},{
-				name: 'taxpayer',
+				name: 'vatTaxpayer',
 				component: 'DataGrid.Column',
-				columnKey: 'taxpayer',
+				columnKey: 'vatTaxpayer',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -637,11 +690,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '纳税人身份'
 				},
-				cell: "{{$cellGetter('taxpayer')}}",
+				cell: "{{$cellGetterRule('vatTaxpayer')}}",
 			},{
-				name: 'departmentStatus',
+				name: 'departmentAttr',
 				component: 'DataGrid.Column',
-				columnKey: 'departmentStatus',
+				columnKey: 'departmentAttr',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -649,11 +702,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '部门属性'
 				},
-				cell: "{{$cellGetter('departmentStatus')}}",
+				cell: "{{$cellGetterRule('departmentAttr')}}",
 			},{
-				name: 'employeeStatus',
+				name: 'personAttr',
 				component: 'DataGrid.Column',
-				columnKey: 'employeeStatus',
+				columnKey: 'personAttr',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -661,11 +714,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '人员属性'
 				},
-				cell: "{{$cellGetter('employeeStatus')}}",
+				cell: "{{$cellGetterRule('personAttr')}}",
 			},{
-				name: 'goodsStatus',
+				name: 'goodsAttr',
 				component: 'DataGrid.Column',
-				columnKey: 'goodsStatus',
+				columnKey: 'goodsAttr',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -673,7 +726,7 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '存货属性'
 				},
-				cell: "{{$cellGetter('goodsStatus')}}",
+				cell: "{{$cellGetterRule('goodsAttr')}}",
 			},{
 				name: 'taxType',
 				component: 'DataGrid.Column',
@@ -685,11 +738,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '计税方式'
 				},
-				cell: "{{$cellGetter('taxType')}}",
+				cell: "{{$cellGetterRule('taxType')}}",
 			},{
-				name: 'certification',
+				name: 'qualification',
 				component: 'DataGrid.Column',
-				columnKey: 'certification',
+				columnKey: 'qualification',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -697,11 +750,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '认证'
 				},
-				cell: "{{$cellGetter('certification')}}",
+				cell: "{{$cellGetterRule('qualification')}}",
 			},{
-				name: 'extStatus',
+				name: 'extendAttr',
 				component: 'DataGrid.Column',
-				columnKey: 'extStatus',
+				columnKey: 'extendAttr',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -709,7 +762,7 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '扩展影响因素'
 				},
-				cell: "{{$cellGetter('extStatus')}}",
+				cell: "{{$cellGetterRule('extendAttr')}}",
 			},{
 				name: 'direction',
 				component: 'DataGrid.Column',
@@ -721,11 +774,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '借贷方'
 				},
-				cell: "{{$cellGetter('direction')}}",
+				cell: "{{$cellGetterRule('direction')}}",
 			},{
-				name: 'amountType',
+				name: 'fundSource',
 				component: 'DataGrid.Column',
-				columnKey: 'amountType',
+				columnKey: 'fundSource',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -733,7 +786,7 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '金额来源'
 				},
-				cell: "{{$cellGetter('amountType')}}",
+				cell: "{{$cellGetterRule('fundSource')}}",
 			},{
 				name: 'amountTypeDetail',
 				component: 'DataGrid.Column',
@@ -745,11 +798,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '金额来源说明'
 				},
-				cell: "{{$cellGetter('amountTypeDetail')}}",
+				cell: "{{$cellGetterRule('amountTypeDetail')}}",
 			},{
-				name: 'subjectCode',
+				name: 'accountCode',
 				component: 'DataGrid.Column',
-				columnKey: 'subjectCode',
+				columnKey: 'accountCode',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -757,11 +810,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '科目编码'
 				},
-				cell: "{{$cellGetter('subjectCode')}}",
+				cell: "{{$cellGetterRule('accountCode')}}",
 			},{
-				name: 'subjectName',
+				name: 'accountName',
 				component: 'DataGrid.Column',
-				columnKey: 'subjectName',
+				columnKey: 'accountName',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -769,11 +822,11 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '科目名称'
 				},
-				cell: "{{$cellGetter('subjectName')}}",
+				cell: "{{$cellGetterRule('accountName')}}",
 			},{
-				name: 'subjectSrc',
+				name: 'isSettlement',
 				component: 'DataGrid.Column',
-				columnKey: 'subjectSrc',
+				columnKey: 'isSettlement',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -781,7 +834,7 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '对方科目来源'
 				},
-				cell: "{{$cellGetter('subjectSrc')}}",
+				cell: "{{$cellGetterRule('isSettlement')}}",
 			}]
 		}]
 	}]
@@ -792,6 +845,10 @@ function getRuleMeta(){
 export function getInitState() {
 	return {
 		data: {
+			templateData:{
+				businessType:{
+				}
+			},
 			content: 'hello world',
 			interface:{
 				other:{
@@ -800,11 +857,13 @@ export function getInitState() {
 				list:[{
 					invoiceType:'增值税普通发票',
 					bankAccount:'现金、银行、支付宝、微信',
-					stringExt:'2,工资月份'
+					stringExt:'2,工资月份',
+					noTaxAmount:'100'
 				},{
 					invoiceType:'增值税专用发票'
 				},{
-					invoiceType:'农产品发票'
+					invoiceType:'农产品发票',
+					noTaxAmount:'200'
 				},{
 					invoiceType:'其他发票'
 				}]
@@ -814,13 +873,13 @@ export function getInitState() {
 					focusCellInfo:undefined
 				},
 				list:[{
-					subjectGroup:'A'
+					flag:'A'
 				},{
-					subjectGroup:'B'
+					flag:'B'
 				},{
-					subjectGroup:'C'
+					flag:'C'
 				},{
-					subjectGroup:'A'
+					flag:'A'
 				}]
 			}
 		}

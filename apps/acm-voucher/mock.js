@@ -8,7 +8,7 @@ import { fetch } from 'mk-utils'
 const mockData = fetch.mockData
 
 
-fetch.mock('/v1/tree/query', (option) => {
+fetch.mock('/v1/web/businessTypeTemplate/init', (option) => {
     return {result:true, value:data}
 })
 
