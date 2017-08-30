@@ -74,15 +74,30 @@ class action {
             default:
 
         }
-        debugger
         this.injections.reduce('initTemplate',response)
         this.injections.reduce('initForm',this.transData4List(response))
     }
     handleCheck = () => {
 
     }
+    parseRuleList = (ruleList) => {
+        // let res = []
+        let res = ruleList.map(o=>{
+            o.direction = o.direction? '贷':'借'
+            o.isSettlement = o.isSettlement? '结算方式':'本表'
+            o.taxType = o.taxType? '一般计税':'建议计税'
+            o.vatTaxpayer = o.vatTaxpayer == 41? '一般纳税人':'小规模纳税人'
+            if(o.personAttr == 10050){
+                o.personAttr ='管理人员'
+            }
+            if(o.personAttr == 10051){
+                o.personAttr ='生产人员'
+            }
+            return o
+        })
+        return res
+    }
     handleStandardChange = (e)=>{
-        debugger
         this.metaAction.sf('data.standard', e.target.value)
 
         let ruleData = this.metaAction.gf('data.templateData').toJS().docTemplateList,
@@ -94,7 +109,7 @@ class action {
                 ruleList = ruleData[1]? ruleData[1].details:[]
             }
 
-            this.metaAction.sf('data.rule.list', fromJS(ruleList))
+            this.metaAction.sf('data.rule.list', fromJS( this.parseRuleList(ruleList) ))
         }
     }
     transData4List = (res)=> {
@@ -103,7 +118,7 @@ class action {
             interfaceDataList = [],
             resData = {},
             standard = this.metaAction.gf('data.standard')
-            
+
         interfaceData.map(o=>{
             let item = {}
             item.invoiceType =consts.ticketType.filter(obj=>{
@@ -132,7 +147,7 @@ class action {
             other:{
                 focusCellInfo:undefined
             },
-            list:standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[])
+            list:this.parseRuleList(standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[]))
         }
         return resData
 

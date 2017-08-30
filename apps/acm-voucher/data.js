@@ -192,9 +192,9 @@ function getInterfaceMeta(){
 		children:[{
 			name: 'table',
 			component:'DataGrid',
-			headerHeight: 40,
+			headerHeight: 30,
 			rowsCount: '{{data.interface.list.length}}',
-			rowHeight: 40,
+			rowHeight: 30,
 			readonly: false,
 			// enableSequence: true,
 			// enableAddDelrow: true,
@@ -667,9 +667,9 @@ function getRuleMeta(){
 		children:[{
 			name: 'table',
 			component:'DataGrid',
-			headerHeight: 40,
+			headerHeight: 30,
 			rowsCount: '{{data.rule.list.length}}',
-			rowHeight: 40,
+			rowHeight: 30,
 			readonly: false,
 			// enableSequence: true,
 			// enableAddDelrow: true,
@@ -878,14 +878,14 @@ export function getInitState() {
 				},
 				list:[{
 					invoiceType:'增值税普通发票',
-					bankAccount:'现金、银行、支付宝、微信',
-					stringExt:'2,工资月份',
-					noTaxAmount:'100'
+					bankAccount:'',
+					stringExt:'',
+					noTaxAmount:''
 				},{
 					invoiceType:'增值税专用发票'
 				},{
 					invoiceType:'农产品发票',
-					noTaxAmount:'200'
+					noTaxAmount:''
 				},{
 					invoiceType:'其他发票'
 				}]

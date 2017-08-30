@@ -34,7 +34,7 @@ class action {
         const response = await this.webapi.user.login(form)
 
         this.metaAction.context.set('user', response.value.sysUser)
-        debugger
+
         sessionStorage['account'] = form.account
         sessionStorage['username'] = response.value.sysUser.name
         sessionStorage['_accessToken'] = response.token
