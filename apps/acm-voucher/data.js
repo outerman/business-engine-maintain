@@ -619,9 +619,29 @@ function getRuleMeta(){
 		component:'::div',
 		className:'acm-voucher-rule-header',
 		children:[{
-			name:'title',
-			component:'::span',
-			children:'凭证生成规则:'
+			name:'rule-header-left',
+			component:'::div',
+			children:[{
+				name:'title',
+				component:'::span',
+				children:'凭证生成规则:'
+			},{
+				name:'standard',
+				component:'Radio.Group',
+				onChange:'{{$handleStandardChange}}',
+				children:[{
+					name:'standard1',
+					component:'Radio',
+					value:18,
+					checked:true,
+					children:'07准则'
+				},{
+					name:'standard1',
+					component:'Radio',
+					value:19,
+					children:'13准则'
+				}]
+			}]
 		},{
 			name:'adds',
 			component:'::div',
