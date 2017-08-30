@@ -35,6 +35,7 @@ class reducer {
     }
     initForm = (state,data) =>{
         debugger
+        
         state = this.metaReducer.sf(state,'data.interface.list',fromJS(data.interface.list))
         state = this.metaReducer.sf(state,'data.rule.list',fromJS(data.rule.list))
         return state

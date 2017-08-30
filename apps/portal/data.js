@@ -64,7 +64,11 @@ export function getMeta() {
 								component: '::img',
 								className: 'mk-app-portal-header-right-photo',
 								src: '{{$getPhoto()}}'
-							}, '我的']
+							}, {
+								name:'name',
+								component:'::span',
+								children:'{{data.username}}'
+							}]
 						},
 						children: [{
 							name: 'logout',
@@ -115,7 +119,8 @@ export function getInitState() {
 			menu: [],
 			menuDefaultSelectedKeys: [],
 			menuDefaultOpenKeys: [],
-			content: {}
+			content: {},
+			username:'我的'
 		}
 	}
 }

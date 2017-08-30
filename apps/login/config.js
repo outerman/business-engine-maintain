@@ -8,6 +8,7 @@ var _options = {
 		appParams: {}
 	},
 	logo: logo
+	
 }
 
 

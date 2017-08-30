@@ -11,7 +11,9 @@ class reducer {
 
     init = (state, option) => {
         state = this.metaReducer.init(state, getInitState())
-
+        if(sessionStorage['username']){
+            state = this.metaReducer.sf(state,'data.username',sessionStorage['username'])
+        }
         if (this.config.menu && !this.config.webapi.getMenu) {
             return this.load(state, { menu: this.config.menu })
         }

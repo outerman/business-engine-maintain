@@ -12,6 +12,7 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
+    "md5": "^2.2.1",
     "mk-component": "^1.0.10",
     "mk-meta-engine": "^1.0.21",
     "mk-utils": "^1.0.5",

@@ -14,18 +14,12 @@ class action {
         this.component = component
         this.injections = injections
         injections.reduce('init')
-
         this.load()
-        try {
-            sessionStorage['_accessToken'] = 'eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJbMTAwMDAwMDQwLDI5OTUyMDYyNzM3NjIzMDQsbnVsbCwxMDBdIiwiZXhwIjoxNTA0NDA5MjYyLCJpYXQiOjE1MDM5NzcyNjJ9.-ValkC-7luaqSYballr3tXcDqAYCgiBfcFmn2e-gmDxjTmcvmJcVtmUXVN5RBWyFkyAUGgTQta6h9a38Xy2bkA';
-        } catch (e) {
-            console.log(e)
-        }
-
     }
 
     load = async () => {
         if (this.webapi.getMenu) {
+
             const menu = await this.webapi.getMenu()
             this.injections.reduce('load', {menu})
         }
@@ -58,6 +52,9 @@ class action {
             case 'logout':
                 if (this.component.props.onRedirect && this.config.goAfterLogout) {
                     this.metaAction.context.set('user', undefined)
+                    sessionStorage['_accessToken'] = ''
+                    sessionStorage['account'] = ''
+                    sessionStorage['password'] =''
                     this.component.props.onRedirect(this.config.goAfterLogout)
                 }
                 break;

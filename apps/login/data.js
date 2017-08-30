@@ -12,7 +12,7 @@ export function getMeta() {
 				component: '::img',
 				className: 'mk-app-login-header-logo',
 				src: '{{$getLogo()}}'
-			}, 'Monkey King']
+			}, '北京人人时代科技有限公司']
 		}, {
 			name: 'content',
 			className: 'mk-app-login-content',
@@ -37,8 +37,8 @@ export function getMeta() {
 						name: 'user',
 						component: 'Input',
 						placeholder: 'user name',
-						onChange: "{{(e)=>$setField('data.form.user', e.target.value)}}",
-						value: '{{data.form.user}}',
+						onChange: "{{(e)=>$setField('data.form.account', e.target.value)}}",
+						value: '{{data.form.account}}',
 						prefix: {
 							name: 'userIcon',
 							component: 'Icon',
@@ -110,7 +110,7 @@ export function getMeta() {
 export function getInitState() {
 	return {
 		data: {
-			form: { user: '', password: '' }
+			form: { account: '', password: '' }
 		}
 	}
 }

@@ -85,7 +85,6 @@ class action {
             ruleData = res.docTemplateList,
             interfaceDataList = [],
             resData = {}
-            debugger
         interfaceData.map(o=>{
             let item = {}
             item.invoiceType =consts.ticketType.filter(obj=>{
@@ -114,7 +113,7 @@ class action {
             other:{
                 focusCellInfo:undefined
             },
-            list:ruleData[0].details
+            list:ruleData[0]? ruleData[0].details:[]
         }
         return resData
 
@@ -164,7 +163,7 @@ class action {
         e.stopPropagation()
         if(type == 'rule'){
 
-            this.metaAction.sf('data.interface.rule.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
+            this.metaAction.sf('data.rule.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
         }else{
             this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
 
