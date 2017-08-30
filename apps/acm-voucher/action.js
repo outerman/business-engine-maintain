@@ -2,6 +2,7 @@ import React from 'react'
 import { action as MetaAction, AppLoader } from 'mk-meta-engine'
 import config from './config'
 import * as consts from './consts'
+import { Map,fromJS } from 'immutable'
 import * as util from './util'
 import { Tree,Input ,DataGrid} from 'mk-component'
 const TreeNode = Tree.TreeNode
@@ -73,18 +74,36 @@ class action {
             default:
 
         }
-
+        debugger
         this.injections.reduce('initTemplate',response)
         this.injections.reduce('initForm',this.transData4List(response))
     }
     handleCheck = () => {
 
     }
+    handleStandardChange = (e)=>{
+        debugger
+        this.metaAction.sf('data.standard', e.target.value)
+
+        let ruleData = this.metaAction.gf('data.templateData').toJS().docTemplateList,
+            ruleList = []
+        if(ruleData){
+            if(e.target.value == 18){
+                ruleList = ruleData[0]? ruleData[0].details:[]
+            }else{
+                ruleList = ruleData[1]? ruleData[1].details:[]
+            }
+
+            this.metaAction.sf('data.rule.list', fromJS(ruleList))
+        }
+    }
     transData4List = (res)=> {
         let interfaceData = res.tacticsList,
             ruleData = res.docTemplateList,
             interfaceDataList = [],
-            resData = {}
+            resData = {},
+            standard = this.metaAction.gf('data.standard')
+            
         interfaceData.map(o=>{
             let item = {}
             item.invoiceType =consts.ticketType.filter(obj=>{
@@ -113,7 +132,7 @@ class action {
             other:{
                 focusCellInfo:undefined
             },
-            list:ruleData[0]? ruleData[0].details:[]
+            list:standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[])
         }
         return resData
 
@@ -286,6 +305,7 @@ class action {
             })
         }
     }
+
 
 
 }

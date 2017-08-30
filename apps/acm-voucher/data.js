@@ -628,15 +628,16 @@ function getRuleMeta(){
 			},{
 				name:'standard',
 				component:'Radio.Group',
+				defaultValue:18,
 				onChange:'{{$handleStandardChange}}',
 				children:[{
 					name:'standard1',
 					component:'Radio',
 					value:18,
-					checked:true,
+					// defaultChecked:true,
 					children:'07准则'
 				},{
-					name:'standard1',
+					name:'standard2',
 					component:'Radio',
 					value:19,
 					children:'13准则'
@@ -870,6 +871,7 @@ export function getInitState() {
 				}
 			},
 			content: 'hello world',
+			standard:18,
 			interface:{
 				other:{
 					focusCellInfo:undefined
