@@ -9,14 +9,21 @@ class reducer {
         this.config = config.current
     }
 
-    init = (state, option) => {
+    init = (state, option,initData) => {
         const initState = getInitState()
+        initState.store = initData
         return this.metaReducer.init(state, initState)
     }
 
     modifyContent = (state) => {
         const content = this.metaReducer.gf(state, 'data.content')
         return this.metaReducer.sf(state, 'data.content', content + '!')
+    }
+    editForm = (state,option) =>{
+        for (let attr in option){
+            state = this.metaReducer.sf(state,'data.form.'+attr,option[attr])
+        }
+        return state
     }
 }
 

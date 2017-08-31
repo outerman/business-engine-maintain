@@ -586,6 +586,30 @@ function getInterfaceMeta(){
 				},
 				cell: "{{$cellGetter('deductibleInputTax')}}",
 			},{
+				name: 'vatTaxpayerSmall',
+				component: 'DataGrid.Column',
+				columnKey: 'vatTaxpayerSmall',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '票据类型小规模'
+				},
+				cell: "{{$cellGetter('vatTaxpayerSmall')}}",
+			},{
+				name: 'vatTaxpayerNormal',
+				component: 'DataGrid.Column',
+				columnKey: 'vatTaxpayerNormal',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '票据类型一般'
+				},
+				cell: "{{$cellGetter('vatTaxpayerNormal')}}",
+			},{
 				name: 'ext0',
 				component: 'DataGrid.Column',
 				columnKey: 'ext0',

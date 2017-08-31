@@ -45,7 +45,9 @@ class action {
         console.log(val)
     }
     handleSelect=(checkedNode,selectedNode)=>{
-        // console.log(a,b)
+        if(selectedNode.node.props.className === 'z-tree-parent'){//点父级  不查询
+            return
+        }
         let code = selectedNode.node.props['data-code']
         this.queryTemplate(code)
     }
@@ -130,7 +132,7 @@ class action {
                 let temp = o.details.filter( oo =>{
                     return oo.columnsId ==  consts.columns[attr].id
                 })[0] || {}
-                item[attr] = temp.flag||''
+                item[attr] = temp.flag
             }
             interfaceDataList.push(item)
         })
@@ -177,9 +179,7 @@ class action {
     getTreeChild = () =>{
         if(!this.metaAction.gf('data.tree')) return []
 
-        let types = this.metaAction.gf('data.tree').toJS()
-
-        return this.getTreeNode(types)
+        return this.getTreeNode(this.metaAction.gf('data.tree').toJS())
     }
     nameChange =(ps)=>{
         // console.log(ps)
@@ -267,25 +267,32 @@ class action {
 
     // 弹框 界面元数据
     addInvoiceType = async () => {
+        if(!this.metaAction.gf('data.templateData.businessType.code'))
+            return this.metaAction.toast('error','请先选择业务类型')
         const ret = await this.metaAction.modal('show', {
             title: '新增/编辑界面元数据',
             width:900,
             children: this.metaAction.loadApp('interface-data-card', {
                 store: this.component.props.store,
+                initData:this.metaAction.gf('data.store').toJS()
             })
         })
 
         if (ret) {
-            const response = await this.webapi.education.query()
-            this.metaAction.sfs({
-                'data.other.educationDataSource': fromJS(response),
-                'data.form.education': fromJS(ret)
-            })
+            debugger
+            // const response = await this.webapi.education.query()
+            // this.metaAction.sfs({
+            //     'data.other.educationDataSource': fromJS(response),
+            //     'data.form.education': fromJS(ret)
+            // })
         }
 
     }
     // 弹框 新增规则1
     newInvoiceRule = async ()=>{
+        if(!this.metaAction.gf('data.templateData.businessType.code'))
+            return this.metaAction.toast('error','请先选择业务类型')
+
         const ret = await this.metaAction.modal('show', {
             title: '新增/编辑凭证规则：',
             width:900,
@@ -304,6 +311,9 @@ class action {
     }
     // 弹框 新增规则2
     newInvoiceRule2 = async ()=>{
+        if(!this.metaAction.gf('data.templateData.businessType.code'))
+            return this.metaAction.toast('error','请先选择业务类型')
+
         const ret = await this.metaAction.modal('show', {
             title: '新增/编辑凭证规则2：',
             width:400,

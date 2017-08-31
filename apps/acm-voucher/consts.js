@@ -70,7 +70,7 @@ export const industryType = {
 	gy: { id: 1, name: '工业' },
 	sm: { id: 2, name: '商贸' },
 	fw: { id: 3, name: '服务' },
-	qt: { id: 4, name: '其他' }
+	qt: { id: 4, name: '信息技术' }
 }
 
 export const vatTaxpayerType = {
@@ -125,7 +125,9 @@ export const columns = {
 	isQualification: { id: 29, name: '认证' },
 	certificationMonth: { id: 30, name: '认证月份' },
 	deductibleInputTax: { id: 31, name: '可抵扣进项税额' },
-	// investor:{id:32,name:'投资人'},
+	vatTaxpayerSmall:{id:32,name:'票据类型小规模'},
+	vatTaxpayerNormal:{id:33,name:'票据类型一般'},
+	drawbackPolicy:{id:34,name:'即征即退核算'},
 
 	ext0: { id: 1000, name: '自定义项0' },
 	ext1: { id: 1001, name: '自定义项1' },

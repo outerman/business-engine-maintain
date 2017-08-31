@@ -12,45 +12,46 @@ export function getMeta() {
 				children:['票据类型：',{
 					name:'invoiceType',
 					component:'Select',
-					defaultValue:'0',
+					defaultValue:'{{$getInvoiceDefaultValue()}}',
 					style:{ width: 120 },
 					onChange:'{{$invoiceTypeChange}}',
-					children:[{
-						name:'invoiceType0',
-						component:'Select.Option',
-						value:'0',
-						children:'增值税专用发票'
-					},{
-						name:'invoiceType1',
-						component:'Select.Option',
-						value:'1',
-						children:'增值税普通发票'
-					},{
-						name:'invoiceType2',
-						component:'Select.Option',
-						value:'2',
-						children:'农产品发票'
-					}]
+					children:'{{$getInvoiceOptions()}}'
+					// [{
+					// 	name:'invoiceType0',
+					// 	component:'Select.Option',
+					// 	value:'0',
+					// 	children:'增值税专用发票'
+					// },{
+					// 	name:'invoiceType1',
+					// 	component:'Select.Option',
+					// 	value:1,
+					// 	children:'增值税普通发票'
+					// },{
+					// 	name:'invoiceType2',
+					// 	component:'Select.Option',
+					// 	value:0,
+					// 	children:'农产品发票'
+					// }]
 				}]
 			},{
 				name:'headerItem1',
 				component:'::div',
 				children:['纳税人身份：',{
-					name:'normalTaxer',
+					name:'vatTaxpayer',
 					component:'Checkbox.Group',
 					options:['一般纳税人','小规模'],
 					defaultValue:['一般纳税人'],
-					// onChange:'{{$normalTaxerChange}}'
+					onChange:'{{$vatTaxpayerChange}}'
 				}]
 			},{
 				name:'headerItem2',
 				component:'::div',
 				children:['支持行业：',{
-					name:'industry',
+					name:'industryIdList',
 					component:'Checkbox.Group',
-					options:['工业','商贸','信息技术','服务'],
+					options:['工业','商贸','服务','信息技术'],
 					defaultValue:['工业'],
-					// onChange:'{{$industryChange}}'
+					onChange:'{{$industryChange}}'
 				}]
 			}]
 		},{
@@ -130,22 +131,22 @@ function getAmountAndtaxChild(){
 			},{
 				name:'amountRadio',
 				component:'Radio.Group',
-				onChange:'{{$amountRadioChange}}',
+				onChange:'{{$detailRadioChange("noTaxAmount")}}',
 				children:[{
 					name:'amountRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'amountRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'amountRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -159,22 +160,22 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxRadio',
 				component:'Radio.Group',
-				// onChange:'{{$taxRadioChange}}',
+				onChange:'{{$detailRadioChange("tax")}}',
 				children:[{
 					name:'taxRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'taxRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'taxRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -188,22 +189,22 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxAndAmountRadio',
 				component:'Radio.Group',
-				// onChange:'{{$taxAndAmountRadioChange}}',
+				onChange:'{{$detailRadioChange("amount")}}',
 				children:[{
 					name:'taxAndAmountRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'taxAndAmountRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'taxAndAmountRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -217,22 +218,22 @@ function getAmountAndtaxChild(){
 			},{
 				name:'deductibleAmountRadio',
 				component:'Radio.Group',
-				// onChange:'{{$deductibleAmountRadioChange}}',
+				onChange:'{{$detailRadioChange("deductibleInputTax")}}',
 				children:[{
 					name:'deductibleAmountRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'deductibleAmountRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'deductibleAmountRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -246,22 +247,22 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxRate',
 				component:'Radio.Group',
-				// onChange:'{{$taxRateChange}}',
+				onChange:'{{$detailRadioChange("taxRate")}}',
 				children:[{
 					name:'taxRate0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'taxRate1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'taxRate2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -300,22 +301,22 @@ function getDeductibleChild(){
 			},{
 				name:'certificationRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("isQualification")}}',
 				children:[{
 					name:'certificationRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'certificationRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'certificationRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -329,22 +330,22 @@ function getDeductibleChild(){
 			},{
 				name:'certificationMonthRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("certificationMonth")}}',
 				children:[{
 					name:'certificationMonthRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'certificationMonthRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'certificationMonthRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -358,22 +359,22 @@ function getDeductibleChild(){
 			},{
 				name:'deductibleRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("isDeduct")}}',
 				children:[{
 					name:'deductibleRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'deductibleRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'deductibleRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -387,22 +388,22 @@ function getDeductibleChild(){
 			},{
 				name:'invoiceDateRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("billingDate")}}',
 				children:[{
 					name:'invoiceDateRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'invoiceDateRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'invoiceDateRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -416,22 +417,22 @@ function getDeductibleChild(){
 			},{
 				name:'imAndRefundRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("drawbackPolicy")}}',
 				children:[{
 					name:'imAndRefundRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'imAndRefundRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'imAndRefundRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		}]
@@ -452,22 +453,22 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'departmentRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("department")}}',
 				children:[{
 					name:'departmentRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'departmentRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'departmentRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -481,22 +482,22 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'employeeMonthRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("employee")}}',
 				children:[{
 					name:'employeeMonthRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'employeeMonthRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'employeeMonthRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -510,22 +511,22 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'customerRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("customer")}}',
 				children:[{
 					name:'customerRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'customerRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'customerRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -539,22 +540,22 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'investorRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("investor")}}',
 				children:[{
 					name:'investorRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'investorRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'investorRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -568,22 +569,22 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'creditorRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("creditor")}}',
 				children:[{
 					name:'creditorRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'creditorRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'creditorRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -597,22 +598,22 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'obligorRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("obligor")}}',
 				children:[{
 					name:'obligorRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'obligorRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'obligorRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		}]
@@ -633,22 +634,22 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'goodsRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("goods")}}',
 				children:[{
 					name:'goodsRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'goodsRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'goodsRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -662,22 +663,22 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'assetsTypeMonthRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("assetsType")}}',
 				children:[{
 					name:'assetsTypeMonthRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'assetsTypeMonthRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'assetsTypeMonthRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -691,22 +692,22 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'assetsRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("assets")}}',
 				children:[{
 					name:'assetsRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'assetsRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'assetsRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -720,22 +721,22 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'quantityRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("number")}}',
 				children:[{
 					name:'quantityRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'quantityRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'quantityRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -749,22 +750,22 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'priceRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("price")}}',
 				children:[{
 					name:'priceRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'priceRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'priceRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		}]
@@ -785,22 +786,22 @@ function getBankAccountChild(){
 			},{
 				name:'bankAccountRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("bankAccount")}}',
 				children:[{
 					name:'bankAccountRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'bankAccountRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'bankAccountRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -838,22 +839,22 @@ function getBankAccountChild(){
 			},{
 				name:'othBankAccountSetRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("incomeAccount")}}',
 				children:[{
 					name:'othBankAccountSetRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'othBankAccountSetRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'othBankAccountSetRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		}]
@@ -874,22 +875,22 @@ function getAuxInfoChild(){
 			},{
 				name:'invoiceCodeRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("invoiceNO")}}',
 				children:[{
 					name:'invoiceCodeRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'invoiceCodeRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'invoiceCodeRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -903,22 +904,22 @@ function getAuxInfoChild(){
 			},{
 				name:'penaltyTypeMonthRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("penaltyType")}}',
 				children:[{
 					name:'penaltyTypeMonthRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'penaltyTypeMonthRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'penaltyTypeMonthRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -932,22 +933,22 @@ function getAuxInfoChild(){
 			},{
 				name:'loanTermRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("loanTerm")}}',
 				children:[{
 					name:'loanTermRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'loanTermRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'loanTermRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -961,22 +962,22 @@ function getAuxInfoChild(){
 			},{
 				name:'abstractRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("abstract")}}',
 				children:[{
 					name:'abstractRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'abstractRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'abstractRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		},{
@@ -990,22 +991,22 @@ function getAuxInfoChild(){
 			},{
 				name:'projectRadio',
 				component:'Radio.Group',
-				// onChange:'{{$DCRadioChange}}',
+				onChange:'{{$detailRadioChange("project")}}',
 				children:[{
 					name:'projectRadio0',
 					component:'Radio',
 					children:'必填',
-					value:'0'
+					value:2
 				},{
 					name:'projectRadio1',
 					component:'Radio',
 					children:'选填',
-					value:'1'
+					value:1
 				},{
 					name:'projectRadio2',
 					component:'Radio',
 					children:'不显示',
-					value:'2'
+					value:0
 				}]
 			}]
 		}]
@@ -1026,7 +1027,7 @@ for(let i=0 ; i< 10;i++){
 		},{
 			name:'ext'+i+'Radio',
 			component:'Radio.Group',
-			// onChange:'{{$DCRadioChange}}',
+			// onChange:'{{$detailRadioChange}}',
 			children:[{
 				name:'ext'+0+'Radio0',
 				component:'Radio',
@@ -1036,12 +1037,12 @@ for(let i=0 ; i< 10;i++){
 				name:'ext'+0+'Radio1',
 				component:'Radio',
 				children:'选填',
-				value:'1'
+				value:1
 			},{
 				name:'ext'+0+'Radio2',
 				component:'Radio',
 				children:'不显示',
-				value:'2'
+				value:0
 			}]
 		},{
 			name:'showTitle'+i,
@@ -1071,7 +1072,7 @@ for(let i=0; i<5;i++){
 		},{
 			name:'stringExt'+i+'Radio',
 			component:'Radio.Group',
-			// onChange:'{{$DCRadioChange}}',
+			// onChange:'{{$detailRadioChange}}',
 			children:[{
 				name:	'stringExt'+0+'Radio0',
 				component:'Radio',
@@ -1081,12 +1082,12 @@ for(let i=0; i<5;i++){
 				name:'stringExt'+0+'Radio1',
 				component:'Radio',
 				children:'选填',
-				value:'1'
+				value:1
 			},{
 				name:'stringExt'+0+'Radio2',
 				component:'Radio',
 				children:'不显示',
-				value:'2'
+				value:0
 			}]
 		},{
 			name:'stringShowTitle'+i,
@@ -1122,7 +1123,11 @@ function getStringExtChild(){
 export function getInitState() {
 	return {
 		data: {
-			content: 'hello world'
+			content: 'hello world',
+			form:{
+				vatTaxpayerSmall:undefined,
+				vatTaxpayerNormal:undefined
+			}
 		}
 	}
 }
