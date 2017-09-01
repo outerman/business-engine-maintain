@@ -3,6 +3,7 @@ export function getMeta() {
 		name: 'root',
 		component: 'Layout',
 		className: 'mk-app-login',
+		onKeyDown:'{{$handleKeyDown}}',
 		children: [{
 			name: 'header',
 			className: 'mk-app-login-header',

@@ -1027,7 +1027,7 @@ for(let i=0 ; i< 10;i++){
 		},{
 			name:'ext'+i+'Radio',
 			component:'Radio.Group',
-			// onChange:'{{$detailRadioChange}}',
+			onChange:'{{$detailRadioChange("ext"+i)}}',
 			children:[{
 				name:'ext'+0+'Radio0',
 				component:'Radio',
@@ -1054,6 +1054,7 @@ for(let i=0 ; i< 10;i++){
 				children:'显示标题:'
 			},{
 				name:'edit'+i,
+				onChange:'{{$extTittleChange("extTitle"+i)}}',
 				component:'Input',
 				width:100
 			}]
@@ -1072,7 +1073,7 @@ for(let i=0; i<5;i++){
 		},{
 			name:'stringExt'+i+'Radio',
 			component:'Radio.Group',
-			// onChange:'{{$detailRadioChange}}',
+			onChange:'{{$detailRadioChange("stringExt"+i)}}',
 			children:[{
 				name:	'stringExt'+0+'Radio0',
 				component:'Radio',
@@ -1099,6 +1100,7 @@ for(let i=0; i<5;i++){
 				children:'显示标题:'
 			},{
 				name:'stringEdit'+i,
+				onChange:'{{$extTittleChange("stringExtTitle"+i)}}',
 				component:'Input',
 				width:100
 			}]

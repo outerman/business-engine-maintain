@@ -20,7 +20,11 @@ class action {
     }
 
     getLogo = () => this.config.logo
-
+    handleKeyDown =(e)=>{
+        if(e.keyCode ===13){
+            this.login()
+        }
+    }
     login = async (option) => {
         let form = this.metaAction.gf('data.form').toJS()
         if(form.password){

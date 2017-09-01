@@ -78,7 +78,10 @@ class action {
         this.injections.reduce('editForm',{industryList})
     }
     detailRadioChange = (key) => (e)=>{
-        this.injections.reduce('editForm',{key:e.target.value})
+        this.injections.reduce('editForm',{[key]:e.target.value})
+    }
+    extTittleChange = (key) =>(e)=>{
+        this.injections.reduce('editForm',{[key]:e.target.value})
     }
     invoiceTypeChange = (data)=>{
 
@@ -99,6 +102,7 @@ class action {
 
     }
     onOk = () => {
+        let res = this.metaAction.gf('data.form')
        return {result:true,value:{list}}
     }
 }
