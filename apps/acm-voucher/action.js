@@ -125,7 +125,7 @@ class action {
             let item = {}
             item.invoiceType =consts.ticketType.filter(obj=>{
                 return obj.id ==  o.invoiceId
-            })[0].name
+            })[0]
 
 
             for (let attr in consts.columns){
@@ -133,6 +133,46 @@ class action {
                     return oo.columnsId ==  consts.columns[attr].id
                 })[0] || {}
                 item[attr] = temp.flag
+                if(temp.columnsId == 14){//结算方式
+                    let settlements = temp.specialList,
+                    settlementType = consts.settlementType,
+                    settlement = []
+                    settlements.map(o=>{
+                        settlement =settlement.concat(settlementType.filter(oo=>{
+                            return oo.id == o.optionValue
+                        }))
+                    })
+                    item.settlement = settlement
+                }
+                if(temp.columnsId == 16){//税率
+                    let rates = temp.specialList,
+                        rateSource = consts.taxRateType,
+                        smallRateIdx=[],normalRateIdx=[],
+                        smallRate=[],normalRate=[]
+                    rates.map(oRates=>{
+                        if(oRates.vatTaxpayer == 41){
+                            normalRateIdx.push(oRates.optionValue)
+                        }else{
+                            smallRateIdx.push(oRates.optionValue)
+                        }
+                    })
+                    normalRateIdx.map(oNormalRateIdx=>{
+                        rateSource.map(ooRateSource=>{
+                            if(oNormalRateIdx == ooRateSource.id)
+                                normalRate.push(ooRateSource)
+                        })
+                    })
+                    smallRateIdx.map(oSmallRateIdx=>{
+                        rateSource.map(ooRateSource=>{
+                            if(oSmallRateIdx == ooRateSource.id){
+                                smallRate.push(ooRateSource)
+                            }
+                        })
+                    })
+                    item.normalRate = normalRate
+                    item.smallRate = smallRate
+                }
+
             }
             interfaceDataList.push(item)
         })
@@ -242,9 +282,23 @@ class action {
                 />
             )
     }
-    cellGetter = (columnKey) => (ps) => {
-        var cellValue = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`)
-        var showValue = cellValue
+    cellGetter = (columnKey,columnKey2) => (ps) => {
+        var cellValue = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`),
+            cellValue2 = ''
+        if(typeof columnKey2 === 'string'){
+            cellValue2 = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey2}`)
+            cellValue2 && (cellValue = cellValue + ','+cellValue2)
+        }
+        // if(columnKey === 'settlementTypeList'){
+        //     cellValue =cellValue? cellValue.toJS().join(','):cellValue
+        // }
+        if(columnKey === 'settlement' || columnKey === 'smallRate' ||columnKey === 'normalRate' ){
+            if(cellValue){
+                cellValue = cellValue.toJS().map(o=>{return o.name}).join(',')
+            }
+        }
+
+        var showValue =  cellValue
 
         if (!this.isFocusCell(ps, columnKey)) {
             return (
@@ -280,6 +334,15 @@ class action {
 
         if (ret) {
             debugger
+            let list = this.metaAction.gf('data.interface.list').toJS(),
+                val = ret.value.list
+            for(let o of list){
+                if(o.invoiceType.id === val.invoiceType.id){
+                    return this.metaAction.toast('error','票据类型重复')
+                }
+            }
+            list.push(val)
+            this.metaAction.sf('data.interface.list',fromJS(list))
             // const response = await this.webapi.education.query()
             // this.metaAction.sfs({
             //     'data.other.educationDataSource': fromJS(response),

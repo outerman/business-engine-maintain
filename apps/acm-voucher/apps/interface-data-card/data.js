@@ -19,7 +19,7 @@ export function getMeta() {
 					// [{
 					// 	name:'invoiceType0',
 					// 	component:'Select.Option',
-					// 	value:'0',
+					// 	value:2,
 					// 	children:'增值税专用发票'
 					// },{
 					// 	name:'invoiceType1',
@@ -131,6 +131,7 @@ function getAmountAndtaxChild(){
 			},{
 				name:'amountRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("noTaxAmount")}}',
 				children:[{
 					name:'amountRadio0',
@@ -160,6 +161,7 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("tax")}}',
 				children:[{
 					name:'taxRadio0',
@@ -189,6 +191,7 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxAndAmountRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("amount")}}',
 				children:[{
 					name:'taxAndAmountRadio0',
@@ -218,6 +221,7 @@ function getAmountAndtaxChild(){
 			},{
 				name:'deductibleAmountRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("deductibleInputTax")}}',
 				children:[{
 					name:'deductibleAmountRadio0',
@@ -247,6 +251,7 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxRate',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("taxRate")}}',
 				children:[{
 					name:'taxRate0',
@@ -270,19 +275,21 @@ function getAmountAndtaxChild(){
 			component:'::div',
 			children:['一般纳税人:(多选)',{
 				component:'Checkbox.Group',
-				options:['0%','1.5%','3%减按2%'],
+				disabled:"{{!data.form.vatTaxpayerNormal}}",
+				options:'{{$getTaxRateOption()}}',
 				defaultValue:['0%'],
+				onChange:'{{$taxerChange("normalRate")}}'
 			}]
-			// onChange:'{{$normalTaxerChange}}'
 		},{
 			name:'taxSmall',
 			component:'::div',
-			children:['一般纳税人:(多选)',{
+			children:['小规模:(多选)',{
 				component:'Checkbox.Group',
-				options:['0%','1.5%','3%减按2%'],
+				disabled:"{{!data.form.vatTaxpayerSmall}}",
+				options:'{{$getTaxRateOption("smallRate")}}',
 				defaultValue:['0%'],
+				onChange:'{{$taxerChange("small")}}'
 			}]
-			// onChange:'{{$normalTaxerChange}}'
 		}]
 	}
 }
@@ -301,6 +308,7 @@ function getDeductibleChild(){
 			},{
 				name:'certificationRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("isQualification")}}',
 				children:[{
 					name:'certificationRadio0',
@@ -330,6 +338,7 @@ function getDeductibleChild(){
 			},{
 				name:'certificationMonthRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("certificationMonth")}}',
 				children:[{
 					name:'certificationMonthRadio0',
@@ -359,6 +368,7 @@ function getDeductibleChild(){
 			},{
 				name:'deductibleRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("isDeduct")}}',
 				children:[{
 					name:'deductibleRadio0',
@@ -388,6 +398,7 @@ function getDeductibleChild(){
 			},{
 				name:'invoiceDateRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("billingDate")}}',
 				children:[{
 					name:'invoiceDateRadio0',
@@ -417,6 +428,7 @@ function getDeductibleChild(){
 			},{
 				name:'imAndRefundRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("drawbackPolicy")}}',
 				children:[{
 					name:'imAndRefundRadio0',
@@ -453,6 +465,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'departmentRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("department")}}',
 				children:[{
 					name:'departmentRadio0',
@@ -482,6 +495,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'employeeMonthRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("employee")}}',
 				children:[{
 					name:'employeeMonthRadio0',
@@ -511,6 +525,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'customerRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("customer")}}',
 				children:[{
 					name:'customerRadio0',
@@ -540,7 +555,38 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'investorRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("investor")}}',
+				children:[{
+					name:'investorRadio0',
+					component:'Radio',
+					children:'必填',
+					value:2
+				},{
+					name:'investorRadio1',
+					component:'Radio',
+					children:'选填',
+					value:1
+				},{
+					name:'investorRadio2',
+					component:'Radio',
+					children:'不显示',
+					value:0
+				}]
+			}]
+		},{
+			name:'byInvestor',
+			component:'::div',
+			children:[{
+				name:'investorTitle',
+				component:'::span',
+				className:'settingLabel',
+				children:'被投资人:'
+			},{
+				name:'byInvestorRadio',
+				component:'Radio.Group',
+				defaultValue:0,
+				onChange:'{{$detailRadioChange("byInvestor")}}',
 				children:[{
 					name:'investorRadio0',
 					component:'Radio',
@@ -569,6 +615,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'creditorRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("creditor")}}',
 				children:[{
 					name:'creditorRadio0',
@@ -598,6 +645,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'obligorRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("obligor")}}',
 				children:[{
 					name:'obligorRadio0',
@@ -634,6 +682,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'goodsRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("goods")}}',
 				children:[{
 					name:'goodsRadio0',
@@ -663,6 +712,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'assetsTypeMonthRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("assetsType")}}',
 				children:[{
 					name:'assetsTypeMonthRadio0',
@@ -692,6 +742,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'assetsRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("assets")}}',
 				children:[{
 					name:'assetsRadio0',
@@ -721,6 +772,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'quantityRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("number")}}',
 				children:[{
 					name:'quantityRadio0',
@@ -750,6 +802,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'priceRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("price")}}',
 				children:[{
 					name:'priceRadio0',
@@ -786,6 +839,7 @@ function getBankAccountChild(){
 			},{
 				name:'bankAccountRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("bankAccount")}}',
 				children:[{
 					name:'bankAccountRadio0',
@@ -807,26 +861,12 @@ function getBankAccountChild(){
 		},{
 			name:'bankAccountCheck',
 			component:'::div',
-			children:[{
-				name:'bankAccount1',
-				component:'::div',
-				children:['账号：',{
-					name:'normalTaxer',
-					component:'Checkbox.Group',
-					options:['现金','银行存款','支付宝','微信'],
-					defaultValue:['现金'],
-					// onChange:'{{$normalTaxerChange}}'
-				}]
-			},{
-				name:'option',
-				component:'::div',
-				children:['结算方式：',{
-					name:'normalTaxer',
-					component:'Checkbox.Group',
-					options:['冲减预收款','客户欠款','冲减预付款','欠供应商款','冲员工借款','员工垫付'],
-					defaultValue:['冲减预收款'],
-					// onChange:'{{$normalTaxerChange}}'
-				}]
+			children:['结算方式：',{
+				name:'normalTaxer',
+				component:'Checkbox.Group',
+				options:'{{$getSettlementTypeList()}}',
+				defaultValue:['现金'],
+				onChange:'{{$settlementTypeChange}}'
 			}]
 		},{
 			name:'othBankAccountSet',
@@ -839,6 +879,7 @@ function getBankAccountChild(){
 			},{
 				name:'othBankAccountSetRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("incomeAccount")}}',
 				children:[{
 					name:'othBankAccountSetRadio0',
@@ -875,6 +916,7 @@ function getAuxInfoChild(){
 			},{
 				name:'invoiceCodeRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("invoiceNO")}}',
 				children:[{
 					name:'invoiceCodeRadio0',
@@ -894,6 +936,36 @@ function getAuxInfoChild(){
 				}]
 			}]
 		},{
+			name:'billNumber',
+			component:'::div',
+			children:[{
+				name:'billNumberTitle',
+				component:'::span',
+				className:'settingLabel',
+				children:'票据号:'
+			},{
+				name:'billNumberRadio',
+				component:'Radio.Group',
+				defaultValue:0,
+				onChange:'{{$detailRadioChange("billNumber")}}',
+				children:[{
+					name:'billNumberRadio0',
+					component:'Radio',
+					children:'必填',
+					value:2
+				},{
+					name:'billNumberRadio1',
+					component:'Radio',
+					children:'选填',
+					value:1
+				},{
+					name:'billNumberRadio2',
+					component:'Radio',
+					children:'不显示',
+					value:0
+				}]
+			}]
+		},{
 			name:'penaltyType',
 			component:'::div',
 			children:[{
@@ -904,6 +976,7 @@ function getAuxInfoChild(){
 			},{
 				name:'penaltyTypeMonthRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("penaltyType")}}',
 				children:[{
 					name:'penaltyTypeMonthRadio0',
@@ -933,6 +1006,7 @@ function getAuxInfoChild(){
 			},{
 				name:'loanTermRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("loanTerm")}}',
 				children:[{
 					name:'loanTermRadio0',
@@ -962,6 +1036,7 @@ function getAuxInfoChild(){
 			},{
 				name:'abstractRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("abstract")}}',
 				children:[{
 					name:'abstractRadio0',
@@ -991,6 +1066,7 @@ function getAuxInfoChild(){
 			},{
 				name:'projectRadio',
 				component:'Radio.Group',
+				defaultValue:0,
 				onChange:'{{$detailRadioChange("project")}}',
 				children:[{
 					name:'projectRadio0',
@@ -1027,12 +1103,13 @@ for(let i=0 ; i< 10;i++){
 		},{
 			name:'ext'+i+'Radio',
 			component:'Radio.Group',
-			onChange:'{{$detailRadioChange("ext"+i)}}',
+			defaultValue:0,
+			onChange:'{{$detailRadioChange("ext'+i+'")}}',
 			children:[{
 				name:'ext'+0+'Radio0',
 				component:'Radio',
 				children:'必填',
-				value:'0'
+				value:2
 			},{
 				name:'ext'+0+'Radio1',
 				component:'Radio',
@@ -1054,8 +1131,9 @@ for(let i=0 ; i< 10;i++){
 				children:'显示标题:'
 			},{
 				name:'edit'+i,
-				onChange:'{{$extTittleChange("extTitle"+i)}}',
+				onChange:'{{$extTittleChange("extTitle'+i+'")}}',
 				component:'Input',
+				value:'{{data.form.extTitle'+i+'}}',
 				width:100
 			}]
 		}]
@@ -1073,12 +1151,13 @@ for(let i=0; i<5;i++){
 		},{
 			name:'stringExt'+i+'Radio',
 			component:'Radio.Group',
-			onChange:'{{$detailRadioChange("stringExt"+i)}}',
+			defaultValue:0,
+			onChange:'{{$detailRadioChange("stringExt'+i+'")}}',
 			children:[{
-				name:	'stringExt'+0+'Radio0',
+				name:'stringExt'+0+'Radio0',
 				component:'Radio',
 				children:'必填',
-				value:'0'
+				value:2
 			},{
 				name:'stringExt'+0+'Radio1',
 				component:'Radio',
@@ -1100,8 +1179,9 @@ for(let i=0; i<5;i++){
 				children:'显示标题:'
 			},{
 				name:'stringEdit'+i,
-				onChange:'{{$extTittleChange("stringExtTitle"+i)}}',
+				onChange:'{{$extTittleChange("stringExtTitle'+i+'")}}',
 				component:'Input',
+				value:'{{data.form.stringExtTitle'+i+'}}',
 				width:100
 			}]
 		}]
@@ -1127,8 +1207,78 @@ export function getInitState() {
 		data: {
 			content: 'hello world',
 			form:{
-				vatTaxpayerSmall:undefined,
-				vatTaxpayerNormal:undefined
+				invoiceType:{
+					name:'增值税普通发票',
+					id:200000000000050
+				},
+				bankAccount:2,
+				settlement:[{id: 1, name: "现金"}],
+				stringExt:'',
+				noTaxAmount:'',
+			    "stringExt0": 0,
+			    "extTitle7": "",
+			    "stringExt1": 0,
+			    "extTitle8": "",
+			    // "settlement": [5, 2, 3, 4],
+				// settlement:1,
+			    "abstract": 0,
+			    "stringExt2": 0,
+			    "extTitle9": "",
+			    "noTaxAmount": 0,
+			    "stringExt3": 0,
+			    "penaltyType": 0,
+			    "assets": 0,
+			    "incomeAccount": 0,
+			    "stringExt4": 0,
+			    "isQualification": 0,
+			    "certificationMonth": 0,
+			    "stringExtTitle0": "",
+			    "billingDate": 0,
+			    "stringExtTitle1": "",
+			    "price": 0,
+			    "number": 0,
+			    "stringExtTitle2": "",
+			    "stringExtTitle3": "",
+			    "taxRate": 0,
+			    "tax": 0,
+			    "stringExtTitle4": "",
+			    "isDeduct": 0,
+			    "invoiceNO": 0,
+			    "employee": 0,
+			    "ext0": 0,
+			    "ext1": 0,
+			    "ext2": 0,
+			    "ext3": 0,
+			    "department": 0,
+			    "ext4": 0,
+			    "ext5": 0,
+			    "vatTaxpayerSmall": 0,
+			    "ext6": 0,
+			    "deductibleInputTax": 0,
+			    "ext7": 0,
+			    "goods": 0,
+			    "ext8": 0,
+				billNumber:0,
+			    "industryIdList": [1],
+			    "amount": 0,
+			    "investor": 0,
+				byInvestor:0,
+			    "ext9": 0,
+			    "extTitle0": "",
+			    "project": 0,
+			    "extTitle1": "",
+			    "vatTaxpayerNormal": 1,
+			    "obligor": 0,
+			    "extTitle2": "",
+			    "loanTerm": 0,
+			    "extTitle3": "",
+			    "creditor": 0,
+			    "drawbackPolicy": 0,
+			    "assetsType": 0,
+			    "extTitle4": "",
+			    "extTitle5": "",
+			    "customer": 0,
+			    "extTitle6": ""
 			}
 		}
 	}

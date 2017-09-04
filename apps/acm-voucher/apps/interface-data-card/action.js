@@ -34,10 +34,61 @@ class action {
 
         return res
     }
+    invoiceTypeChange = (invoiceTypeId)=>{
+        let invoiceTypes = this.component.props.initData.invoiceTypeList,
+            invoiceType = invoiceTypes.filter(o=>{
+                return o.enumItemId === invoiceTypeId
+            })[0]
 
-
+        this.injections.reduce('editForm',{invoiceType:{id:invoiceType.enumItemId,name:invoiceType.enumItemName}})
+    }
+    getTaxRateOption = ()=>{
+        let taxRateList = this.component.props.initData.taxRateList,
+            res = []
+        taxRateList.map(o=>{
+            res.push(o.name)
+        })
+        return res
+    }
+    getBankAccountOption = ()=>{
+        let accountTypeList = this.component.props.initData.accountTypeList,
+            res = []
+        accountTypeList.map(o=>{
+            res.push(o.enumItemName)
+        })
+        return res
+    }
+    bankAccountChange = (checkedValues)=>{
+        let bankAccount = [],
+            accountTypeList = this.component.props.initData.accountTypeList
+        checkedValues.map(o=>{
+            bankAccounts.push(accountTypeList.filter(oo=>{
+                return oo.enumItemName === o
+            })[0].enumItemId)
+        })
+        this.injections.reduce('editForm',{bankAccount})
+    }
+    getSettlementTypeList = ()=>{
+        let settlementTypeList = this.component.props.initData.settlementTypeList,
+            res = []
+        settlementTypeList.map(o=>{
+            res.push(o.name)
+        })
+        return res
+    }
+    settlementTypeChange = (checkedValues)=>{
+        let settlement = [],
+            settlementTypes = this.component.props.initData.settlementTypeList
+        checkedValues.map(o=>{
+            settlement.push(
+                settlementTypes.filter(oo=>{
+                    return oo.name == o
+                })[0]
+            )
+        })
+        this.injections.reduce('editForm',{settlement})
+    }
     vatTaxpayerChange = (checkedValues)=>{
-        debugger
         let vatTaxpayerSmall = 0,vatTaxpayerNormal = 0
         switch (checkedValues.length) {
             case 0:
@@ -50,9 +101,8 @@ class action {
                 break
             case 2:
                 vatTaxpayerSmall = 1
-                vatTaxpayerNormal = 2
+                vatTaxpayerNormal = 1
                 break
-
         }
         this.injections.reduce('editForm',{vatTaxpayerSmall,vatTaxpayerNormal})
     }
@@ -83,17 +133,48 @@ class action {
     extTittleChange = (key) =>(e)=>{
         this.injections.reduce('editForm',{[key]:e.target.value})
     }
-    invoiceTypeChange = (data)=>{
 
-    }
     normalTaxerChange =(data)=>{
-
+        debugger
     }
     industryChange =(data)=>{
-
+        debugger
+        let industryIdList = []
+        data.map(o=>{
+            switch (o) {
+                case '工业':
+                    industryIdList.push(1)
+                    break;
+                case '商贸':
+                    industryIdList.push(2)
+                    break;
+                case '服务':
+                    industryIdList.push(3)
+                    break;
+                case '信息技术':
+                    industryIdList.push(4)
+                    break;
+            }
+        })
+        this.injections.reduce('editForm',{industryIdList})
     }
+
     tabsChange = (key)=>{
 
+    }
+
+    taxerChange = (key)=>(checkedValues)=>{
+        debugger
+        let taxRateType = this.component.props.initData.taxRateList,
+            rateType = []
+            checkedValues.map(o=>{
+                taxRateType.map(oo=>{
+                    if(o==oo.name)
+                        rateType.push(oo)
+                })
+                
+            })
+        this.injections.reduce('editForm',{[key]:rateType})
     }
     amountRadioChange = (e)=>{
 
@@ -102,8 +183,8 @@ class action {
 
     }
     onOk = () => {
-        let res = this.metaAction.gf('data.form')
-       return {result:true,value:{list}}
+        let list = this.metaAction.gf('data.form').toJS()
+        return {result:true,value:{list}}
     }
 }
 

@@ -1,18 +1,19 @@
-export const settlementType = {
-	xj: { id: 1, name: "现金" },
-	yh: { id: 2, name: "银行" },
-	wx: { id: 3, name: "微信" },
-	zfb: { id: 4, name: "支付宝" },
-	cjysk: { id: 5, name: "冲减预收款" },
-	cjyfk: { id: 6, name: "冲减预付款" },
-	khqk: { id: 7, name: "客户欠款" },
-	qgysk: { id: 8, name: "欠供应商款" },
-	cygjk: { id: 9, name: "冲员工借款" },
-	ygdf: { id: 10, name: "员工垫付" }
-}
+export const settlementType = [
+	{ id: 1, name: "现金" },
+	{ id: 2, name: "银行" },
+	{ id: 3, name: "微信" },
+	{ id: 4, name: "支付宝" },
+	{ id: 5, name: "冲减预收款" },
+	{ id: 6, name: "冲减预付款" },
+	{ id: 7, name: "客户欠款" },
+	{ id: 8, name: "欠供应商款" },
+	{ id: 9, name: "冲员工借款" },
+	{ id: 10, name: "员工垫付" }
+]
+
 
 export const accountType = {
-	xj: { id: 98, name: '现金' },
+	xj: { id: 98, name: '现金',code:'1' },
 	yh: { id: 99, name: '银行' },
 	wx: { id: 100, name: '微信' },
 	zfb: { id: 101, name: '支付宝' },
@@ -78,20 +79,20 @@ export const vatTaxpayerType = {
 	xgmnsr: { id: 42, name: '小规模纳税人' }
 }
 
-export const taxRateType = {
-	hundred: { id: 100, name: '100%', value: 1 },
-	seventeen: { id: 17, name: '17%', value: 0.17 },
-	thirteen: { id: 13, name: '13%', value: 0.13 },
-	eleven: { id: 11, name: '11%', value: 0.11 },
-	six: { id: 6, name: '6%', value: 0.06 },
-	five: { id: 5, name: '5%', value: 0.05 },
-	four: { id: 4, name: '4%', value: 0.04 },
-	three: { id: 3, name: '3%', value: 0.03 },
-	two: { id: 2, name: '3%减按2%', value: 0.03 },
-	oneHalf: { id: 1, name: '1.5%', value: 0.015 },
-	zero: { id: 0, name: '0%', value: 0 },
-	nothing: { id: 1000, name: '免税', value: 0 }
-}
+export const taxRateType = [
+	{ id: 100, name: '100%', value: 1 },
+	{ id: 17, name: '17%', value: 0.17 },
+	{ id: 13, name: '13%', value: 0.13 },
+	{ id: 11, name: '11%', value: 0.11 },
+	{ id: 6, name: '6%', value: 0.06 },
+	{ id: 5, name: '5%', value: 0.05 },
+	{ id: 4, name: '4%', value: 0.04 },
+	{ id: 3, name: '3%', value: 0.03 },
+	{ id: 2, name: '3%减按2%', value: 0.03 },
+	{ id: 1, name: '1.5%', value: 0.015 },
+	{ id: 0, name: '0%', value: 0 },
+	{ id: 1000, name: '免税', value: 0 }
+]
 
 export const columns = {
 	noTaxAmount: { id: 1, name: '金额' },
@@ -111,7 +112,7 @@ export const columns = {
 	billNumber: { id: 15, name: '票据号' },
 	taxRate: { id: 16, name: '税率' },
 	isDeduct: { id: 17, name: '抵扣' },
-	investmentObject: { id: 18, name: '投资对象' },
+	byInvestor: { id: 18, name: '被投资人' },
 	investmentType: { id: 19, name: '投资类别' },
 	investor:{id:20, name:'  投资人'},
 	creditor: { id: 21, name: '债权人' },
