@@ -12,6 +12,7 @@ class reducer {
 
     init = (state, option) => {
         const initState = getInitState()
+        initState.store = initData
         return this.metaReducer.init(state, initState)
     }
 
@@ -35,7 +36,7 @@ class reducer {
         const index = list.findIndex(o => {
            return  o.get('id') == id
         })
-        
+
         if (index == -1)
             return state
 

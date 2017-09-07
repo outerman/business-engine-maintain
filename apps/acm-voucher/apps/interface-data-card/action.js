@@ -12,6 +12,7 @@ class action {
     onInit = ({ component, injections }) => {
         this.component = component
         this.injections = injections
+
         if (this.component.props.setOkListener)
             this.component.props.setOkListener(this.onOk)
 
@@ -45,27 +46,33 @@ class action {
     getTaxRateOption = ()=>{
         let taxRateList = this.component.props.initData.taxRateList,
             res = []
+
         taxRateList.map(o=>{
             res.push(o.name)
         })
+
         return res
     }
     getBankAccountOption = ()=>{
         let accountTypeList = this.component.props.initData.accountTypeList,
             res = []
+
         accountTypeList.map(o=>{
             res.push(o.enumItemName)
         })
+
         return res
     }
     bankAccountChange = (checkedValues)=>{
         let bankAccount = [],
             accountTypeList = this.component.props.initData.accountTypeList
+
         checkedValues.map(o=>{
             bankAccounts.push(accountTypeList.filter(oo=>{
                 return oo.enumItemName === o
             })[0].enumItemId)
         })
+
         this.injections.reduce('editForm',{bankAccount})
     }
     getSettlementTypeList = ()=>{
@@ -79,6 +86,7 @@ class action {
     settlementTypeChange = (checkedValues)=>{
         let settlement = [],
             settlementTypes = this.component.props.initData.settlementTypeList
+
         checkedValues.map(o=>{
             settlement.push(
                 settlementTypes.filter(oo=>{
@@ -86,10 +94,12 @@ class action {
                 })[0]
             )
         })
+
         this.injections.reduce('editForm',{settlement})
     }
     vatTaxpayerChange = (checkedValues)=>{
         let vatTaxpayerSmall = 0,vatTaxpayerNormal = 0
+
         switch (checkedValues.length) {
             case 0:
                 vatTaxpayerSmall = 0
@@ -104,10 +114,12 @@ class action {
                 vatTaxpayerNormal = 1
                 break
         }
+
         this.injections.reduce('editForm',{vatTaxpayerSmall,vatTaxpayerNormal})
     }
     industryChange = (checkedValues)=>{
         let industryList = []
+
         checkedValues.map(o=>{
             switch (o) {
                 case '工业':
@@ -122,9 +134,9 @@ class action {
                 case '信息技术':
                     industryList.push(4)
                     break
-
             }
         })
+
         this.injections.reduce('editForm',{industryList})
     }
     detailRadioChange = (key) => (e)=>{
@@ -133,13 +145,9 @@ class action {
     extTittleChange = (key) =>(e)=>{
         this.injections.reduce('editForm',{[key]:e.target.value})
     }
-
-    normalTaxerChange =(data)=>{
-        debugger
-    }
     industryChange =(data)=>{
-        debugger
         let industryIdList = []
+
         data.map(o=>{
             switch (o) {
                 case '工业':
@@ -156,6 +164,7 @@ class action {
                     break;
             }
         })
+
         this.injections.reduce('editForm',{industryIdList})
     }
 
@@ -164,16 +173,16 @@ class action {
     }
 
     taxerChange = (key)=>(checkedValues)=>{
-        debugger
         let taxRateType = this.component.props.initData.taxRateList,
             rateType = []
+
             checkedValues.map(o=>{
                 taxRateType.map(oo=>{
                     if(o==oo.name)
                         rateType.push(oo)
                 })
-                
             })
+            
         this.injections.reduce('editForm',{[key]:rateType})
     }
     amountRadioChange = (e)=>{

@@ -20,19 +20,8 @@ export function getMeta() {
 				// onChange:'{{$handleChange}}',
 				children:[{
 					name:'option0',
-					component:'Select.Option',
-					value:'0',
-					children:'A'
-				},{
-					name:'option1',
-					component:'Select.Option',
-					value:'1',
-					children:'B'
-				},{
-					name:'option2',
-					component:'Select.Option',
-					value:'2',
-					children:'C'
+					component:'Input',
+					defaultValue:'A'
 				}]
 			}]
 		},{
@@ -55,7 +44,7 @@ export function getMeta() {
 					component:'Select.Option',
 					value:'0',
 					children:'(无影响因素)'
-				},{
+				}/*,{
 					name:'option1',
 					component:'Select.Option',
 					value:'1',
@@ -75,7 +64,7 @@ export function getMeta() {
 					component:'Select.Option',
 					value:'4',
 					children:'计税方式'
-				}]
+				}*/]
 			}]
 		},{
 			name: 'factorsVal',
@@ -235,7 +224,15 @@ export function getMeta() {
 export function getInitState() {
 	return {
 		data: {
-			content: 'hello world'
+			store:{},
+			content: 'hello world',
+			form:{
+				flag:'A',
+				influence:{
+					id:0,
+					name:''
+				}
+			}
 		}
 	}
 }

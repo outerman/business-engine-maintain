@@ -1072,6 +1072,8 @@ function getRuleMeta(){
 export function getInitState() {
 	return {
 		data: {
+			dataSources:{},
+			store:{},
 			templateData:{
 				businessType:{
 				}
@@ -1168,16 +1170,30 @@ export function getInitState() {
 			},
 			rule:{
 				other:{
-					focusCellInfo:undefined
+					focusCellInfo:undefined,
+					account:[],
+					influence:[],
+					vatTaxpayer:[],
+					departmentAttr:[],
+					personAttr:[],
+					goodsAttr:[],
+					taxType:[],
+					qualification:[]
+
 				},
 				list:[{
-					flag:'A'
-				},{
-					flag:'B'
-				},{
-					flag:'C'
-				},{
-					flag:'A'
+				    "orgId": 0,
+				    "flag": "B",
+				    // "influence": "vatTaxpayer,taxType",
+				    // "vatTaxpayer": 41,
+				    // "taxType": false,
+				    // "direction": true,
+				    // "fundSource": "税额",
+				    // "accountCode": "222108",
+				    // "accountName": "应交税费-简易计税",
+				    // "isSettlement": true,
+				    // "industryIdList": [2],
+				    // "idList": [498927]
 				}]
 			}
 		}

@@ -4,7 +4,7 @@ import config from './config'
 import * as consts from './consts'
 import { Map,fromJS } from 'immutable'
 import * as util from './util'
-import { Tree,Input ,DataGrid} from 'mk-component'
+import { Tree,Input ,DataGrid,Select} from 'mk-component'
 const TreeNode = Tree.TreeNode
 
 class action {
@@ -19,6 +19,7 @@ class action {
         this.injections = injections
         injections.reduce('init')
         this.queryTree()
+        this.getAccountList()
     }
     queryTree = async () => {
         let response = await this.webapi.businessTypeTemplate.init(),
@@ -111,7 +112,8 @@ class action {
                 ruleList = ruleData[1]? ruleData[1].details:[]
             }
 
-            this.metaAction.sf('data.rule.list', fromJS( this.parseRuleList(ruleList) ))
+            // this.metaAction.sf('data.rule.list', fromJS( this.parseRuleList(ruleList) ))
+            this.injections.reduce('initRuleList',this.parseRuleList(ruleList))
         }
     }
     transData4List = (res)=> {
@@ -137,7 +139,7 @@ class action {
                     let settlements = temp.specialList,
                     settlementType = consts.settlementType,
                     settlement = []
-                    settlements.map(o=>{
+                    settlements && settlements.length && settlements.map(o=>{
                         settlement =settlement.concat(settlementType.filter(oo=>{
                             return oo.id == o.optionValue
                         }))
@@ -149,20 +151,20 @@ class action {
                         rateSource = consts.taxRateType,
                         smallRateIdx=[],normalRateIdx=[],
                         smallRate=[],normalRate=[]
-                    rates.map(oRates=>{
+                    rates && rates.map(oRates=>{
                         if(oRates.vatTaxpayer == 41){
                             normalRateIdx.push(oRates.optionValue)
                         }else{
                             smallRateIdx.push(oRates.optionValue)
                         }
                     })
-                    normalRateIdx.map(oNormalRateIdx=>{
+                    normalRateIdx.length && normalRateIdx.map(oNormalRateIdx=>{
                         rateSource.map(ooRateSource=>{
                             if(oNormalRateIdx == ooRateSource.id)
                                 normalRate.push(ooRateSource)
                         })
                     })
-                    smallRateIdx.map(oSmallRateIdx=>{
+                    smallRateIdx.length && smallRateIdx.map(oSmallRateIdx=>{
                         rateSource.map(ooRateSource=>{
                             if(oSmallRateIdx == ooRateSource.id){
                                 smallRate.push(ooRateSource)
@@ -191,6 +193,7 @@ class action {
             },
             list:this.parseRuleList(standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[]))
         }
+
         return resData
 
     }
@@ -236,43 +239,131 @@ class action {
     cellClick = (ps, columnKey,type) => (e) => {
         e.stopPropagation()
         if(type == 'rule'){
-
             this.metaAction.sf('data.rule.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
         }else{
             this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
 
         }
 
-        // if (columnKey == 'name') {
-        //     setTimeout(() => {
-        //         const dom = ReactDOM.findDOMNode(this.refName)
-        //         dom.select()
-        //     }, 0)
-        // }
-        // else if (columnKey == 'mobile'){
-        //     setTimeout(() => {
-        //         const dom = ReactDOM.findDOMNode(this.refMobile)
-        //         dom.select()
-        //     }, 0)
-        // }
-
     }
     handleChange = (a,b,c,d)=>{
         // console.log(a,b,c,d)
     }
+    handleInfluenceChange = (columnKey,ps,dataSource)=>(val)=>{
+        let selected = dataSource.filter(o=>{
+            if(columnKey == 'accountName'){
+                return o.name == val
+            }
+            return o.id == val
+        })[0]
+
+        this.injections.reduce('setRuleList',columnKey,ps,val,selected)
+    }
+    getAccountList =  async()=>{
+        let val = await this.webapi.businessTypeTemplate.accountQuery({
+                    "isEndNode": true,
+                    "accountTypeId": 88,
+                    "status": true
+                })
+        this.injections.reduce('setAccountSource',val)
+    }
     cellGetterRule = (columnKey) => (ps) => {
+        let metaAction = this.metaAction
         var cellValue = this.metaAction.gf(`data.rule.list.${ps.rowIndex}.${columnKey}`)
+        let list =  this.metaAction.gf(`data.rule.list.${ps.rowIndex}`)
         var showValue = cellValue
 
+        if(columnKey == 'accountName' ){
+            let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+            account && (showValue = account.get('name'))
+        }
+        if(columnKey == 'accountCode' ){
+            let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+            account && (showValue = account.get('id'))
+        }
+        if(columnKey == 'influence'){
+
+            switch (showValue) {
+                case 'departmentAttr':
+                    showValue = '部门属性'
+                    break;
+                case 'departmentAttr,personAttr':
+                    showValue = '部门属性,人员属性'
+                    break;
+                case 'vatTaxpayer':
+                    showValue = '纳税人身份'
+                    break;
+                case 'vatTaxpayer,qualification':
+                    showValue = '纳税人身份,认证'
+                    break;
+                case 'vatTaxpayer,taxType':
+                    showValue = '纳税人身份,计税方式'
+                    break;
+                case 'punishmentAttr':
+                    showValue = '纳税人身份,计税方式'
+                    break;
+                case 'borrowAttr':
+                    showValue = '借款期限属性'
+                    break;
+                case 'inventoryAttr':
+                    showValue = '存货属性'
+                    break;
+                case 'assetAttr':
+                    showValue = '资产属性'
+                    break;
+                case 'accountInAttr':
+                    showValue = '账户属性流入'
+                    break;
+                case 'accountOutAttr':
+                    showValue = '账户属性流出'
+                    break;
+                case 'formula':
+                    showValue = '公式'
+                    break;
+            }
+        }
         if (!this.isFocusCell(ps, columnKey,'rule')) {
             return (
                 <DataGrid.TextCell
-                    onClick={this.cellClick(ps, columnKey,'rule')}
+                    onClick={::this.cellClick(ps, columnKey,'rule')}
                     value={showValue}
                 />
             )
         }
 
+
+        let data = this.metaAction.gf(`data.dataSources`).toJS()
+        let dataSource,
+            selectItem = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)
+        if(columnKey == 'accountName'||columnKey == 'accountCode'){
+            dataSource = this.metaAction.gf(`data.dataSources.accountSource`)
+            selectItem = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+        }else{
+            dataSource = this.metaAction.gf(`data.dataSources.${columnKey}`)
+        }
+        if(dataSource){
+            let temp = dataSource.toJS()
+            return (
+                <Select
+                    showSearch
+                    style={{ width: 200 }}
+                    placeholder={showValue}
+                    value = {selectItem?  (columnKey == 'accountName'? selectItem.get('name') : selectItem.get('id')):''}
+                    optionFilterProp="children"
+                    optionLabelProp="children"
+
+                    onChange={::this.handleInfluenceChange(columnKey,ps,dataSource.toJS())}>
+                    {
+                        dataSource.map(o=>{
+                            return <Select.Option
+                                value={columnKey == 'accountName'? o.get('name') : o.get('id')}>
+                                {columnKey == 'accountCode'? o.get('id'):o.get('name') }
+                            </Select.Option>
+                        })
+                    }
+                </Select>
+            )
+        }
         return (
                 <Input
                    className='mk-app-editable-table-cell'
@@ -333,7 +424,6 @@ class action {
         })
 
         if (ret) {
-            debugger
             let list = this.metaAction.gf('data.interface.list').toJS(),
                 val = ret.value.list
             for(let o of list){
@@ -351,8 +441,9 @@ class action {
         }
 
     }
-    // 弹框 新增规则1
+    // 弹框 新增规则1（多个添加）
     newInvoiceRule = async ()=>{
+        return this.metaAction.toast('error','功能尚未开发')
         if(!this.metaAction.gf('data.templateData.businessType.code'))
             return this.metaAction.toast('error','请先选择业务类型')
 
@@ -377,11 +468,15 @@ class action {
         if(!this.metaAction.gf('data.templateData.businessType.code'))
             return this.metaAction.toast('error','请先选择业务类型')
 
+        let store = this.metaAction.gf('data.store').toJS()
+            store.accountList = this.metaAction.gf('data.accountList').toJS()
+
         const ret = await this.metaAction.modal('show', {
             title: '新增/编辑凭证规则2：',
             width:400,
             children: this.metaAction.loadApp('invoice-rule2', {
                 store: this.component.props.store,
+                initData:store
             })
         })
 
