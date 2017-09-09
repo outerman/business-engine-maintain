@@ -77,6 +77,7 @@ class action {
             default:
 
         }
+
         this.injections.reduce('initTemplate',response)
         this.injections.reduce('initForm',this.transData4List(response))
     }
@@ -87,8 +88,8 @@ class action {
         // let res = []
         let res = ruleList.map(o=>{
             o.direction = o.direction? '贷':'借'
-            o.isSettlement = o.isSettlement? '结算方式':'本表'
-            o.taxType = o.taxType? '一般计税':'建议计税'
+            // o.isSettlement = o.isSettlement? '结算方式':'本表'
+            o.taxType = o.taxType? '一般计税':'简易计税'
             o.vatTaxpayer = o.vatTaxpayer == 41? '一般纳税人':'小规模纳税人'
             if(o.personAttr == 10050){
                 o.personAttr ='管理人员'
@@ -224,9 +225,7 @@ class action {
 
         return this.getTreeNode(this.metaAction.gf('data.tree').toJS())
     }
-    nameChange =(ps)=>{
-        // console.log(ps)
-    }
+
     isFocusCell = (ps, columnKey,type) => {
         const focusCellInfo = type == 'rule'?
         this.metaAction.gf('data.rule.other.focusCellInfo'):
@@ -249,11 +248,12 @@ class action {
     handleChange = (a,b,c,d)=>{
         // console.log(a,b,c,d)
     }
+    nameChange =(ps,columnKey)=>(e)=>{
+        this.metaAction.sf(`data.rule.list.${ps.rowIndex}.${columnKey}`,e.target.value)
+        // console.log(ps)
+    }
     handleInfluenceChange = (columnKey,ps,dataSource)=>(val)=>{
         let selected = dataSource.filter(o=>{
-            if(columnKey == 'accountName'){
-                return o.name == val
-            }
             return o.id == val
         })[0]
 
@@ -267,61 +267,37 @@ class action {
                 })
         this.injections.reduce('setAccountSource',val)
     }
-    cellGetterRule = (columnKey) => (ps) => {
+    cellGetterRule = (columnKey,type) => (ps) => {
         let metaAction = this.metaAction
         var cellValue = this.metaAction.gf(`data.rule.list.${ps.rowIndex}.${columnKey}`)
-        let list =  this.metaAction.gf(`data.rule.list.${ps.rowIndex}`)
+        let list =  this.metaAction.gf(`data.rule.list.${ps.rowIndex}`),
+            option = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)
+
         var showValue = cellValue
 
-        if(columnKey == 'accountName' ){
-            let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
-            account && (showValue = account.get('name'))
-        }
-        if(columnKey == 'accountCode' ){
-            let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
-            account && (showValue = account.get('id'))
-        }
-        if(columnKey == 'influence'){
+        if(type == 'text'){
+            showValue = cellValue
+        }else{
+            option && (showValue = option.get('name'))
+            if(columnKey == 'accountName' ){
+                let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+                account && (showValue = account.get('name'))
+            }
+            if(columnKey == 'accountCode' ){
+                let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+                account && (showValue = account.get('value'))
+            }
+            if(columnKey == 'extendAttr'){
+                let influenceOption = this.metaAction.gf(`data.rule.other.influence.${ps.rowIndex}`),
+                id = influenceOption ? influenceOption.get('id'):''
+                if(!consts.extendAttr[id]) return <span>不存在扩展因素</span>
 
-            switch (showValue) {
-                case 'departmentAttr':
-                    showValue = '部门属性'
-                    break;
-                case 'departmentAttr,personAttr':
-                    showValue = '部门属性,人员属性'
-                    break;
-                case 'vatTaxpayer':
-                    showValue = '纳税人身份'
-                    break;
-                case 'vatTaxpayer,qualification':
-                    showValue = '纳税人身份,认证'
-                    break;
-                case 'vatTaxpayer,taxType':
-                    showValue = '纳税人身份,计税方式'
-                    break;
-                case 'punishmentAttr':
-                    showValue = '纳税人身份,计税方式'
-                    break;
-                case 'borrowAttr':
-                    showValue = '借款期限属性'
-                    break;
-                case 'inventoryAttr':
-                    showValue = '存货属性'
-                    break;
-                case 'assetAttr':
-                    showValue = '资产属性'
-                    break;
-                case 'accountInAttr':
-                    showValue = '账户属性流入'
-                    break;
-                case 'accountOutAttr':
-                    showValue = '账户属性流出'
-                    break;
-                case 'formula':
-                    showValue = '公式'
-                    break;
+                if(id == 12){// 公式
+                    showValue = cellValue
+                }
             }
         }
+
         if (!this.isFocusCell(ps, columnKey,'rule')) {
             return (
                 <DataGrid.TextCell
@@ -330,48 +306,76 @@ class action {
                 />
             )
         }
-
-
-        let data = this.metaAction.gf(`data.dataSources`).toJS()
-        let dataSource,
-            selectItem = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)
-        if(columnKey == 'accountName'||columnKey == 'accountCode'){
-            dataSource = this.metaAction.gf(`data.dataSources.accountSource`)
-            selectItem = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+        if(type == 'text' ){
+            return (
+                <Input
+                    className='mk-app-editable-table-cell'
+                    onChange={this.nameChange(ps,columnKey)}
+                    value={cellValue}
+                    ref={o => this.refName = o}
+                />
+            )
         }else{
-            dataSource = this.metaAction.gf(`data.dataSources.${columnKey}`)
-        }
-        if(dataSource){
-            let temp = dataSource.toJS()
+            // let data = this.metaAction.gf(`data.dataSources`).toJS()
+            let dataSource,option
+
+            if(columnKey == 'accountName'||columnKey == 'accountCode'){
+                dataSource = this.metaAction.gf(`data.dataSources.accountSource`)?
+                    this.metaAction.gf(`data.dataSources.accountSource`).toJS():
+                    []
+                option =this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)?
+                    this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`).toJS():
+                    {}
+            }else{
+                option = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)?
+                    this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`).toJS():
+                    []
+                dataSource = consts[columnKey]
+            }
+            if(columnKey == 'extendAttr'){
+                let influenceOption = this.metaAction.gf(`data.rule.other.influence.${ps.rowIndex}`),
+                    id = influenceOption ? influenceOption.get('id'):''
+
+                if(!consts.extendAttr[id]) return <span>不存在扩展因素</span>
+
+                dataSource = consts[consts.extendAttr[id]]
+                option = this.metaAction.gf(`data.rule.other.${consts.extendAttr[id]}.${ps.rowIndex}`)?
+                    this.metaAction.gf(`data.rule.other.${consts.extendAttr[id]}.${ps.rowIndex}`):{}
+
+                if(id == 12){// 公式
+                    return (
+                        <Input
+                            className='mk-app-editable-table-cell'
+                            onChange={this.nameChange(ps,columnKey)}
+                            value={showValue}
+                            ref={o => this.refName = o}
+                        />
+                    )
+                }else if (true) {
+
+                }
+            }
             return (
                 <Select
                     showSearch
                     style={{ width: 200 }}
                     placeholder={showValue}
-                    value = {selectItem?  (columnKey == 'accountName'? selectItem.get('name') : selectItem.get('id')):''}
+                    value = {option.id}
                     optionFilterProp="children"
                     optionLabelProp="children"
 
-                    onChange={::this.handleInfluenceChange(columnKey,ps,dataSource.toJS())}>
+                    onChange={::this.handleInfluenceChange(columnKey,ps,dataSource)}>
                     {
                         dataSource.map(o=>{
                             return <Select.Option
-                                value={columnKey == 'accountName'? o.get('name') : o.get('id')}>
-                                {columnKey == 'accountCode'? o.get('id'):o.get('name') }
+                                value={o.id}>
+                                {columnKey == 'accountCode'?o.value :o.name}
                             </Select.Option>
                         })
                     }
                 </Select>
             )
         }
-        return (
-                <Input
-                   className='mk-app-editable-table-cell'
-                   onChange={this.nameChange(ps)}
-                   value={cellValue}
-                   ref={o => this.refName = o}
-                />
-            )
     }
     cellGetter = (columnKey,columnKey2) => (ps) => {
         var cellValue = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`),
@@ -465,27 +469,50 @@ class action {
     }
     // 弹框 新增规则2
     newInvoiceRule2 = async ()=>{
+        let metaAction = this.metaAction
         if(!this.metaAction.gf('data.templateData.businessType.code'))
             return this.metaAction.toast('error','请先选择业务类型')
 
-        let store = this.metaAction.gf('data.store').toJS()
-            store.accountList = this.metaAction.gf('data.accountList').toJS()
+        let dataSources ={
+            influence:consts.influence,
+            extendAttr:consts.extendAttr,
+            vatTaxpayer:consts.vatTaxpayer,
+            departmentAttr:consts.departmentAttr,
+            personAttr:consts.personAttr,
+            goodsAttr:consts.goodsAttr,
+            taxType:consts.taxType,
+            qualification:consts.qualification,
+            punishmentAttr:consts.punishmentAttr,
+            borrowAttr:consts.borrowAttr,
+            assetAttr:consts.assetAttr,
+            direction:consts.direction,
+            isSettlement:consts.isSettlement,
+            industryIdList:['工业','商贸','服务','信息技术']
+        }
+
+        dataSources.accountSource = this.metaAction.gf('data.dataSources.accountSource').toJS()
+
 
         const ret = await this.metaAction.modal('show', {
             title: '新增/编辑凭证规则2：',
             width:400,
             children: this.metaAction.loadApp('invoice-rule2', {
                 store: this.component.props.store,
-                initData:store
+                initData:dataSources
             })
         })
 
         if (ret) {
-            const response = await this.webapi.education.query()
-            this.metaAction.sfs({
-                'data.other.educationDataSource': fromJS(response),
-                'data.form.education': fromJS(ret)
-            })
+            let list =this.metaAction.gf('data.rule.list').toJS()
+            list.push(ret.value.list)
+            // this.injectFuns.reduce('addInvoiceRule',ret.value.list)
+            debugger
+            this.injections.reduce('initRuleList',this.parseRuleList(list))
+            // this.metaAction.sf('data.rule.list',fromJS(list))
+            // this.metaAction.sfs({
+            //     'data.other.educationDataSource': fromJS(response),
+            //     'data.form.education': fromJS(ret)
+            // })
         }
     }
 

@@ -14,18 +14,15 @@ export function getMeta() {
 				children:'科目分组：'
 			},{
 				name:'group',
-				component:'Select',
-				defaultValue:'0',
+				component:'Input',
+				defaultValue:'A',
+				value:'{{data.form.flag}}',
 				style:{ width: 120 },
-				// onChange:'{{$handleChange}}',
-				children:[{
-					name:'option0',
-					component:'Input',
-					defaultValue:'A'
-				}]
+				onChange:'{{$handleChange("flag")}}'
+
 			}]
 		},{
-			name: 'factors',
+			name: 'influence',
 			component: '::div',
 			className:'invoice-rule2-item',
 			children: [{
@@ -36,78 +33,23 @@ export function getMeta() {
 			},{
 				name:'group',
 				component:'Select',
-				defaultValue:'0',
+				defaultValue:'{{data.dataSources.influence[0].value}}',
 				style:{ width: 120 },
-				// onChange:'{{$handleChange}}',
+				// value:'{{data.other.influence.value}}',
+				onChange:'{{$handleSelectChange("influence")}}',
 				children:[{
 					name:'option0',
 					component:'Select.Option',
-					value:'0',
-					children:'(无影响因素)'
-				}/*,{
-					name:'option1',
-					component:'Select.Option',
-					value:'1',
-					children:'部门属性'
-				},{
-					name:'option2',
-					component:'Select.Option',
-					value:'2',
-					children:'人员属性'
-				},{
-					name:'option3',
-					component:'Select.Option',
-					value:'3',
-					children:'纳税人'
-				},{
-					name:'option4',
-					component:'Select.Option',
-					value:'4',
-					children:'计税方式'
-				}*/]
-			}]
-		},{
-			name: 'factorsVal',
-			className:'invoice-rule2-item',
-			component: '::div',
-			children: [{
-				name:'item-label',
-				component:'::span',
-				className:'item-label',
-				children:'影响因素取值：'
-			},{
-				name:'group',
-				component:'Select',
-				defaultValue:'0',
-				style:{ width: 120 },
-				// onChange:'{{$handleChange}}',
-				children:[{
-					name:'option0',
-					component:'Select.Option',
-					value:'0',
-					children:'默认'
-				},{
-					name:'option1',
-					component:'Select.Option',
-					value:'1',
-					children:'管理部门'
-				},{
-					name:'option2',
-					component:'Select.Option',
-					value:'2',
-					children:'销售部门'
-				},{
-					name:'option3',
-					component:'Select.Option',
-					value:'3',
-					children:'生产部门'
-				},{
-					name:'option4',
-					component:'Select.Option',
-					value:'4',
-					children:'加工修理部门'
+					value:'{{data.dataSources.influence ? data.dataSources.influence[_rowIndex].value:""}}',
+					children:'{{data.dataSources.influence ? data.dataSources.influence[_rowIndex].name:""}}',
+					_power:  'for in data.dataSources.influence'
 				}]
 			}]
+		},{
+			name: 'influenceVal',
+			className:'invoice-rule2-item',
+			component: '::div',
+			children: '{{$getInfluenceValChildren(data.form.influence)}}'
 		},{
 			name: 'direction',
 			className:'invoice-rule2-item',
@@ -120,19 +62,16 @@ export function getMeta() {
 			},{
 				name:'group',
 				component:'Select',
-				defaultValue:'0',
+				defaultValue:false,
 				style:{ width: 120 },
-				// onChange:'{{$handleChange}}',
+				// value:'{{data.other.direction.value}}',
+				onChange:'{{$handleSelectChange("direction")}}',
 				children:[{
 					name:'option0',
 					component:'Select.Option',
-					value:'0',
-					children:'借'
-				},{
-					name:'option1',
-					component:'Select.Option',
-					value:'1',
-					children:'贷'
+					value:'{{data.dataSources.direction ? data.dataSources.direction[_rowIndex].value:""}}',
+					children:'{{data.dataSources.direction ? data.dataSources.direction[_rowIndex].name:""}}',
+					_power:  'for in data.dataSources.direction'
 				}]
 			}]
 		},{
@@ -147,20 +86,9 @@ export function getMeta() {
 			},{
 				name:'amountTypeInput',
 				component:'Input',
-				width:100
-			}]
-		},{
-			name:'amountTypeDetail',
-			component:'::div',
-			className:'inputItem invoice-rule2-item',
-			children:[{
-				name:'item-label',
-				component:'::span',
-				className:'item-label',
-				children:'金额来源说明：'
-			},{
-				name:'detailInput',
-				component:'Input',
+				value:'{{data.form.fundSource}}',
+
+				onChange:'{{$handleChange("fundSource")}}',
 				width:100
 			}]
 		},{
@@ -175,19 +103,16 @@ export function getMeta() {
 			},{
 				name:'group',
 				component:'Select',
-				defaultValue:'0',
+				defaultValue:'{{data.dataSources.accountSource[0].id}}',
 				style:{ width: 120 },
-				// onChange:'{{$handleChange}}',
+				// value:'{{data.other.account.id}}',
+				onChange:'{{$handleSelectChange("account")}}',
 				children:[{
 					name:'option0',
 					component:'Select.Option',
-					value:'0',
-					children:'1001 库存现金'
-				},{
-					name:'option1',
-					component:'Select.Option',
-					value:'1',
-					children:'1002 库存现金'
+					value:'{{data.dataSources.accountSource ? data.dataSources.accountSource[_rowIndex].id :""}}',
+					children:'{{data.dataSources.accountSource ? data.dataSources.accountSource[_rowIndex].name:""}}',
+					_power:  'for in data.dataSources.accountSource'
 				}]
 			}]
 		},{
@@ -202,20 +127,41 @@ export function getMeta() {
 			},{
 				name:'group',
 				component:'Select',
-				defaultValue:'0',
+				defaultValue:true,
 				style:{ width: 120 },
-				// onChange:'{{$handleChange}}',
+				// value:'{{data.other.isSettlement.value}}',
+				onChange:'{{$handleSelectChange("isSettlement")}}',
 				children:[{
 					name:'option0',
 					component:'Select.Option',
-					value:'0',
+					value:true,
 					children:'结算方式'
 				},{
 					name:'option1',
 					component:'Select.Option',
-					value:'1',
+					value:false,
 					children:'本表'
 				}]
+			}]
+		},{
+			name: 'industry',
+			component: '::div',
+			className:'invoice-rule2-item',
+			children: [{
+				name:'item-label',
+				component:'::span',
+				className:'item-label',
+				children:'支持行业：'
+			},{
+				name:'group',
+				component:'Checkbox.Group',
+				defaultValue:['工业'],
+				options:'{{data.dataSources.industryIdList}}',
+				// options:['一般纳税人','小规模'],
+				// defaultValue:['一般纳税人'],
+				style:{ width: 120 },
+				onChange:'{{$handleSelectChange("industryIdList")}}',
+
 			}]
 		}]
 	}
@@ -224,14 +170,23 @@ export function getMeta() {
 export function getInitState() {
 	return {
 		data: {
-			store:{},
+			dataSources:{},
 			content: 'hello world',
+			other:{
+				influence:{id:0,value:0,name:'默认'},
+				direction:{},
+				account:{id:0,value:0,name:'默认'},
+				isSettlement:{id:0,value:0,name:'默认'},
+			},
 			form:{
 				flag:'A',
-				influence:{
-					id:0,
-					name:''
-				}
+				influence:'departmentAttr' ,
+				direction:false,
+				accountCode:'1001',
+				accountName:'库存现金',
+				isSettlement:true,
+				industryIdList:[1]
+
 			}
 		}
 	}

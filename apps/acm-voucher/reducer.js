@@ -1,6 +1,7 @@
 import { Map,fromJS } from 'immutable'
 import { reducer as MetaReducer } from 'mk-meta-engine'
 import config from './config'
+import * as consts from './consts'
 import { getInitState } from './data'
 
 class reducer {
@@ -25,9 +26,11 @@ class reducer {
         return this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
     }
     setAccountSource = (state,data)=>{
-        let accountSource = data.map(o=>{
-            return {id:o.code,name:o.gradeName}
+        let accountSource = data.map((o,i)=>{
+            return {id: i+1,value:o.code,name:o.gradeName}
         })
+
+        accountSource.unshift({id:0,value:0,name:'默认'})
 
         state = this.metaReducer.sf(state, 'data.dataSources.accountSource', fromJS(accountSource))
         state = this.metaReducer.sf(state, 'data.rule.other.account', fromJS([accountSource[0]]))
@@ -47,19 +50,19 @@ class reducer {
             dataSources = this.metaReducer.gf(state,'data.dataSources').toJS()
 
         state = this.metaReducer.sf(state,`data.rule.list`,fromJS(initRuleList))
-        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(other,dataSources,parseSelected(initRuleList)))
+        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,initRuleList)))
         return state
     }
 
     saveData = (state,data) =>{
-        let dataSources = this.metaReducer.gf(state,'data.dataSources').toJS(),
-            temp = this.getDataSource(data)
+        // let dataSources = this.metaReducer.gf(state,'data.dataSources').toJS(),
+            // temp = this.getDataSource(data)
 
-        for(let o in temp){
-            dataSources[o] = temp[o]
-        }
+        // for(let o in temp){
+        //     dataSources[o] = temp[o]
+        // }
         state = this.metaReducer.sf(state,'data.store',fromJS(data))
-        state = this.metaReducer.sf(state,'data.dataSources',fromJS(dataSources))
+        // state = this.metaReducer.sf(state,'data.dataSources',fromJS(dataSources))
         return  state
     }
     getDataSource = (data) =>{
@@ -83,7 +86,7 @@ class reducer {
                     temp.name = '纳税人身份,计税方式'
                     break;
                 case 'punishmentAttr':
-                    temp.name = '纳税人身份,计税方式'
+                    temp.name = '罚款性质'
                     break;
                 case 'borrowAttr':
                     temp.name = '借款期限属性'
@@ -118,7 +121,28 @@ class reducer {
         dataSources.goodsAttr = data.inventoryPropertyList.map(o=>{
             return {id:o.templateId,name:o.name}
         })
-        dataSources.taxType = [{id:true,name:'一般计税'},{id:false,name:'建议计税'}]
+        dataSources.punishmentAttr = data.penaltyTypeList.map(o=>{
+            return {id:o.enumItemId,name:o.enumItemName}
+        })
+        dataSources.borrowAttr = data.loanTermList.map(o=>{
+            return {id:o.enumItemId,name:o.enumItemName}
+        })
+        dataSources.assetAttr = []
+
+        for(let o of data.inventoryPropertyList ){
+            if(!o.detailList) continue
+            o.detailList.map(oo=>{
+                dataSources.assetAttr.push({
+                    id:oo.templateId,
+                    name:oo.name
+                })
+            })
+        }
+        dataSources.industryIdList = data.industryList.map(o=>{
+            return o.enumItemName
+        })
+
+        dataSources.taxType = [{id:true,name:'一般计税'},{id:false,name:'简易计税'}]
         dataSources.qualification = [{id:true,name:'是'},{id:false,name:'否'}]
 
         return dataSources
@@ -131,6 +155,7 @@ class reducer {
         let other = this.metaReducer.gf(state,'data.rule.other').toJS(),
             dataSources = this.metaReducer.gf(state,'data.dataSources').toJS()
 
+
         state = this.metaReducer.sf(state,'data.interface.list',fromJS(data.interface.list))
         state = this.metaReducer.sf(state,'data.rule.list',fromJS(data.rule.list))
         state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule.list)))
@@ -140,32 +165,81 @@ class reducer {
 function parseSelected (other,dataSources,list){
 
     list.map((o,i)=>{
-        if(o.accountCode){
-            other.account[i] = dataSources.accountSource.filter(oo=>{
-                return oo.id == o.accountCode
-            })[0]
+
+        for(let attr in o){
+            if(attr == 'accountCode'){
+                other.account[i]  = dataSources.accountSource.filter(oo=>{
+                    return oo.value == o.accountCode
+                })[0]
+            }
+            if(
+                attr == 'influence'||
+                attr == 'vatTaxpayer'||
+                attr == 'departmentAttr'||
+                attr == 'personAttr'||
+                attr == 'goodsAttr'||
+                attr == 'taxType'||
+                attr == 'qualification'||
+                attr == 'punishmentAttr'||
+                attr == 'borrowAttr'||
+                attr == 'assetAttr'||
+                attr == 'direction'||
+                attr == 'isSettlement'
+
+            ){
+                other[attr][i] = consts[attr].filter(oo=>{
+                    return oo.value == o[attr]
+                })[0]
+            }
+            if(attr == 'extendAttr'){
+                let influence = o.influence,
+                    id = consts.influence.filter(oo=>{
+                        return oo.value == influence
+                    })[0].id,
+                    extendAttrArr = consts[consts.extendAttr[id]]
+                if(extendAttrArr) {
+                    other.extendAttr[i] = extendAttrArr.filter( oo=>{
+                        return oo.value == o.extendAttr
+                    })
+                }
+
+
+
+
+            }
         }
-        other.influence[i] = dataSources.influence.filter(oo=>{
-            return oo.id == o.influence
-        })
-        other.vatTaxpayer[i] = dataSources.vatTaxpayer.filter(oo=>{
-            return oo.id = o.vatTaxpayer
-        })[0]
-        other.departmentAttr[i] = dataSources.departmentAttr.filter(oo=>{
-            return oo.id = o.departmentAttr
-        })[0]
-        other.personAttr[i] = dataSources.personAttr.filter(oo=>{
-            return oo.id = o.personAttr
-        })[0]
-        other.goodsAttr[i] = dataSources.goodsAttr.filter(oo=>{
-            return oo.id = o.goodsAttr
-        })[0]
-        other.taxType[i] = dataSources.taxType.filter(oo=>{
-            return oo.id = o.taxType
-        })[0]
-        other.qualification[i] = dataSources.qualification.filter(oo=>{
-            return oo.id = o.qualification
-        })[0]
+
+
+
+
+
+
+        // if(o.accountCode){
+        //     other.account[i] = dataSources.accountSource.filter(oo=>{
+        //         return oo.id == o.accountCode
+        //     })[0]
+        // }
+        // other.influence[i] = dataSources.influence.filter(oo=>{
+        //     return oo.id == o.influence
+        // })
+        // other.vatTaxpayer[i] = dataSources.vatTaxpayer.filter(oo=>{
+        //     return oo.id = o.vatTaxpayer
+        // })[0]
+        // other.departmentAttr[i] = dataSources.departmentAttr.filter(oo=>{
+        //     return oo.id = o.departmentAttr
+        // })[0]
+        // other.personAttr[i] = dataSources.personAttr.filter(oo=>{
+        //     return oo.id = o.personAttr
+        // })[0]
+        // other.goodsAttr[i] = dataSources.goodsAttr.filter(oo=>{
+        //     return oo.id = o.goodsAttr
+        // })[0]
+        // other.taxType[i] = dataSources.taxType.filter(oo=>{
+        //     return oo.id = o.taxType
+        // })[0]
+        // other.qualification[i] = dataSources.qualification.filter(oo=>{
+        //     return oo.id = o.qualification
+        // })[0]
     })
     return other
 }

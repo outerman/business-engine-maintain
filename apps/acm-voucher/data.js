@@ -345,21 +345,7 @@ function getInterfaceMeta(){
 					children: '单价'
 				},
 				cell: "{{$cellGetter('price')}}",
-			},
-			// {
-			// 	name: 'settlement',
-			// 	component: 'DataGrid.Column',
-			// 	columnKey: 'settlement',
-			// 	flexGrow: 1,
-			// 	width: 100,
-			// 	header: {
-			// 		name: 'header',
-			// 		component: 'DataGrid.Cell',
-			// 		children: '结算方式'
-			// 	},
-			// 	cell: "{{$cellGetter('settlement')}}",
-			// },
-			{
+			},	{
 				name: 'abstract',
 				component: 'DataGrid.Column',
 				columnKey: 'abstract',
@@ -893,7 +879,7 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '科目分组'
 				},
-				cell: "{{$cellGetterRule('flag')}}",
+				cell: "{{$cellGetterRule('flag','text')}}",
 			},{
 				name: 'influence',
 				component: 'DataGrid.Column',
@@ -1013,20 +999,22 @@ function getRuleMeta(){
 					component: 'DataGrid.Cell',
 					children: '金额来源'
 				},
-				cell: "{{$cellGetterRule('fundSource')}}",
-			},{
-				name: 'amountTypeDetail',
-				component: 'DataGrid.Column',
-				columnKey: 'amountTypeDetail',
-				flexGrow: 1,
-				width: 100,
-				header: {
-					name: 'header',
-					component: 'DataGrid.Cell',
-					children: '金额来源说明'
-				},
-				cell: "{{$cellGetterRule('amountTypeDetail')}}",
-			},{
+				cell: "{{$cellGetterRule('fundSource','text')}}",
+			},
+			// {
+			// 	name: 'amountTypeDetail',
+			// 	component: 'DataGrid.Column',
+			// 	columnKey: 'amountTypeDetail',
+			// 	flexGrow: 1,
+			// 	width: 100,
+			// 	header: {
+			// 		name: 'header',
+			// 		component: 'DataGrid.Cell',
+			// 		children: '金额来源说明'
+			// 	},
+			// 	cell: "{{$cellGetterRule('amountTypeDetail')}}",
+			// },
+			{
 				name: 'accountCode',
 				component: 'DataGrid.Column',
 				columnKey: 'accountCode',
@@ -1178,23 +1166,31 @@ export function getInitState() {
 					personAttr:[],
 					goodsAttr:[],
 					taxType:[],
-					qualification:[]
+					qualification:[],
+					punishmentAttr:[],
+					borrowAttr:[],
+					assetAttr:[],
+					direction:[],
+					isSettlement:[],
+					extendAttr:[]
 
 				},
-				list:[{
-				    "orgId": 0,
-				    "flag": "B",
-				    // "influence": "vatTaxpayer,taxType",
-				    // "vatTaxpayer": 41,
-				    // "taxType": false,
-				    // "direction": true,
-				    // "fundSource": "税额",
-				    // "accountCode": "222108",
-				    // "accountName": "应交税费-简易计税",
-				    // "isSettlement": true,
-				    // "industryIdList": [2],
-				    // "idList": [498927]
-				}]
+				list:[
+				// 	{
+				//     // "orgId": 0,
+				//     // "flag": "B",
+				//     // "influence": "vatTaxpayer,taxType",
+				//     // "vatTaxpayer": 41,
+				//     // "taxType": false,
+				//     // "direction": true,
+				//     // "fundSource": "税额",
+				//     // "accountCode": "222108",
+				//     // "accountName": "应交税费-简易计税",
+				//     // "isSettlement": true,
+				//     // "industryIdList": [2],
+				//     // "idList": [498927]
+				// }
+				]
 			}
 		}
 	}

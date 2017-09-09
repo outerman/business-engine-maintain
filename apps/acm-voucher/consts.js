@@ -11,17 +11,123 @@ export const settlementType = [
 	{ id: 10, name: "员工垫付" }
 ]
 
+export const influence = [
+	{id:0,value:0,name:'默认'},
+	{id:1,value:'departmentAttr',name:'部门'},
+	{id:2,value:'departmentAttr,personAttr',name:'部门,人员'},
+	{id:3,value:'vatTaxpayer',name:'纳税人身份'},
+	{id:4,value:'vatTaxpayer,qualification',name:'纳税人身份,认证'},
+	{id:5,value:'vatTaxpayer,taxType',name:'纳税人身份,计税方式'},
+	{id:6,value:'punishmentAttr',name:'罚款性质' },  // ext punishmentAttr 6
+	{id:7,value:'borrowAttr',name:'借款期限属性'}, // ext borrowAttr 7
+	{id:8,value:'inventoryAttr',name:'存货属性'},
+	{id:9,value:'assetAttr',name:'资产属性'},// ext assetAttr 9
+	{id:10,value:'accountInAttr',name:'账户属性流入'},// ext account 10
+	{id:11,value:'accountOutAttr',name:'账户属性流出'},// ext account 11
+	{id:12,value:'formula',name:'公式'} // ext formula 12
+]
+export const extendAttr = {
+	6:'punishmentAttr',
+	7:'borrowAttr',
+	9:'punishmentAttr',
+	10:'account',
+	11:'account',
+	12:'formula'
 
-export const accountType = {
-	xj: { id: 98, name: '现金',code:'1' },
-	yh: { id: 99, name: '银行' },
-	wx: { id: 100, name: '微信' },
-	zfb: { id: 101, name: '支付宝' },
-	ys: { id: 152, name: '应收' },
-	yf: { id: 153, name: '应付' },
-	gr: { id: 154, name: '个人' },
-	ygdf: { id: 155, name: '员工垫付' }
 }
+export const vatTaxpayer = [
+	{id:0,value:0,name:'默认'},
+	{id:1,value:41,name:'一般纳税人'},
+	{id:2,value:42,name:'小规模纳税人'},
+]
+export const departmentAttr = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value: 200000000000070, name:'其他（含管理）'},
+	{id:2, value: 200000000000071, name:'与生产相关'},
+	{id:3, value: 200000000000072, name:'与销售相关'},
+	{id:4, value: 200000000000073, name:'与研发相关'},
+	{id:5, value: 200000000000074, name:'与加工修理相关'},
+	{id:6, value: 200000000000075, name:'与技术咨询服务相关'},
+]
+
+export const personAttr = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value:10050,name:'管理人员'},
+	{id:2, value:10051,name:'生产人员'},
+]
+
+export const goodsAttr = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value:1, name:'商品'},
+	{id:2, value:2, name:'原材料'},
+	{id:3, value:3, name:'半成品'},
+	{id:4, value:4, name:'周转材料'},
+	{id:5, value:5, name:'固定资产-动产'},
+	{id:6, value:6, name:'劳务'},
+	{id:7, value:7, name:'服务'},
+	{id:8, value:8, name:'无形资产'},
+	{id:9, value:9, name:'固定资产-不动产'},
+]
+
+export const taxType = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value:true, name:'一般计税'},
+	{id:2, value:false, name:'建议计税'}
+]
+export const qualification = [
+	{id:0,value:0,name:'默认'},
+	{id:1,value:true,name:'是'},
+	{id:2,value:false,name:'否'}
+]
+export const punishmentAttr = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value:75,name:'其他罚款'},
+	{id:2, value:123,name:'行政罚款'},
+	{id:3, value:124,name:'违约金'},
+]
+export const borrowAttr = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value:125,name:'一年及一年以下'},
+	{id:2, value:126,name:'一年以上'},
+]
+export const assetAttr = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value:1,name:'交通运输服务'},
+	{id:2, value:2,name:'电信服务'},
+	{id:3, value:3,name:'建筑服务'},
+	{id:4, value:4,name:'金融服务'},
+	{id:5, value:5,name:'金融商品转让'},
+	{id:6, value:6,name:'生活服务'},
+	{id:7, value:7,name:'有形动产租赁服务'},
+	{id:8, value:8,name:'不动产租赁服务'},
+	{id:9, value:9,name:'其他服务'},
+	{id:10, value:10,name:'信息技术服务'},
+
+	{id:11, value:19,name:'土地使用权'},
+	{id:12, value:20,name:'专利权'},
+	{id:13, value:21,name:'著作权'},
+	{id:14, value:23,name:'非专利技术'},
+	{id:15, value:31,name:'特权使用费'},
+	{id:16, value:32,name:'其它'},
+
+	{id:17, value:35,name:'房屋建筑物'},
+	{id:18, value:36,name:'机器设备'},
+	{id:19, value:37,name:'办公家具'},
+	{id:20, value:38,name:'运输工具'},
+	{id:21, value:39,name:'电子设备'},
+]
+export const direction = [
+
+	{id:1, value:true,name:'贷'},
+	{id:2, value:false,name:'借'},
+]
+export const isSettlement = [
+	{id:0,value:0,name:'默认'},
+	{id:1, value:true,name:'结算方式'},
+	{id:2, value:false,name:'本表'},
+]
+
+
 
 export const commonAccountId = {
 	xj: { id: 4, name: '现金' },
