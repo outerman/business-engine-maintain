@@ -16,11 +16,15 @@ class action {
         if (this.component.props.setOkListener)
             this.component.props.setOkListener(this.onOk)
 
+
         injections.reduce('init',component.props.initData)
     }
 
     onOk = () => {
         let list = this.metaAction.gf('data.form').toJS()
+        debugger
+        // let extendAttr = list.punishmentAttr || list.borrowAttr || list.assetAttr
+
         return {result:true,value:{list}}
     }
 
@@ -80,14 +84,16 @@ class action {
         if(o == 'inventoryAttr'){
             dataSource = dataSources.goodsAttr
         }
-
+        if( o == 'punishmentAttr'|| o == 'borrowAttr'|| o == 'assetAttr'){
+            o = 'extendAttr'
+        }
         return <Select
             value = {form[o]}
             onChange = {::this.handleSelectChange(o)}
             defaultValue = {dataSource[0].value}>
             {
-                dataSource.map(o=>{
-                    return <Select.Option style={{ width: 120 }}  value = {o.value}>{o.name}</Select.Option>
+                dataSource.map(oo=>{
+                    return <Select.Option style={{ width: 120 }}  value = {oo.value}>{oo.name}</Select.Option>
                 })
             }
         </Select>

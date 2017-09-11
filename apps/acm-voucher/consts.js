@@ -29,7 +29,7 @@ export const influence = [
 export const extendAttr = {
 	6:'punishmentAttr',
 	7:'borrowAttr',
-	9:'punishmentAttr',
+	9:'assetAttr',
 	10:'account',
 	11:'account',
 	12:'formula'

@@ -294,6 +294,10 @@ class action {
 
                 if(id == 12){// 公式
                     showValue = cellValue
+                }else{
+                    showValue = consts[consts.extendAttr[id]].filter(oo=>{
+                        return oo.value == cellValue
+                    })[0].name
                 }
             }
         }
