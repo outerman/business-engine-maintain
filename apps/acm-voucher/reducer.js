@@ -37,6 +37,9 @@ class reducer {
         return state
     }
     setRuleList = (state,columnKey,ps,val,selected)=>{
+        if(columnKey !=='extendAttr' ){
+            val = selected.value
+        }
         state = this.metaReducer.sf(state,`data.rule.list.${ps.rowIndex}.${columnKey}`,val)
         if(columnKey == 'accountName'||columnKey == 'accountCode'){
             state = this.metaReducer.sf(state,`data.rule.other.account.${ps.rowIndex}`,fromJS(selected))
@@ -118,7 +121,7 @@ class reducer {
         dataSources.personAttr = data.personAttrList.map(o=>{
             return {id:o.enumItemId,name:o.enumItemName}
         })
-        dataSources.goodsAttr = data.inventoryPropertyList.map(o=>{
+        dataSources.inventoryAttr = data.inventoryPropertyList.map(o=>{
             return {id:o.templateId,name:o.name}
         })
         dataSources.punishmentAttr = data.penaltyTypeList.map(o=>{
@@ -177,7 +180,7 @@ function parseSelected (other,dataSources,list){
                 attr == 'vatTaxpayer'||
                 attr == 'departmentAttr'||
                 attr == 'personAttr'||
-                attr == 'goodsAttr'||
+                // attr == 'inventoryAttr'||
                 attr == 'taxType'||
                 attr == 'qualification'||
                 attr == 'punishmentAttr'||
@@ -209,37 +212,6 @@ function parseSelected (other,dataSources,list){
             }
         }
 
-
-
-
-
-
-        // if(o.accountCode){
-        //     other.account[i] = dataSources.accountSource.filter(oo=>{
-        //         return oo.id == o.accountCode
-        //     })[0]
-        // }
-        // other.influence[i] = dataSources.influence.filter(oo=>{
-        //     return oo.id == o.influence
-        // })
-        // other.vatTaxpayer[i] = dataSources.vatTaxpayer.filter(oo=>{
-        //     return oo.id = o.vatTaxpayer
-        // })[0]
-        // other.departmentAttr[i] = dataSources.departmentAttr.filter(oo=>{
-        //     return oo.id = o.departmentAttr
-        // })[0]
-        // other.personAttr[i] = dataSources.personAttr.filter(oo=>{
-        //     return oo.id = o.personAttr
-        // })[0]
-        // other.goodsAttr[i] = dataSources.goodsAttr.filter(oo=>{
-        //     return oo.id = o.goodsAttr
-        // })[0]
-        // other.taxType[i] = dataSources.taxType.filter(oo=>{
-        //     return oo.id = o.taxType
-        // })[0]
-        // other.qualification[i] = dataSources.qualification.filter(oo=>{
-        //     return oo.id = o.qualification
-        // })[0]
     })
     return other
 }

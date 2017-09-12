@@ -1,14 +1,14 @@
 export const settlementType = [
-	{ id: 1, name: "现金" },
-	{ id: 2, name: "银行" },
-	{ id: 3, name: "微信" },
-	{ id: 4, name: "支付宝" },
-	{ id: 5, name: "冲减预收款" },
-	{ id: 6, name: "冲减预付款" },
-	{ id: 7, name: "客户欠款" },
-	{ id: 8, name: "欠供应商款" },
-	{ id: 9, name: "冲员工借款" },
-	{ id: 10, name: "员工垫付" }
+	{ id: '1', name: "现金" },
+	{ id: '2', name: "银行" },
+	{ id: '3', name: "微信" },
+	{ id: '4', name: "支付宝" },
+	{ id: '5', name: "冲减预收款" },
+	{ id: '6', name: "冲减预付款" },
+	{ id: '7', name: "客户欠款" },
+	{ id: '8', name: "欠供应商款" },
+	{ id: '9', name: "冲员工借款" },
+	{ id: '10', name: "员工垫付" }
 ]
 
 export const influence = [
@@ -20,7 +20,7 @@ export const influence = [
 	{id:5,value:'vatTaxpayer,taxType',name:'纳税人身份,计税方式'},
 	{id:6,value:'punishmentAttr',name:'罚款性质' },  // ext punishmentAttr 6
 	{id:7,value:'borrowAttr',name:'借款期限属性'}, // ext borrowAttr 7
-	{id:8,value:'inventoryAttr',name:'存货属性'},
+	{id:8,value:'inventoryAttr',name:'存货属性'}, // ext inventoryAttr 8
 	{id:9,value:'assetAttr',name:'资产属性'},// ext assetAttr 9
 	{id:10,value:'accountInAttr',name:'账户属性流入'},// ext account 10
 	{id:11,value:'accountOutAttr',name:'账户属性流出'},// ext account 11
@@ -29,6 +29,7 @@ export const influence = [
 export const extendAttr = {
 	6:'punishmentAttr',
 	7:'borrowAttr',
+	8:'inventoryAttr',
 	9:'assetAttr',
 	10:'account',
 	11:'account',
@@ -56,7 +57,7 @@ export const personAttr = [
 	{id:2, value:10051,name:'生产人员'},
 ]
 
-export const goodsAttr = [
+export const inventoryAttr = [
 	{id:0,value:0,name:'默认'},
 	{id:1, value:1, name:'商品'},
 	{id:2, value:2, name:'原材料'},
@@ -186,18 +187,18 @@ export const vatTaxpayerType = {
 }
 
 export const taxRateType = [
-	{ id: 100, name: '100%', value: 1 },
-	{ id: 17, name: '17%', value: 0.17 },
-	{ id: 13, name: '13%', value: 0.13 },
-	{ id: 11, name: '11%', value: 0.11 },
-	{ id: 6, name: '6%', value: 0.06 },
-	{ id: 5, name: '5%', value: 0.05 },
-	{ id: 4, name: '4%', value: 0.04 },
-	{ id: 3, name: '3%', value: 0.03 },
-	{ id: 2, name: '3%减按2%', value: 0.03 },
-	{ id: 1, name: '1.5%', value: 0.015 },
-	{ id: 0, name: '0%', value: 0 },
-	{ id: 1000, name: '免税', value: 0 }
+	{ id: '100', name: '100%', value: 1 },
+	{ id: '17', name: '17%', value: 0.17 },
+	{ id: '13', name: '13%', value: 0.13 },
+	{ id: '11', name: '11%', value: 0.11 },
+	{ id: '6', name: '6%', value: 0.06 },
+	{ id: '5', name: '5%', value: 0.05 },
+	{ id: '4', name: '4%', value: 0.04 },
+	{ id: '3', name: '3%', value: 0.03 },
+	{ id: '2', name: '3%减按2%', value: 0.03 },
+	{ id: '1', name: '1.5%', value: 0.015 },
+	{ id: '0', name: '0%', value: 0 },
+	{ id: '1000', name: '免税', value: 0 }
 ]
 
 export const columns = {

@@ -22,7 +22,6 @@ class action {
 
     onOk = () => {
         let list = this.metaAction.gf('data.form').toJS()
-        debugger
         // let extendAttr = list.punishmentAttr || list.borrowAttr || list.assetAttr
 
         return {result:true,value:{list}}
@@ -81,10 +80,10 @@ class action {
             dataSource = dataSources.accountSource
         }
 
-        if(o == 'inventoryAttr'){
-            dataSource = dataSources.goodsAttr
-        }
-        if( o == 'punishmentAttr'|| o == 'borrowAttr'|| o == 'assetAttr'){
+        // if(o == 'inventoryAttr'){
+        //     dataSource = dataSources.inventoryAttr
+        // }
+        if( o == 'punishmentAttr'|| o == 'borrowAttr'|| o == 'assetAttr'||o == 'inventoryAttr'){
             o = 'extendAttr'
         }
         return <Select

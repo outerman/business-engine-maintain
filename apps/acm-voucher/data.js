@@ -1,3 +1,5 @@
+import * as consts from './consts'
+
 export function getMeta() {
 	return {
 		name: 'root',
@@ -15,7 +17,7 @@ export function getMeta() {
 					name:'add',
 					component:'Button',
 					children:'新增业务',
-					onClick:'{{$addBisness}}' //btnClick在action中声明
+					onClick:'{{$addBisness}}'
 				}]
 
 			},{
@@ -157,10 +159,12 @@ export function getMeta() {
 				children:[{
 					name:'preview',
 					component:'Button',
+					onClick:'{{$handlePreview}}',
 					children:'预览'
 				},{
 					name:'save',
 					component:'Button',
+					onClick:'{{$handleSave}}',
 					children:'保存'
 				}]
 			}]
@@ -212,7 +216,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '票据类型'
 				},
-				cell: "{{$cellGetter('invoiceType.name')}}",
+				cell: "{{$cellGetter('invoiceType','select')}}",
 			},{
 				name: 'noTaxAmount',
 				component: 'DataGrid.Column',
@@ -380,7 +384,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '结算方式'
 				},
-				cell: "{{$cellGetter('settlement')}}",
+				cell: "{{$cellGetter('settlement','mmultiple')}}",
 			},{
 				name: 'incomeAccount',
 				component: 'DataGrid.Column',
@@ -420,7 +424,7 @@ function getInterfaceMeta(){
 			},{//normalRate
 				name: 'normalRate',
 				component: 'DataGrid.Column',
-				columnKey: 'taxRate',
+				columnKey: 'normalRate',
 				flexGrow: 1,
 				width: 100,
 				header: {
@@ -428,7 +432,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '一般纳税人税率'
 				},
-				cell: "{{$cellGetter('normalRate')}}",
+				cell: "{{$cellGetter('normalRate','multiple')}}",
 			},{//normalRate
 				name: 'smallRate',
 				component: 'DataGrid.Column',
@@ -440,7 +444,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '小规模税率）'
 				},
-				cell: "{{$cellGetter('smallRate')}}",
+				cell: "{{$cellGetter('smallRate','multiple')}}",
 			},{
 				name: 'isDeduct',
 				component: 'DataGrid.Column',
@@ -618,7 +622,7 @@ function getInterfaceMeta(){
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
-					children: '票据类型小规模'
+					children: '小规模纳税人'
 				},
 				cell: "{{$cellGetter('vatTaxpayerSmall')}}",
 			},{
@@ -630,9 +634,21 @@ function getInterfaceMeta(){
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
-					children: '票据类型一般'
+					children: '一般纳税人'
 				},
 				cell: "{{$cellGetter('vatTaxpayerNormal')}}",
+			},{
+				name: 'industryIdList',
+				component: 'DataGrid.Column',
+				columnKey: 'stringExt3',
+				flexGrow: 1,
+				width: 100,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: '支持行业'
+				},
+				cell: "{{$cellGetter('industryIdList','multiple')}}",
 			},{
 				name: 'ext0',
 				component: 'DataGrid.Column',
@@ -644,7 +660,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展0'
 				},
-				cell: "{{$cellGetter('ext0','extTitle0')}}",
+				cell: "{{$cellGetter('ext0','ext')}}",
 			},{
 				name: 'ext1',
 				component: 'DataGrid.Column',
@@ -656,7 +672,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展1'
 				},
-				cell: "{{$cellGetter('ext1')}}",
+				cell: "{{$cellGetter('ext1','ext')}}",
 			},{
 				name: 'ext2',
 				component: 'DataGrid.Column',
@@ -668,7 +684,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展2'
 				},
-				cell: "{{$cellGetter('ext2')}}",
+				cell: "{{$cellGetter('ext2','ext')}}",
 			},{
 				name: 'ext3',
 				component: 'DataGrid.Column',
@@ -680,7 +696,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展3'
 				},
-				cell: "{{$cellGetter('ext3')}}",
+				cell: "{{$cellGetter('ext3','ext')}}",
 			},{
 				name: 'ext4',
 				component: 'DataGrid.Column',
@@ -692,7 +708,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展4'
 				},
-				cell: "{{$cellGetter('ext4')}}",
+				cell: "{{$cellGetter('ext4','ext')}}",
 			},{
 				name: 'ext5',
 				component: 'DataGrid.Column',
@@ -704,7 +720,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展5'
 				},
-				cell: "{{$cellGetter('ext5')}}",
+				cell: "{{$cellGetter('ext5','ext')}}",
 			},{
 				name: 'ext6',
 				component: 'DataGrid.Column',
@@ -716,7 +732,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展6'
 				},
-				cell: "{{$cellGetter('ext6')}}",
+				cell: "{{$cellGetter('ext6','ext')}}",
 			},{
 				name: 'ext7',
 				component: 'DataGrid.Column',
@@ -728,7 +744,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展7'
 				},
-				cell: "{{$cellGetter('ext7')}}",
+				cell: "{{$cellGetter('ext7','ext')}}",
 			},{
 				name: 'ext8',
 				component: 'DataGrid.Column',
@@ -740,7 +756,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展8'
 				},
-				cell: "{{$cellGetter('ext8')}}",
+				cell: "{{$cellGetter('ext8','ext')}}",
 			},{
 				name: 'ext9',
 				component: 'DataGrid.Column',
@@ -752,7 +768,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '数值扩展9'
 				},
-				cell: "{{$cellGetter('ext9')}}",
+				cell: "{{$cellGetter('ext9','ext')}}",
 			},{
 				name: 'stringExt0',
 				component: 'DataGrid.Column',
@@ -764,7 +780,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '字符扩展0'
 				},
-				cell: "{{$cellGetter('stringExt0')}}",
+				cell: "{{$cellGetter('stringExt0','ext')}}",
 			},{
 				name: 'stringExt1',
 				component: 'DataGrid.Column',
@@ -776,7 +792,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '字符扩展1'
 				},
-				cell: "{{$cellGetter('stringExt1')}}",
+				cell: "{{$cellGetter('stringExt1','ext')}}",
 			},{
 				name: 'stringExt2',
 				component: 'DataGrid.Column',
@@ -788,7 +804,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '字符扩展2'
 				},
-				cell: "{{$cellGetter('stringExt2')}}",
+				cell: "{{$cellGetter('stringExt2','ext')}}",
 			},{
 				name: 'stringExt3',
 				component: 'DataGrid.Column',
@@ -800,7 +816,7 @@ function getInterfaceMeta(){
 					component: 'DataGrid.Cell',
 					children: '字符扩展3'
 				},
-				cell: "{{$cellGetter('stringExt3')}}",
+				cell: "{{$cellGetter('stringExt3','ext')}}",
 			}]
 		}]
 	}]
@@ -928,7 +944,7 @@ function getRuleMeta(){
 					children: '人员属性'
 				},
 				cell: "{{$cellGetterRule('personAttr')}}",
-			},{
+			}/*,{
 				name: 'goodsAttr',
 				component: 'DataGrid.Column',
 				columnKey: 'goodsAttr',
@@ -940,7 +956,7 @@ function getRuleMeta(){
 					children: '存货属性'
 				},
 				cell: "{{$cellGetterRule('goodsAttr')}}",
-			},{
+			}*/,{
 				name: 'taxType',
 				component: 'DataGrid.Column',
 				columnKey: 'taxType',
@@ -1066,21 +1082,24 @@ export function getInitState() {
 				businessType:{
 				}
 			},
-			content: 'hello world',
 			standard:18,
 			interface:{
 				other:{
-					focusCellInfo:undefined
+					focusCellInfo:undefined,
+
+				},
+				dataSources:{
+					invoiceType:consts.ticketType,
+					settlement:consts.settlementType,
+					taxRate:consts.taxRateType,
+					industryIdList:consts.industryType
 				},
 				list:[{
-					invoiceType:{
-						name:'农产品发票',
-						id:200000000000054
-					},
+					invoiceType:200000000000054,
 					bankAccount:2,
-					settlement:[
-						{id: 1, name: "现金"}
-					],
+					settlement:['1'],
+					smallRate:['0,1'],
+					normalRate:['1,2'],
 					stringExt:'',
 					noTaxAmount:'',
 				    "stringExt0": 1,
@@ -1132,28 +1151,21 @@ export function getInitState() {
 				    "investor": 2,
 					byInvestor:0,
 				    "ext9": 1,
-				    "extTitle0": "数值",
+				    "ext0Title": "数值",
 				    "project": 1,
-				    "extTitle1": "数值",
+				    "ext1Title": "数值",
 				    "vatTaxpayerNormal": 0,
 				    "obligor": 2,
-				    "extTitle2": "数值",
+				    "ext2Title": "数值",
 				    "loanTerm": 1,
-				    "extTitle3": "数值",
+				    "ext3Title": "数值",
 				    "creditor": 2,
 				    "drawbackPolicy": 2,
 				    "assetsType": 2,
-				    "extTitle4": "数值",
-				    "extTitle5": "数值",
+				    "ext4Title": "数值",
+				    "ext5Title": "数值",
 				    "customer": 2,
-				    "extTitle6": "数值"
-				},{
-					invoiceType:{name:'增值税专用发票'}
-				},{
-					invoiceType:{name:'增值税专用发票'},
-					noTaxAmount:''
-				},{
-					invoiceType:{name:'其他发票'}
+				    "ext6Title": "数值"
 				}]
 			},
 			rule:{
@@ -1164,7 +1176,7 @@ export function getInitState() {
 					vatTaxpayer:[],
 					departmentAttr:[],
 					personAttr:[],
-					goodsAttr:[],
+					inventoryAttr:[],
 					taxType:[],
 					qualification:[],
 					punishmentAttr:[],

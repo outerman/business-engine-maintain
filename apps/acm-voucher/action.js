@@ -43,12 +43,12 @@ class action {
         this.injections.reduce('addBisness')
     }
     onSearch = (val)=>{
-        console.log(val)
     }
     handleSelect=(checkedNode,selectedNode)=>{
         if(selectedNode.node.props.className === 'z-tree-parent'){//点父级  不查询
             return
         }
+
         let code = selectedNode.node.props['data-code']
         this.queryTemplate(code)
     }
@@ -75,7 +75,6 @@ class action {
                 response.businessType.typeName = '请会计处理'
                 break;
             default:
-
         }
 
         this.injections.reduce('initTemplate',response)
@@ -122,56 +121,57 @@ class action {
             ruleData = res.docTemplateList,
             interfaceDataList = [],
             resData = {},
-            standard = this.metaAction.gf('data.standard')
+            standard = this.metaAction.gf('data.standard'),
+            dataSources = this.metaAction.gf('data.interface.dataSources').toJS()
 
-        interfaceData.map(o=>{
+
+        interfaceData.map((o,i)=>{
             let item = {}
-            item.invoiceType =consts.ticketType.filter(obj=>{
+
+            let invoiceType = consts.ticketType.filter(obj=>{
                 return obj.id ==  o.invoiceId
             })[0]
 
+
+            item.invoiceType = invoiceType.id
+            item.industryIdList = o.industryIdList
 
             for (let attr in consts.columns){
                 let temp = o.details.filter( oo =>{
                     return oo.columnsId ==  consts.columns[attr].id
                 })[0] || {}
+
                 item[attr] = temp.flag
-                if(temp.columnsId == 14){//结算方式
-                    let settlements = temp.specialList,
-                    settlementType = consts.settlementType,
-                    settlement = []
-                    settlements && settlements.length && settlements.map(o=>{
-                        settlement =settlement.concat(settlementType.filter(oo=>{
-                            return oo.id == o.optionValue
-                        }))
-                    })
-                    item.settlement = settlement
+                if(o.columnsName){
+                    item[attr+'Title'] = o.columnsName
                 }
-                if(temp.columnsId == 16){//税率
+
+
+
+                if(temp.columnsId == 14){// 结算方式
+                    let settlements = temp.specialList
+
+                    item.settlement = []
+
+                    settlements && settlements.length && settlements.map(obj=>{
+                        item.settlement.push(obj.optionValue)
+                    })
+
+
+                }
+                if(temp.columnsId == 16){// 税率
                     let rates = temp.specialList,
                         rateSource = consts.taxRateType,
-                        smallRateIdx=[],normalRateIdx=[],
                         smallRate=[],normalRate=[]
+
                     rates && rates.map(oRates=>{
                         if(oRates.vatTaxpayer == 41){
-                            normalRateIdx.push(oRates.optionValue)
+                            normalRate.push(oRates.optionValue)
                         }else{
-                            smallRateIdx.push(oRates.optionValue)
+                            smallRate.push(oRates.optionValue)
                         }
                     })
-                    normalRateIdx.length && normalRateIdx.map(oNormalRateIdx=>{
-                        rateSource.map(ooRateSource=>{
-                            if(oNormalRateIdx == ooRateSource.id)
-                                normalRate.push(ooRateSource)
-                        })
-                    })
-                    smallRateIdx.length && smallRateIdx.map(oSmallRateIdx=>{
-                        rateSource.map(ooRateSource=>{
-                            if(oSmallRateIdx == ooRateSource.id){
-                                smallRate.push(ooRateSource)
-                            }
-                        })
-                    })
+
                     item.normalRate = normalRate
                     item.smallRate = smallRate
                 }
@@ -248,10 +248,7 @@ class action {
     handleChange = (a,b,c,d)=>{
         // console.log(a,b,c,d)
     }
-    nameChange =(ps,columnKey)=>(e)=>{
-        this.metaAction.sf(`data.rule.list.${ps.rowIndex}.${columnKey}`,e.target.value)
-        // console.log(ps)
-    }
+
     handleInfluenceChange = (columnKey,ps,dataSource)=>(val)=>{
         let selected = dataSource.filter(o=>{
             return o.id == val
@@ -266,6 +263,13 @@ class action {
                     "status": true
                 })
         this.injections.reduce('setAccountSource',val)
+    }
+    nameChange =(ps,columnKey)=>(e)=>{
+        this.metaAction.sf(`data.rule.list.${ps.rowIndex}.${columnKey}`,e.target.value)
+        // console.log(ps)
+    }
+    interfaceChange = (columnKey,ps)=>(val)=>{
+        this.metaAction.sf(`data.interface.list.${ps.rowIndex}.${columnKey}`,val)
     }
     cellGetterRule = (columnKey,type) => (ps) => {
         let metaAction = this.metaAction
@@ -296,8 +300,9 @@ class action {
                     showValue = cellValue
                 }else{
                     showValue = consts[consts.extendAttr[id]].filter(oo=>{
-                        return oo.value == cellValue
-                    })[0].name
+                        return oo.id == cellValue
+                    })[0]
+                    showValue = showValue? showValue.name:cellValue
                 }
             }
         }
@@ -336,7 +341,7 @@ class action {
                     []
                 dataSource = consts[columnKey]
             }
-            if(columnKey == 'extendAttr'){
+            if(columnKey == 'extendAttr' ){
                 let influenceOption = this.metaAction.gf(`data.rule.other.influence.${ps.rowIndex}`),
                     id = influenceOption ? influenceOption.get('id'):''
 
@@ -381,22 +386,26 @@ class action {
             )
         }
     }
-    cellGetter = (columnKey,columnKey2) => (ps) => {
+    cellGetter = (columnKey,type) => (ps) => {
+        let metaAction = this.metaAction
         var cellValue = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`),
             cellValue2 = ''
-        if(typeof columnKey2 === 'string'){
-            cellValue2 = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey2}`)
+        if(type === 'ext'){
+            cellValue2 = this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}Title`)
             cellValue2 && (cellValue = cellValue + ','+cellValue2)
         }
-        // if(columnKey === 'settlementTypeList'){
-        //     cellValue =cellValue? cellValue.toJS().join(','):cellValue
-        // }
-        if(columnKey === 'settlement' || columnKey === 'smallRate' ||columnKey === 'normalRate' ){
+
+        if(columnKey === 'settlement' || columnKey === 'smallRate' ||columnKey === 'normalRate'||columnKey === 'industryIdList'){
             if(cellValue){
-                cellValue = cellValue.toJS().map(o=>{return o.name}).join(',')
+                cellValue = cellValue.toJS().join(',')
             }
         }
-
+        if(columnKey =='invoiceType'){
+            let a  = consts.ticketType.filter(o=>{
+                return o.id == cellValue
+            })[0]
+            cellValue =a ? a.name:cellValue
+        }
         var showValue =  cellValue
 
         if (!this.isFocusCell(ps, columnKey)) {
@@ -408,6 +417,58 @@ class action {
             )
         }
 
+        if(type == 'select'){
+            let dataSource = this.metaAction.gf(`data.interface.dataSources.${columnKey}`).toJS()
+
+            return (
+                <Select
+                    showSearch
+                    style={{ width: 200 }}
+                    placeholder={showValue}
+                    value = {this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`)}
+                    onChange = {::this.interfaceChange(columnKey,ps)}
+                    optionFilterProp="children"
+                    optionLabelProp="children">
+                    {
+                        dataSource.map(o=>{
+                            return <Select.Option
+                                value={o.id}>
+                                {o.name}
+                            </Select.Option>
+                        })
+                    }
+                </Select>
+            )
+        }
+        if(type == 'multiple'){
+            let dataSource = []
+            if(columnKey == 'normalRate'||columnKey == 'smallRate'){
+                dataSource = this.metaAction.gf(`data.interface.dataSources.taxRate`).toJS()
+            }else{
+                this.metaAction.gf(`data.interface.dataSources.${columnKey}`).toJS()
+            }
+            return (
+                <Select
+                    mode = 'multiple'
+                    style={{ width: 200 }}
+                    placeholder={showValue}
+                    value = {this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`)}
+                    onChange = {::this.interfaceChange(columnKey,ps)}
+                    optionFilterProp="children"
+                    optionLabelProp="children">
+                    {
+                        dataSource.map(o=>{
+                            return <Select.Option
+                                value={o.id}>
+                                { o.name}
+                            </Select.Option>
+                        })
+                    }
+                </Select>
+            )
+        }
+
+
         return (
                 <Input
                    className='mk-app-editable-table-cell'
@@ -416,6 +477,132 @@ class action {
                    ref={o => this.refName = o}
                 />
             )
+    }
+    handlePreview = ()=>{
+        return this.metaAction.toast('error','尚未开发')
+    }
+    handleSave = async()=>{
+        let metaAction = this.metaAction,
+            templateData = metaAction.gf('data.templateData').toJS(),
+            interfaceData = metaAction.gf('data.interface').toJS(),
+            ruleData = metaAction.gf('data.rule').toJS(),
+            tacticsList = this.parseTacticsList(templateData,interfaceData),
+            docTemplateList = this.parseDocTemplateList(templateData,ruleData)
+
+            templateData.tacticsList = tacticsList
+            templateData.docTemplateList = docTemplateList
+
+            delete templateData.businessType.typeName
+
+        let response = await this.webapi.businessTypeTemplate.update(templateData)
+
+        this.injections.reduce('initTemplate',response)
+        this.injections.reduce('initForm',this.transData4List(response))
+
+    }
+    parseTacticsList = (templateData,interfaceData)=>{
+        let tacticsList = []
+        interfaceData.list.map((o,i)=>{// interfaceData
+            tacticsList[i] = {}
+            tacticsList[i].invoiceId = o.invoiceType
+            tacticsList[i].industryIdList = o.industryIdList
+            tacticsList[i].details = templateData.tacticsList[i].details
+
+            tacticsList[i].details = tacticsList[i].details.map(oo=>{// templateData
+                oo.flag = o[this.getColumnsById(oo.columnsId)]
+                if(o.columnsName){
+                    oo.columnsName = o.columnsName
+                }
+                if(oo.columnsId == 14){
+                    let specialList = []
+                    o.settlement.map((ooo,oooIdx)=>{
+                        specialList.push({
+                            columnsId: 12,
+                            isDefault: 0,
+                            optionValue:ooo,
+                            idList:oo.specialList[oooIdx].idList
+                        })
+                    })
+                    specialList[0].isDefault = 1
+                    oo.specialList = specialList
+                }
+                if(oo.columns == 16){
+                    let specialList = []
+                    o.normalRate.map((ooo,oooIdx)=>{
+                        specialList.push({
+                            "columnsId": 16,
+                            "isDefault": 0,
+                            "vatTaxpayer": 41,
+                            "optionValue": ooo,
+                            idList:oo.specialList[oooIdx].idList
+                        })
+                    })
+                    specialList[0].isDefault = 1
+                    oo.specialList = specialList
+                }
+                return oo
+            })
+        })
+
+
+        return tacticsList
+    }
+    parseDocTemplateList = (templateData,ruleData)=>{
+        let accountingStandardId = this.metaAction.gf('data.standard'),
+            idx = templateData.docTemplateList.map((o,i)=>{
+                if(o.accountingStandardId == accountingStandardId){
+                    return i
+                }
+            })[0],
+            docTemplate = ruleData.list.map((o,i)=>{
+                let item = {}
+
+                item.fundSource = o.fundSource
+                item.flag = o.flag
+                item.isSettlement = o.isSettlement
+                item.taxType = !(o.taxType =='简易计税')
+                item.vatTaxpayer = o.vatTaxpayer == '一般纳税人' ?41:42
+                item.accountName = o.accountName
+                item.influence = o.influence
+
+                item.accountCode = o.accountCode
+                item.orgId = o.orgId
+                item.direction = !(o.direction == '借')
+                if(o.departmentAttr){
+                    item.departmentAttr = o.departmentAttr
+                }
+                if(o.personAttr){
+                    item.personAttr = o.personAttr
+                }
+                if(o.qualification){
+                    item.qualification = o.qualification
+                }
+
+                let id = consts.influence.filter(oo=>{
+                        return oo.value === item.influence
+                    })[0].id
+                if(consts.extendAttr[id]){
+                        item.extendAttr = consts[consts.extendAttr[id]].filter(oo=>{
+                        return (oo.value == o.extendAttr || oo.id == o.extendAttr)
+                    })[0].value
+                }
+
+
+                item.industryIdList = o.industryIdList
+                item.idList = o.idList
+
+                return item
+            })
+            templateData.docTemplateList[idx].details = docTemplate
+            return templateData.docTemplateList
+    }
+    getColumnsById = (id)=>{
+        let columns = consts.columns
+        for( let attr in columns){
+            if(columns[attr].id == id){
+                return attr
+            }
+        }
     }
 
     // 弹框 界面元数据
@@ -483,7 +670,7 @@ class action {
             vatTaxpayer:consts.vatTaxpayer,
             departmentAttr:consts.departmentAttr,
             personAttr:consts.personAttr,
-            goodsAttr:consts.goodsAttr,
+            inventoryAttr:consts.inventoryAttr,
             taxType:consts.taxType,
             qualification:consts.qualification,
             punishmentAttr:consts.punishmentAttr,
@@ -510,7 +697,6 @@ class action {
             let list =this.metaAction.gf('data.rule.list').toJS()
             list.push(ret.value.list)
             // this.injectFuns.reduce('addInvoiceRule',ret.value.list)
-            debugger
             this.injections.reduce('initRuleList',this.parseRuleList(list))
             // this.metaAction.sf('data.rule.list',fromJS(list))
             // this.metaAction.sfs({

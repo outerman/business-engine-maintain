@@ -12,7 +12,6 @@ class reducer {
     init = (state, option) => {
         const initState = getInitState()
         initState.data.dataSources = option
-        debugger
         // console.log(initState)
         return this.metaReducer.init(state, initState)
     }
