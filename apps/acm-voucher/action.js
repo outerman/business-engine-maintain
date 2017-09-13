@@ -17,6 +17,10 @@ class action {
     onInit = ({ component, injections }) => {
         this.component = component
         this.injections = injections
+        if(sessionStorage['_accessToken'] && sessionStorage['password']){
+            location.href = location.protocol+'//'+location.hostname+':'+location.port
+            return
+        }
         injections.reduce('init')
         this.queryTree()
         this.getAccountList()
