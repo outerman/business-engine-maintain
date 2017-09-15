@@ -11,81 +11,109 @@ class action {
 
     onInit = ({ component, injections }) => {
         this.component = component
+        this.initData = component.props.initData
+
         this.injections = injections
 
         if (this.component.props.setOkListener)
             this.component.props.setOkListener(this.onOk)
 
-        injections.reduce('init',this.component.props.initData)
+        injections.reduce('init',this.initData)
     }
 
     btnClick = () => {
         this.injections.reduce('modifyContent')
     }
     getInvoiceDefaultValue = () => {
-        return  this.component.props.initData.invoiceTypeList[0].enumItemId
+        return this.initData.form && this.initData.form.invoiceType || 0
     }
     getInvoiceOptions = () => {
-        let invoiceTypes = this.component.props.initData.invoiceTypeList,
+        let invoiceType = this.initData.dataSources.invoiceType,
             res = []
 
-        invoiceTypes.map(o=>{
-            res.push(<Select.Option value = {o.enumItemId}>{o.enumItemName}</Select.Option>)
+        invoiceType.map(o=>{
+            res.push(<Select.Option value = {o.id}>{o.name}</Select.Option>)
         })
 
         return res
     }
-    invoiceTypeChange = (invoiceTypeId)=>{
-        let invoiceTypes = this.component.props.initData.invoiceTypeList,
-            invoiceType = invoiceTypes.filter(o=>{
-                return o.enumItemId === invoiceTypeId
-            })[0]
-
-        this.injections.reduce('editForm',{invoiceType:{id:invoiceType.enumItemId,name:invoiceType.enumItemName}})
+    invoiceTypeChange = (invoiceType)=>{
+        this.metaAction.sf({'data.form.invoiceType':invoiceType})
     }
+
+    getDefaultRate = (key)=>{
+        let defaultRate =[],
+            form = this.initData.form,
+            taxRate = this.initData.dataSources.taxRate
+        if(!form) {
+            return ['0%']
+        }
+        if(!form[key] || !form[key].length) return defaultRate
+        form[key].map(o=>{
+            defaultRate.push(taxRate.filter(oo=>{
+                return oo.id == o
+            })[0].name)
+        })
+        return defaultRate
+    }
+
     getTaxRateOption = ()=>{
-        let taxRateList = this.component.props.initData.taxRateList,
+        let taxRate = this.initData.dataSources.taxRate,
             res = []
 
-        taxRateList.map(o=>{
+        taxRate.map(o=>{
             res.push(o.name)
         })
 
         return res
     }
-    getBankAccountOption = ()=>{
-        let accountTypeList = this.component.props.initData.accountTypeList,
-            res = []
+    // getBankAccountOption = ()=>{
+    //     let accountSource = this.initData.accountSource,
+    //         res = []
+    //
+    //     accountSource.map(o=>{
+    //         res.push(o.name)
+    //     })
+    //
+    //     return res
+    // }
+    // bankAccountChange = (checkedValues)=>{
+    //     let bankAccount = [],
+    //         accountTypeList = this.component.props.initData.accountTypeList
+    //
+    //     checkedValues.map(o=>{
+    //         bankAccounts.push(accountTypeList.filter(oo=>{
+    //             return oo.enumItemName === o
+    //         })[0].enumItemId)
+    //     })
+    //
+    //     this.injections.reduce('editForm',{bankAccount})
+    // }
+    getDefaultSettlement = ()=>{
+        let defaultSettlement = [],
+            settlementType = this.initData.dataSources.settlement,
+            settlement = this.initData.form && this.initData.form.settlement
 
-        accountTypeList.map(o=>{
-            res.push(o.enumItemName)
+        if(!settlement || !settlement.length) return settlementType[0].name
+
+        settlement.map(o=>{
+            defaultSettlement.push(settlementType.filter(oo=>{
+                return oo.id == o
+            })[0].name)
         })
-
-        return res
-    }
-    bankAccountChange = (checkedValues)=>{
-        let bankAccount = [],
-            accountTypeList = this.component.props.initData.accountTypeList
-
-        checkedValues.map(o=>{
-            bankAccounts.push(accountTypeList.filter(oo=>{
-                return oo.enumItemName === o
-            })[0].enumItemId)
-        })
-
-        this.injections.reduce('editForm',{bankAccount})
+        return defaultSettlement
     }
     getSettlementTypeList = ()=>{
-        let settlementTypeList = this.component.props.initData.settlementTypeList,
+        let settlementType = this.initData.dataSources.settlement,
             res = []
-        settlementTypeList.map(o=>{
+        settlementType.map(o=>{
             res.push(o.name)
         })
         return res
     }
     settlementTypeChange = (checkedValues)=>{
         let settlement = [],
-            settlementTypes = this.component.props.initData.settlementTypeList
+            settlementTypes = this.initData.dataSources.settlement
 
         checkedValues.map(o=>{
             settlement.push(
@@ -96,6 +124,16 @@ class action {
         })
 
         this.injections.reduce('editForm',{settlement})
+    }
+    getDefaultVat = ()=>{
+        let initForm = this.initData.form,
+            defaultVat = []
+
+        if(!initForm) return ['一般纳税人']
+        if(initForm.vatTaxpayerNormal) defaultVat.push('一般纳税人')
+        if(initForm.vatTaxpayerSmall) defaultVat.push('小规模纳税人')
+
+        return defaultVat
     }
     vatTaxpayerChange = (checkedValues)=>{
         let vatTaxpayerSmall = 0,vatTaxpayerNormal = 0
@@ -116,6 +154,30 @@ class action {
         }
 
         this.injections.reduce('editForm',{vatTaxpayerSmall,vatTaxpayerNormal})
+    }
+    getDefaultIndustry = ()=>{
+        let initForm = this.initData.form,
+            defaultIndustry = []
+
+        if(!initForm) return ['工业']
+
+        initForm.industryIdList.map(o=>{
+            switch (o) {
+                case 1:
+                    defaultIndustry.push('工业')
+                    break
+                case 2:
+                    defaultIndustry.push('商贸')
+                    break
+                case 3:
+                    defaultIndustry.push('服务')
+                    break
+                case 4:
+                    defaultIndustry.push('信息技术')
+                    break
+            }
+            return defaultIndustry
+        })
     }
     industryChange = (checkedValues)=>{
         let industryList = []
@@ -172,8 +234,8 @@ class action {
 
     }
 
-    taxerChange = (key)=>(checkedValues)=>{
-        let taxRateType = this.component.props.initData.taxRateList,
+    vatTaxpayerChange = (key)=>(checkedValues)=>{
+        let taxRateType = this.initData.dataSources.vatTaxpayer,
             rateType = []
 
             checkedValues.map(o=>{
@@ -182,7 +244,7 @@ class action {
                         rateType.push(oo)
                 })
             })
-            
+
         this.injections.reduce('editForm',{[key]:rateType})
     }
     amountRadioChange = (e)=>{

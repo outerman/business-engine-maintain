@@ -9,9 +9,12 @@ class reducer {
         this.config = config.current
     }
 
-    init = (state, option,initData) => {
+    init = (state, initData) => {
         const initState = getInitState()
-        initState.store = initData
+        initState.dataSources = initData.dataSources
+        initState.from = initData.from
+        initState.other = {}
+
         return this.metaReducer.init(state, initState)
     }
 

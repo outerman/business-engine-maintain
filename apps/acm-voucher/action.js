@@ -17,10 +17,18 @@ class action {
     onInit = ({ component, injections }) => {
         this.component = component
         this.injections = injections
-        if(sessionStorage['_accessToken'] && sessionStorage['password']){
+        if(!sessionStorage['_accessToken'] || !sessionStorage['password']){// 未登录不允许操作
             location.href = location.protocol+'//'+location.hostname+':'+location.port
             return
         }
+
+        // 防止越过权限直接访问
+        let re = new RegExp('share/acm_engine')
+
+        if(re.test(location.href)){
+            location.href = location.protocol+'//'+location.hostname+':'+location.port
+        }
+
         injections.reduce('init')
         this.queryTree()
         this.getAccountList()
@@ -132,12 +140,11 @@ class action {
         interfaceData.map((o,i)=>{
             let item = {}
 
-            let invoiceType = consts.ticketType.filter(obj=>{
-                return obj.id ==  o.invoiceId
-            })[0]
+            // let invoiceType = consts.ticketType.filter(obj=>{
+            //     return obj.id ==  o.invoiceId
+            // })[0]
 
-
-            item.invoiceType = invoiceType.id
+            item.invoiceType = o.invoiceId
             item.industryIdList = o.industryIdList
 
             for (let attr in consts.columns){
@@ -160,8 +167,6 @@ class action {
                     settlements && settlements.length && settlements.map(obj=>{
                         item.settlement.push(obj.optionValue)
                     })
-
-
                 }
                 if(temp.columnsId == 16){// 税率
                     let rates = temp.specialList,
@@ -182,9 +187,16 @@ class action {
 
             }
             interfaceDataList.push(item)
+
         })
 
+        if(interfaceDataList.length<4){
+            let a = 4 - interfaceDataList.length
 
+            for(let i = 0;i <a;i++){
+                interfaceDataList.push({})
+            }
+        }
         resData.interface = {
             other:{
                 focusCellInfo:undefined
@@ -198,7 +210,12 @@ class action {
             },
             list:this.parseRuleList(standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[]))
         }
-
+        if(resData.rule.list.length<4){
+            let a = 4 - resData.rule.list.length
+            for(let i = 0;i<a;i++){
+                resData.rule.list.push({})
+            }
+        }
         return resData
 
     }
@@ -241,12 +258,25 @@ class action {
     }
     cellClick = (ps, columnKey,type) => (e) => {
         e.stopPropagation()
+        let {metaAction} = this,
+        code = metaAction.gf('data.templateData.businessType.code')
         if(type == 'rule'){
-            this.metaAction.sf('data.rule.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
-        }else{
-            this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
-
+            if(!code) return metaAction.toast('error','请选择业务类型')
+            return metaAction.sf('data.rule.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
         }
+        if(columnKey === 'invoiceType'){
+            if(!code) return metaAction.toast('error','请选择业务类型')
+
+            let item  = metaAction.gf(`data.interface.list.${ps.rowIndex}`).toJS()
+
+            this.addInvoiceType(item)
+
+            debugger
+        }
+        // else{
+        //     this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
+        //
+        // }
 
     }
     handleChange = (a,b,c,d)=>{
@@ -304,7 +334,7 @@ class action {
                     showValue = cellValue
                 }else{
                     showValue = consts[consts.extendAttr[id]].filter(oo=>{
-                        return oo.id == cellValue
+                        return oo.value == cellValue
                     })[0]
                     showValue = showValue? showValue.name:cellValue
                 }
@@ -409,6 +439,13 @@ class action {
                 return o.id == cellValue
             })[0]
             cellValue =a ? a.name:cellValue
+            return (
+                <DataGrid.TextCell
+                    onClick={this.cellClick(ps, columnKey)}
+                    style = {{color: '#2db7f5',cursor:'pointer'}}
+                    value={cellValue}
+                />
+            )
         }
         var showValue =  cellValue
 
@@ -420,7 +457,7 @@ class action {
                 />
             )
         }
-
+        /*  //不提供编辑功能
         if(type == 'select'){
             let dataSource = this.metaAction.gf(`data.interface.dataSources.${columnKey}`).toJS()
 
@@ -481,6 +518,7 @@ class action {
                    ref={o => this.refName = o}
                 />
             )
+        */
     }
     handlePreview = ()=>{
         return this.metaAction.toast('error','尚未开发')
@@ -610,15 +648,18 @@ class action {
     }
 
     // 弹框 界面元数据
-    addInvoiceType = async () => {
-        if(!this.metaAction.gf('data.templateData.businessType.code'))
-            return this.metaAction.toast('error','请先选择业务类型')
-        const ret = await this.metaAction.modal('show', {
+    addInvoiceType = async (data) => {
+        let {metaAction} = this
+        if(!metaAction.gf('data.templateData.businessType.code'))
+            return metaAction.toast('error','请先选择业务类型')
+
+        if(data.target) data = undefined
+        const ret = await metaAction.modal('show', {
             title: '新增/编辑界面元数据',
             width:900,
-            children: this.metaAction.loadApp('interface-data-card', {
+            children: metaAction.loadApp('interface-data-card', {
                 store: this.component.props.store,
-                initData:this.metaAction.gf('data.store').toJS()
+                initData:{form:data,dataSources:metaAction.gf('data.interface.dataSources').toJS()}
             })
         })
 

@@ -174,12 +174,13 @@ export const incomeType = {
 	kj: { id: 10005, code: '60', name: '请会计处理' }
 }
 
-export const industryType = {
-	gy: { id: 1, name: '工业' },
-	sm: { id: 2, name: '商贸' },
-	fw: { id: 3, name: '服务' },
-	qt: { id: 4, name: '信息技术' }
-}
+export const industryType = [
+	{ id: 1, name: '工业' },
+	{ id: 2, name: '商贸' },
+	{ id: 3, name: '服务' },
+	{ id: 4, name: '信息技术' }
+	
+]
 
 export const vatTaxpayerType = {
 	ybnsr: { id: 41, name: '一般纳税人' },
