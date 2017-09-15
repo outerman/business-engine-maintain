@@ -23,7 +23,7 @@ export function getMeta() {
 				children:['纳税人身份：',{
 					name:'vatTaxpayer',
 					component:'Checkbox.Group',
-					options:['一般纳税人','小规模'],
+					options:['一般纳税人','小规模纳税人'],
 					defaultValue:'{{$getDefaultVat()}}',
 					onChange:'{{$vatTaxpayerChange}}'
 				}]
