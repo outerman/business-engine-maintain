@@ -689,28 +689,27 @@ class action {
             let list = metaAction.gf('data.interface.list').toJS(),
                 val = ret.value.list
 
-            list.map((o,i)=>{
+            // list.map((o,i)=>{
+            //     if (i != rowIndex){
+            //         if(o.invoiceType === val.invoiceType){
+            //             return metaAction.toast('error','票据类型重复')
+            //         }
+            //     }
+            // })
+
+            for (var i = 0; i < list.length; i++) {
                 if (i != rowIndex){
-                    if(o.invoiceType === val.invoiceType){
+                    if(list[i].invoiceType === val.invoiceType){
                         return metaAction.toast('error','票据类型重复')
                     }
                 }
-            })
+            }
 
-            // for(let o of list){
-            //     if(o.invoiceType === val.invoiceType){
-            //         return metaAction.toast('error','票据类型重复')
-            //     }
-            // }
 
             !isNaN(rowIndex)? (list[rowIndex]= val):(list.push(val))
 
             this.metaAction.sf('data.interface.list',fromJS(list))
-            // const response = await this.webapi.education.query()
-            // this.metaAction.sfs({
-            //     'data.other.educationDataSource': fromJS(response),
-            //     'data.form.education': fromJS(ret)
-            // })
+
         }
 
     }

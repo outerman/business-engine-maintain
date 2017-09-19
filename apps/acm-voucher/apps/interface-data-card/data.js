@@ -267,7 +267,7 @@ function getAmountAndtaxChild(){
 				disabled:"{{!data.form.vatTaxpayerNormal}}",
 				options:'{{$getTaxRateOption()}}',
 				defaultValue:'{{$getDefaultRate("normalRate")}}',
-				onChange:'{{$vatTaxpayerChange("normalRate")}}'
+				onChange:'{{$taxRateChange("normalRate")}}'
 			}]
 		},{
 			name:'taxSmall',
@@ -277,7 +277,7 @@ function getAmountAndtaxChild(){
 				disabled:"{{!data.form.vatTaxpayerSmall}}",
 				options:'{{$getTaxRateOption("smallRate")}}',
 				defaultValue:'{{$getDefaultRate("smallRate")}}',
-				onChange:'{{$vatTaxpayerChange("smallRate")}}'
+				onChange:'{{$taxRateChange("smallRate")}}'
 			}]
 		}]
 	}
