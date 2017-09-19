@@ -123,6 +123,151 @@ export function getMeta() {
 					// fixed: 'left' ,
 					dataIndex:'invoiceType'
 				},{
+					title:'金额',
+					key:'noTaxAmount',
+					width:150,
+					dataIndex:'noTaxAmount'
+				},{
+					title:'税额',
+					key:'tax',
+					width:150,
+					dataIndex:'tax'
+				},{
+					title:'开票日期',
+					key:'billingDate',
+					width:150,
+					dataIndex:'billingDate'
+				},{
+					title:'认证',
+					key:'isQualification',
+					width:150,
+					dataIndex:'isQualification'
+				},{
+					title:'认证月份',
+					key:'certificationMonth',
+					width:150,
+					dataIndex:'certificationMonth'
+				},{
+					title:'可抵扣进项税额',
+					key:'deductibleInputTax',
+					width:150,
+					dataIndex:'deductibleInputTax'
+				},{
+					title:'抵扣',
+					key:'isDeduct',
+					width:150,
+					dataIndex:'isDeduct'
+				},{
+					title:'税率',
+					key:'taxRate',
+					width:150,
+					dataIndex:'taxRate'
+				},{
+					title:'价税合计',
+					key:'amount',
+					width:150,
+					dataIndex:'amount'
+				},{
+					title:'部门',
+					key:'department',
+					width:150,
+					dataIndex:'department'
+				}, {
+					title:'人员',
+					key:'employee',
+					width:150,
+					dataIndex:'employee'
+				}, {
+					title:'客户',
+					key:'customer',
+					width:150,
+					dataIndex:'customer'
+				}, {
+					title:'商品或服务名称',
+					key:'goods',
+					width:150,
+					dataIndex:'goods'
+				}, {
+					title:'资产类别',
+					key:'assetsType',
+					width:150,
+					dataIndex:'assetsType'
+				}, {
+					title:'资产',
+					key:'assets',
+					width:150,
+					dataIndex:'assets'
+				}, {
+					title:'数量',
+					key:'number',
+					width:150,
+					dataIndex:'number'
+				}, {
+					title:'单价',
+					key:'price',
+					width:150,
+					dataIndex:'price'
+				}, {
+					title:'投资对象',
+					key:'InvestmentObject',
+					width:150,
+					dataIndex:'InvestmentObject'
+				}, {
+					title:'投资类别',
+					key:'InvestmentType',
+					width:150,
+					dataIndex:'InvestmentType'
+				}, {
+					title:'股东',
+					key:'shareholder',
+					width:150,
+					dataIndex:'shareholder'
+				}, {
+					title:'债权人',
+					key:'creditor',
+					width:150,
+					dataIndex:'creditor'
+				}, {
+					title:'债务人',
+					key:'obligor',
+					width:150,
+					dataIndex:'obligor'
+				}, {
+					title:'现金',
+					key:'cash',
+					width:150,
+					dataIndex:'cash'
+				}, {
+					title:'银行存款',
+					key:'bankAcount',
+					width:150,
+					dataIndex:'bankAcount'
+				}, {
+					title:'支付宝',
+					key:'alipay',
+					width:150,
+					dataIndex:'alipay'
+				}, {
+					title:'微信',
+					key:'weChat',
+					width:150,
+					dataIndex:'weChat'
+				}, {
+					title:'冲减预收款',
+					key:'prePaymentReceivable',
+					width:150,
+					dataIndex:'prePaymentReceivable'
+				}, {
+					title:'欠供应商款',
+					key:'underSupplier',
+					width:150,
+					dataIndex:'underSupplier'
+				}, {
+					title:'冲员工借款',
+					key:'lendingToEmployees',
+					width:150,
+					dataIndex:'lendingToEmployees'
+				}, {
 					title:'银行账号',
 					key:'bankAccount',
 					width:200,
