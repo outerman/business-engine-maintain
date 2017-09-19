@@ -269,9 +269,8 @@ class action {
 
             let item  = metaAction.gf(`data.interface.list.${ps.rowIndex}`).toJS()
 
-            this.addInvoiceType(item)
+            this.addInvoiceType(item,ps.rowIndex)
 
-            debugger
         }
         // else{
         //     this.metaAction.sf('data.interface.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
@@ -300,6 +299,7 @@ class action {
     }
     nameChange =(ps,columnKey)=>(e)=>{
         this.metaAction.sf(`data.rule.list.${ps.rowIndex}.${columnKey}`,e.target.value)
+
         // console.log(ps)
     }
     interfaceChange = (columnKey,ps)=>(val)=>{
@@ -430,8 +430,29 @@ class action {
         }
 
         if(columnKey === 'settlement' || columnKey === 'smallRate' ||columnKey === 'normalRate'||columnKey === 'industryIdList'){
-            if(cellValue){
-                cellValue = cellValue.toJS().join(',')
+            let dataSource = []
+
+            if(columnKey === 'settlement'){
+                dataSource = consts.settlementType
+            }else if(columnKey === 'smallRate' || columnKey === 'normalRate'){
+                dataSource = consts.taxRateType
+            }else if(columnKey === 'industryIdList' ){
+                dataSource = consts.industryType
+            }
+            if(cellValue && cellValue.size){
+                let aVal = []
+
+                cellValue.map(o=>{
+                    aVal.push(
+                        dataSource.filter(oo=>{
+                            return oo.id == o
+                        })[0].name
+                    )
+                })
+
+                cellValue = aVal.join(',')
+            }else{
+                cellValue = ''
             }
         }
         if(columnKey =='invoiceType'){
@@ -648,7 +669,7 @@ class action {
     }
 
     // 弹框 界面元数据
-    addInvoiceType = async (data) => {
+    addInvoiceType = async (data,rowIndex) => {
         let {metaAction} = this
         if(!metaAction.gf('data.templateData.businessType.code'))
             return metaAction.toast('error','请先选择业务类型')
@@ -659,19 +680,31 @@ class action {
             width:900,
             children: metaAction.loadApp('interface-data-card', {
                 store: this.component.props.store,
-                initData:{form:data,dataSources:metaAction.gf('data.interface.dataSources').toJS()}
+                initData:{form:data,dataSources:metaAction.gf('data.interface.dataSources').toJS(),rowIndex}
             })
         })
+        debugger
 
         if (ret) {
-            let list = this.metaAction.gf('data.interface.list').toJS(),
+            let list = metaAction.gf('data.interface.list').toJS(),
                 val = ret.value.list
-            for(let o of list){
-                if(o.invoiceType.id === val.invoiceType.id){
-                    return this.metaAction.toast('error','票据类型重复')
+
+            list.map((o,i)=>{
+                if (i != rowIndex){
+                    if(o.invoiceType === val.invoiceType){
+                        return metaAction.toast('error','票据类型重复')
+                    }
                 }
-            }
-            list.push(val)
+            })
+
+            // for(let o of list){
+            //     if(o.invoiceType === val.invoiceType){
+            //         return metaAction.toast('error','票据类型重复')
+            //     }
+            // }
+
+            !isNaN(rowIndex)? (list[rowIndex]= val):(list.push(val))
+
             this.metaAction.sf('data.interface.list',fromJS(list))
             // const response = await this.webapi.education.query()
             // this.metaAction.sfs({

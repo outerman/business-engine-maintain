@@ -25,7 +25,7 @@ class action {
         this.injections.reduce('modifyContent')
     }
     getInvoiceDefaultValue = () => {
-        return this.initData.form && this.initData.form.invoiceType || 0
+        return this.initData.form && this.initData.form.invoiceType || 200000000000050
     }
     getInvoiceOptions = () => {
         let invoiceType = this.initData.dataSources.invoiceType,
@@ -38,7 +38,7 @@ class action {
         return res
     }
     invoiceTypeChange = (invoiceType)=>{
-        this.metaAction.sf({'data.form.invoiceType':invoiceType})
+        this.metaAction.sf('data.form.invoiceType',invoiceType)
     }
 
     getDefaultRate = (key)=>{
@@ -255,7 +255,9 @@ class action {
 
     }
     onOk = () => {
-        let list = this.metaAction.gf('data.form').toJS()
+        let {metaAction} = this,
+            list = metaAction.gf('data.form').toJS()
+
         return {result:true,value:{list}}
     }
 }
