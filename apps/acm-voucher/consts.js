@@ -179,7 +179,7 @@ export const industryType = [
 	{ id: 2, name: '商贸' },
 	{ id: 3, name: '服务' },
 	{ id: 4, name: '信息技术' }
-	
+
 ]
 
 export const vatTaxpayerType = {
@@ -249,11 +249,11 @@ export const columns = {
 	ext8: { id: 1008, name: '自定义项8' },
 	ext9: { id: 1009, name: '自定义项9' },
 
-	extString0: { id: 1020, name: "字符自定义项0" },
-	extString1: { id: 1021, name: "字符自定义项1" },
-	extString2: { id: 1022, name: "字符自定义项2" },
-	extString3: { id: 1023, name: "字符自定义项3" },
-	extString4: { id: 1024, name: "字符自定义项4" },
+	stringExt0: { id: 1020, name: "字符自定义项0" },
+	stringExt1: { id: 1021, name: "字符自定义项1" },
+	stringExt2: { id: 1022, name: "字符自定义项2" },
+	stringExt3: { id: 1023, name: "字符自定义项3" },
+	stringExt4: { id: 1024, name: "字符自定义项4" },
 
 	// taxBreaks: { id: 90001, name: '减免税款' },
 

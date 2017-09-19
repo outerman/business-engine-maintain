@@ -260,6 +260,7 @@ class action {
         e.stopPropagation()
         let {metaAction} = this,
         code = metaAction.gf('data.templateData.businessType.code')
+
         if(type == 'rule'){
             if(!code) return metaAction.toast('error','请选择业务类型')
             return metaAction.sf('data.rule.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
