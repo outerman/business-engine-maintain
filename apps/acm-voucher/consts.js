@@ -259,6 +259,16 @@ export const columns = {
 
 }
 
+// 税务属性
+export const taxPropertyList = [
+	{attrCode: "1", attrName: "货物"},
+	{attrCode: "2", attrName: "劳务"},
+	{attrCode: "3", attrName: "服务"},
+	{attrCode: "4", attrName: "无形资产"},
+	{attrCode: "7", attrName: "不涉税"},
+	{attrCode: "6", attrName: "其他"},
+	{attrCode: "5", attrName: "不动产"}
+]
 
 export const statusType = {
 	normal: { value: 2, label: '未审核' },

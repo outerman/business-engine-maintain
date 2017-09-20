@@ -66,53 +66,79 @@ export function getMeta() {
 					},{
 						name:'item2',
 						component:'::li',
-						children:['业务类型:',{
+						children:['排序编码:',{
 							name:'itme2-1',
-							component:'::span',
-							children:'{{data.typeName}}'
+							component:'Input',
+							size:'small',
+							width:100,
+							onChange:'{{$bizAttrChange("treeCode")}}',
+							value:'{{data.templateData.businessType.treeCode}}'
 						}]
 					},{
 						name:'item3',
 						component:'::li',
-						children:['业务名称:',{
+						children:['业务类型:',{
 							name:'itme3-1',
+							component:'::span',
+							children:'{{data.typeName}}'
+						}]
+					},{
+						name:'item4',
+						component:'::li',
+						children:['业务名称:',{
+							name:'itme4-1',
 							component:'Input',
 							size:'small',
+							onChange:'{{$bizAttrChange("name")}}',
 							width:100,
 							value:'{{data.templateData.businessType.name}}'
 						}]
-					}/*,{
-						name:'item4',
+					},{
+						name:'item5',
 						component:'::li',
+						className:'{{data.typeName == "收入"? "":"hidden"}}',
 						children:['涉税属性:',{
 							name:'itme4-1',
 							component:'Select',
-							defaultValue:'0',
+							value:'{{data.templateData.taxProperty? data.templateData.taxProperty.attrCode:"1"}}',
 							style:{ width: 120 },
-							onChange:'{{$handleChange}}',
+							onChange:'{{$taxPropertyChange}}',
+							children:[
+							{
+								name:'option0',
+								component:'Select.Option',
+								value:'{{data.dataSources.taxPropertyList[_rowIndex].attrCode}}',
+								children:'{{data.dataSources.taxPropertyList[_rowIndex].attrName}}',
+								_power:  'for in data.dataSources.taxPropertyList'
+							}]
+						}]
+					},{
+						name:'item6',
+						component:'::li',
+						children:['收支统计:',{
+							name:'report',
+							component:'Select',
+							value:'{{data.templateData.businessType.report}}',
+							style:{ width: 120 },
+							onChange:'{{$handleReportChange}}',
 							children:[{
 								name:'option0',
 								component:'Select.Option',
-								value:'0',
-								children:'劳务'
+								value:0,
+								children:'不统计'
 							},{
-								name:'option0',
+								name:'option1',
 								component:'Select.Option',
-								value:'1',
-								children:'服务'
+								value:1,
+								children:'收入'
 							},{
-								name:'option0',
+								name:'option2',
 								component:'Select.Option',
-								value:'2',
-								children:'货物'
-							},{
-								name:'option0',
-								component:'Select.Option',
-								value:'3',
-								children:'无形资产'
+								value:2,
+								children:'支出'
 							}]
 						}]
-					}*/]
+					}]
 				},{
 					name:'right-header-r',
 					className:'acm-voucher-right-header-r',
@@ -123,7 +149,8 @@ export function getMeta() {
 						children:[{
 							name:'item-r-1-1',
 							component:'Checkbox',
-							// onChange:'{{$onChange}}',
+							checked:'{{data.templateData.businessType.isShow}}',
+							onChange:'{{$onRightChange("isShow")}}',
 							children:'隐藏业务'
 						}]
 					},{
@@ -132,8 +159,18 @@ export function getMeta() {
 						children:[{
 							name:'item-r-2-1',
 							component:'Checkbox',
-							// onChange:'{{$onChange}}',
+							checked:'{{data.templateData.businessType.isSettlement}}',
+							onChange:'{{$onRightChange("isSettlement")}}',
 							children:'需要结算'
+						}]
+					},{
+						name:'item-r-3',
+						component:'::li',
+						children:[{
+							name:'item-r-3-1',
+							component:'Button',
+							// onChange:'{{$onChange}}',
+							children:'设置可选存货'
 						}]
 					}]
 				}]
@@ -1076,7 +1113,9 @@ function getRuleMeta(){
 export function getInitState() {
 	return {
 		data: {
-			dataSources:{},
+			dataSources:{
+				taxPropertyList:consts.taxPropertyList
+			},
 			store:{},
 			templateData:{
 				businessType:{

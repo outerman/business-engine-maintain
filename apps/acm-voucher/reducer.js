@@ -207,10 +207,6 @@ function parseSelected (other,dataSources,list){
                         return oo.value == o.extendAttr
                     })
                 }
-
-
-
-
             }
         }
 
