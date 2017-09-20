@@ -11,6 +11,7 @@ class reducer {
 
     init = (state, initData) => {
         const initState = getInitState()
+        
         initState.dataSources = initData.dataSources
         initState.from = initData.from
         initState.other = {}

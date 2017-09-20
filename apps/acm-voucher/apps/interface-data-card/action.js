@@ -25,7 +25,7 @@ class action {
         this.injections.reduce('modifyContent')
     }
     getInvoiceDefaultValue = () => {
-        return this.initData.form && this.initData.form.invoiceType || 0
+        return this.initData.form && this.initData.form.invoiceType || 200000000000050
     }
     getInvoiceOptions = () => {
         let invoiceType = this.initData.dataSources.invoiceType,
@@ -38,7 +38,7 @@ class action {
         return res
     }
     invoiceTypeChange = (invoiceType)=>{
-        this.metaAction.sf({'data.form.invoiceType':invoiceType})
+        this.metaAction.sf('data.form.invoiceType',invoiceType)
     }
 
     getDefaultRate = (key)=>{
@@ -208,41 +208,41 @@ class action {
     extTittleChange = (key) =>(e)=>{
         this.injections.reduce('editForm',{[key]:e.target.value})
     }
-    industryChange =(data)=>{
-        let industryIdList = []
-
-        data.map(o=>{
-            switch (o) {
-                case '工业':
-                    industryIdList.push(1)
-                    break;
-                case '商贸':
-                    industryIdList.push(2)
-                    break;
-                case '服务':
-                    industryIdList.push(3)
-                    break;
-                case '信息技术':
-                    industryIdList.push(4)
-                    break;
-            }
-        })
-
-        this.injections.reduce('editForm',{industryIdList})
-    }
+    // industryChange =(data)=>{
+    //     let industryIdList = []
+    //
+    //     data.map(o=>{
+    //         switch (o) {
+    //             case '工业':
+    //                 industryIdList.push(1)
+    //                 break;
+    //             case '商贸':
+    //                 industryIdList.push(2)
+    //                 break;
+    //             case '服务':
+    //                 industryIdList.push(3)
+    //                 break;
+    //             case '信息技术':
+    //                 industryIdList.push(4)
+    //                 break;
+    //         }
+    //     })
+    //
+    //     this.injections.reduce('editForm',{industryIdList})
+    // }
 
     tabsChange = (key)=>{
 
     }
 
-    vatTaxpayerChange = (key)=>(checkedValues)=>{
-        let taxRateType = this.initData.dataSources.vatTaxpayer,
+    taxRateChange = (key)=>(checkedValues)=>{
+        let taxRateType = this.initData.dataSources.taxRate,
             rateType = []
 
             checkedValues.map(o=>{
                 taxRateType.map(oo=>{
                     if(o==oo.name)
-                        rateType.push(oo)
+                        rateType.push(oo.id)
                 })
             })
 
@@ -255,7 +255,9 @@ class action {
 
     }
     onOk = () => {
-        let list = this.metaAction.gf('data.form').toJS()
+        let {metaAction} = this,
+            list = metaAction.gf('data.form').toJS()
+
         return {result:true,value:{list}}
     }
 }
