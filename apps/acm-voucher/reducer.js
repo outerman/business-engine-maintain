@@ -19,7 +19,7 @@ class reducer {
         const content = this.metaReducer.gf(state, 'data.content')
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
-    addBisness = (state)=>{
+    addBusiness = (state)=>{
         return state
     }
     initTree = (state,data, businessTypeList)=>{

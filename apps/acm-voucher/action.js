@@ -51,8 +51,18 @@ class action {
     btnClick = () => {
         this.injections.reduce('modifyContent')
     }
-    addBisness = () =>{
-        this.injections.reduce('addBisness')
+    addBusiness = async () =>{
+
+        const ret = await this.metaAction.modal('show', {
+            title: '业务类型分类新增',
+            width: 200,
+            children: this.metaAction.loadApp('createCategory', {})
+        })
+        if(ret) {
+            const response = await this.webapi.businessTypeTemplate.createCategory(ret)
+
+            // this.injections.reduce('addBusiness')
+        }
     }
     onSearch = (val)=>{
     }

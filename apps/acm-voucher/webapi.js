@@ -12,7 +12,8 @@ export default {
         query:(option)=> fetch.post('/v1/businessTypeTemplate/query',option),
         accountQuery:(option) => fetch.post('/v1/account/query',option),
         update:(option)=> fetch.post('/v1/businessTypeTemplate/update',option),
-        move: (option) => fetch.post('/v1/businessTypeTemplate/move', option)
+        move: (option) => fetch.post('/v1/businessTypeTemplate/move', option),
+        createCategory: (option) => fetch.post('/v1/businessType/createCategory', option),
     },
 
     tree: {
