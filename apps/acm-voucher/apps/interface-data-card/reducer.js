@@ -11,11 +11,11 @@ class reducer {
 
     init = (state, initData) => {
         const initState = getInitState()
-        
-        initState.dataSources = initData.dataSources
-        initState.from = initData.from
-        initState.other = {}
 
+        initState.data.dataSources = initData.dataSources
+        initState.data.form = initData.form
+        initState.data.other = {}
+        
         return this.metaReducer.init(state, initState)
     }
 
@@ -24,6 +24,7 @@ class reducer {
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
     editForm = (state,option) =>{
+        debugger
         for (let attr in option){
             state = this.metaReducer.sf(state,'data.form.'+attr,option[attr])
         }
