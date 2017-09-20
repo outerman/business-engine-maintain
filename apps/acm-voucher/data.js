@@ -71,7 +71,7 @@ export function getMeta() {
 						children:['业务类型:',{
 							name:'itme2-1',
 							component:'::span',
-							children:'{{data.templateData.businessType.typeName}}'
+							children:'{{data.typeName}}'
 						}]
 					},{
 						name:'item3',

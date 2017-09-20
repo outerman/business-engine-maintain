@@ -151,8 +151,10 @@ class reducer {
 
         return dataSources
     }
-    initTemplate = (state,templateData) =>{
-        return this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
+    initTemplate = (state,templateData,typeName) =>{
+        state = this.metaReducer.sf(state,'data.typeName',typeName)
+        state = this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
+        return state
     }
     initForm = (state,data) =>{
         let metaReducer = this.metaReducer
