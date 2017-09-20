@@ -17,16 +17,17 @@ class action {
     onInit = ({ component, injections }) => {
         this.component = component
         this.injections = injections
-        if(!sessionStorage['_accessToken'] || !sessionStorage['password']){// 未登录不允许操作
-            location.href = location.protocol+'//'+location.hostname+':'+location.port
+
+        if(!sessionStorage['_accessToken'] && top.location.href !=location.href ){// 未登录不允许操作
+            top.location.href = top.location.protocol+'//'+top.location.hostname+':'+top.location.port
             return
         }
 
         // 防止越过权限直接访问
         let re = new RegExp('share/acm_engine')
 
-        if(re.test(location.href)){
-            location.href = location.protocol+'//'+location.hostname+':'+location.port
+        if(re.test(window.top.location.href) && top.location.href !=location.href){
+            window.top.location.href = window.top.location.protocol+'//'+window.top.location.hostname+':'+window.top.location.port
         }
 
         injections.reduce('init')
@@ -65,31 +66,37 @@ class action {
         this.queryTemplate(code)
     }
     queryTemplate = async (code)=>{
-        let response = await this.webapi.businessTypeTemplate.query({code})
+        let response = await this.webapi.businessTypeTemplate.query({code}),
+            typeName = '收入'
         // console.log(response)
+
+
+
+        // let response2 = await this.webapi.businessTypeTemplate.update(response)
+        // return
         switch (response.businessType.code.substr(0,1)) {
             case '1':
-                response.businessType.typeName = '收入'
+                typeName = '收入'
                 break;
             case '2':
-                response.businessType.typeName = '支出'
+                typeName = '支出'
                 break;
             case '3':
-                response.businessType.typeName = '成本/折旧和摊销'
+                typeName = '成本/折旧和摊销'
                 break;
             case '4':
-                response.businessType.typeName = '存取现金/内部账户互转'
+                typeName = '存取现金/内部账户互转'
                 break;
             case '5':
-                response.businessType.typeName = '收款/付款'
+                typeName = '收款/付款'
                 break;
             case '6':
-                response.businessType.typeName = '请会计处理'
+                typeName = '请会计处理'
                 break;
             default:
         }
 
-        this.injections.reduce('initTemplate',response)
+        this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
         this.injections.reduce('initForm',this.transData4List(response))
     }
     handleCheck = () => {
@@ -124,11 +131,11 @@ class action {
                 ruleList = ruleData[1]? ruleData[1].details:[]
             }
 
-            // this.metaAction.sf('data.rule.list', fromJS( this.parseRuleList(ruleList) ))
-            this.injections.reduce('initRuleList',this.parseRuleList(ruleList))
+            this.injections.reduce('initRuleList',ruleList)
         }
     }
-    transData4List = (res)=> {
+    transData4List = (res,typeName)=> {
+        res = JSON.parse(JSON.stringify(res))
         let interfaceData = res.tacticsList,
             ruleData = res.docTemplateList,
             interfaceDataList = [],
@@ -208,7 +215,7 @@ class action {
             other:{
                 focusCellInfo:undefined
             },
-            list:this.parseRuleList(standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[]))
+            list:(standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[]))
         }
         if(resData.rule.list.length<4){
             let a = 4 - resData.rule.list.length
@@ -549,18 +556,52 @@ class action {
         let metaAction = this.metaAction,
             templateData = metaAction.gf('data.templateData').toJS(),
             interfaceData = metaAction.gf('data.interface').toJS(),
-            ruleData = metaAction.gf('data.rule').toJS(),
+            code = metaAction.gf('data.templateData.businessType.code')
+
+        if(!code) return metaAction.toast('error','请选择业务类型')
+
+        let ruleData = metaAction.gf('data.rule').toJS(),
             tacticsList = this.parseTacticsList(templateData,interfaceData),
             docTemplateList = this.parseDocTemplateList(templateData,ruleData)
 
-            templateData.tacticsList = tacticsList
-            templateData.docTemplateList = docTemplateList
 
-            delete templateData.businessType.typeName
+
+        templateData.tacticsList = tacticsList
+        templateData.docTemplateList = docTemplateList
+
+
+        // delete templateData.businessType.typeName
+
 
         let response = await this.webapi.businessTypeTemplate.update(templateData)
 
-        this.injections.reduce('initTemplate',response)
+
+
+        let typeName = '收入'
+        // console.log(response)
+        switch (response.businessType.code.substr(0,1)) {
+            case '1':
+                typeName = '收入'
+                break;
+            case '2':
+                typeName = '支出'
+                break;
+            case '3':
+                typeName = '成本/折旧和摊销'
+                break;
+            case '4':
+                typeName = '存取现金/内部账户互转'
+                break;
+            case '5':
+                typeName = '收款/付款'
+                break;
+            case '6':
+                typeName = '请会计处理'
+                break;
+            default:
+        }
+
+        this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
         this.injections.reduce('initForm',this.transData4List(response))
 
     }
@@ -571,9 +612,9 @@ class action {
             tacticsList[i].invoiceId = o.invoiceType
             tacticsList[i].industryIdList = o.industryIdList
             tacticsList[i].details = templateData.tacticsList[i].details
-
+            debugger
             tacticsList[i].details = tacticsList[i].details.map(oo=>{// templateData
-                oo.flag = o[this.getColumnsById(oo.columnsId)]
+                oo.flag = !isNaN(o[this.getColumnsById(oo.columnsId)])?o[this.getColumnsById(oo.columnsId)]: oo.flag
                 if(o.columnsName){
                     oo.columnsName = o.columnsName
                 }
@@ -642,13 +683,16 @@ class action {
                     item.qualification = o.qualification
                 }
 
-                let id = consts.influence.filter(oo=>{
-                        return oo.value === item.influence
-                    })[0].id
-                if(consts.extendAttr[id]){
-                        item.extendAttr = consts[consts.extendAttr[id]].filter(oo=>{
-                        return (oo.value == o.extendAttr || oo.id == o.extendAttr)
-                    })[0].value
+                if(item.influence){
+                    let id = consts.influence.filter(oo=>{
+                            return oo.value === item.influence
+                        })[0].id
+                    if(consts.extendAttr[id]){
+                            item.extendAttr = consts[consts.extendAttr[id]].filter(oo=>{
+                            return (oo.value == o.extendAttr || oo.id == o.extendAttr)
+                        })[0].value
+                    }
+
                 }
 
 
@@ -684,19 +728,10 @@ class action {
                 initData:{form:data,dataSources:metaAction.gf('data.interface.dataSources').toJS(),rowIndex}
             })
         })
-        debugger
 
         if (ret) {
             let list = metaAction.gf('data.interface.list').toJS(),
                 val = ret.value.list
-
-            // list.map((o,i)=>{
-            //     if (i != rowIndex){
-            //         if(o.invoiceType === val.invoiceType){
-            //             return metaAction.toast('error','票据类型重复')
-            //         }
-            //     }
-            // })
 
             for (var i = 0; i < list.length; i++) {
                 if (i != rowIndex){
@@ -705,7 +740,6 @@ class action {
                     }
                 }
             }
-
 
             !isNaN(rowIndex)? (list[rowIndex]= val):(list.push(val))
 
@@ -775,7 +809,7 @@ class action {
             let list =this.metaAction.gf('data.rule.list').toJS()
             list.push(ret.value.list)
             // this.injectFuns.reduce('addInvoiceRule',ret.value.list)
-            this.injections.reduce('initRuleList',this.parseRuleList(list))
+            this.injections.reduce('initRuleList',list)
             // this.metaAction.sf('data.rule.list',fromJS(list))
             // this.metaAction.sfs({
             //     'data.other.educationDataSource': fromJS(response),
