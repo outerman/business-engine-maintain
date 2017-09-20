@@ -45,7 +45,7 @@ class action {
         ret.types = util.typesToTree(response.businessTypeList)
         // response.filter = filter
 
-        this.injections.reduce('initTree', ret)
+        this.injections.reduce('initTree', ret, response.businessTypeList)
         this.injections.reduce('saveData',response)
     }
     btnClick = () => {
@@ -219,6 +219,89 @@ class action {
         return resData
 
     }
+
+    onDrop = async(info) => {
+        let sourceCode = info.dragNode.props['data-code'],
+            moveCodeInfo = info.node.props,
+            treeType = this.metaAction.gf('data.businessTypeList').toJS(),
+            option = {
+                "source": { //-- 需要移动的业务类型
+                    "code": "" //-- 编码
+                  },
+                //   "previous": { //-- 目标位置前一个业务类型
+                //     "code": ""
+                //   },
+                //   "next": { //-- 目标位置后一个业务类型，previous 有值以 previous 为准
+                //     "code": "" 
+                //   },
+                //   "parent": { //-- 目标位置上级业务类型
+                //     "code": ""
+                //   }
+            }, ret = {}
+
+        option.source.code = sourceCode
+        if(moveCodeInfo.className == "z-tree-leaf") {
+            if(moveCodeInfo.dragOverGapBottom) {
+                option.previous = {}
+                option.previous.code = moveCodeInfo['data-code']
+            } else if(moveCodeInfo.dragOverGapTop) {
+                option.next = {}
+                option.next.code = moveCodeInfo['data-code']
+            }
+        } else if(moveCodeInfo.className == "z-tree-parent") {
+            option.parent = {}
+            option.parent.code = moveCodeInfo['data-code']
+        }
+
+        let response = await this.webapi.businessTypeTemplate.move(option)
+       
+        if(response.isActualMove) {
+            this.metaAction.toast('success','移动成功!')
+            treeType.map(o => {
+                if(o.code == response.source.code) {
+                    o.code = response.source.treeCode
+                }
+                if(o.subTypes) {
+
+                }
+            })
+            let moveTypeInfo = []
+            let sortTypeFuns1 = (treeType) => {
+                treeType.map((o, i) => {
+                    if(o.subTypes) {
+                        sortTypeFuns1(o.subTypes)
+                    } else {
+                        if(o.code == response.source.code) {
+                            o.code = response.source.treeCode
+                            moveTypeInfo.push(o)
+                            treeType.splice(i, 1)
+                        }
+                        
+                    }                   
+                })
+            }
+            let sortTypeFuns2 = (treeType) => {
+                treeType.map((o, i) => {
+                    if(o.subTypes) {
+                        sortTypeFuns2(o.subTypes)
+                    } else {
+                        if(o.code == moveCodeInfo['data-code']) {
+                            if(option.previous.code) {
+                                treeType.splice(i + 1, 0, moveTypeInfo[0])
+                            } else if(option.next.code) {
+                                treeType.splice(i, 0, moveTypeInfo[0])
+                            }
+                        }
+                    }                   
+                })
+            }
+            sortTypeFuns1(treeType)
+            sortTypeFuns2(treeType)
+            ret.types = util.typesToTree(treeType)
+            this.injections.reduce('initTree', ret, this.metaAction.gf('data.businessTypeList').toJS())
+        }
+    }
+
     getTreeNode = (types) =>{
         let parseNade = (types)=>{
             let ret =[]

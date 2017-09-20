@@ -22,8 +22,10 @@ class reducer {
     addBisness = (state)=>{
         return state
     }
-    initTree = (state,data)=>{
-        return this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
+    initTree = (state,data, businessTypeList)=>{
+        state = this.metaReducer.sf(state, 'data.businessTypeList', fromJS(businessTypeList))
+        state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
+        return state
     }
     setAccountSource = (state,data)=>{
         let accountSource = data.map((o,i)=>{
@@ -56,7 +58,6 @@ class reducer {
         state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,initRuleList)))
         return state
     }
-
     saveData = (state,data) =>{
         // let dataSources = this.metaReducer.gf(state,'data.dataSources').toJS(),
             // temp = this.getDataSource(data)
@@ -165,6 +166,7 @@ class reducer {
         return state
     }
 }
+
 function parseSelected (other,dataSources,list){
 
     list.map((o,i)=>{

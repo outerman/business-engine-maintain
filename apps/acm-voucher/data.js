@@ -34,6 +34,8 @@ export function getMeta() {
 					name:'tree',
 					className:'acm-voucher-left-tree',
 					checkable:false,
+					draggable: true,
+					onDrop: '{{$onDrop}}',
 				   	defaultExpandedKeys:['0-0-0', '0-0-1'],
 				   	defaultSelectedKeys:['0-0-0', '0-0-1'],
 				   	defaultCheckedKeys:['0-0-0', '0-0-1'],
