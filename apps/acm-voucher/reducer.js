@@ -24,6 +24,23 @@ class reducer {
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
         return state
     }
+    initTree = (state,data)=>{
+        return this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
+    }
+
+    setInventoryProperty = (state,value)=>{
+        let inventoryPropertyList = value.map(o=>{
+            return {name:o}
+        })
+
+        state = this.metaReducer.sf(state,'data.other.inventoryProperty',fromJS(value))
+        state = this.metaReducer.sf(state,'data.templateData.inventoryPropertyList',fromJS(inventoryPropertyList))
+
+        return state
+
+    }
+
+
     setAccountSource = (state,data)=>{
         let accountSource = data.map((o,i)=>{
             return {id: i+1,value:o.code,name:o.gradeName}
