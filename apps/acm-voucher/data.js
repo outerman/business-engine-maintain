@@ -166,11 +166,25 @@ export function getMeta() {
 					},{
 						name:'item-r-3',
 						component:'::li',
+						className:'inventoryProperty',
 						children:[{
 							name:'item-r-3-1',
-							component:'Button',
-							onClick:'{{$setInventoryProperty}}',
+							component:'::div',
+							// onClick:'{{$setInventoryProperty}}',
 							children:'设置可选存货'
+						},{
+							name:'InventoryPropertyTree',
+							component:'TreeSelect',
+							multiple:true,
+							onChange:'{{$setInventoryProperty}}',
+							allowClear:true,
+							dropdownMatchSelectWidth:true,
+							// treeDefaultExpandAll:true,
+							placeholder:'选择存货',
+							value:'{{data.other.inventoryProperty}}',
+							size:'small',
+							children:'{{$getInventoryTreeNode()}}'
+							// treeData:'{{data.dataSources.inventoryPropertyList}}'
 						}]
 					}]
 				}]
@@ -1120,6 +1134,9 @@ export function getInitState() {
 			templateData:{
 				businessType:{
 				}
+			},
+			other:{
+				inventoryProperty:[]
 			},
 			standard:18,
 			interface:{

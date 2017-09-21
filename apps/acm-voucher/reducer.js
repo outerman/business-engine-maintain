@@ -19,12 +19,29 @@ class reducer {
         const content = this.metaReducer.gf(state, 'data.content')
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
+
+
+
     addBisness = (state)=>{
         return state
     }
     initTree = (state,data)=>{
         return this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
     }
+
+    setInventoryProperty(state,value){
+        let inventoryPropertyList = value.map(o=>{
+            return {name:o}
+        })
+
+        this.metaReducer.sf(stats,'data.other.inventoryProperty',fromJS(value))
+        this.metaReducer.sf(stats,'data.templateData.inventoryPropertyList',fromJS(inventoryPropertyList))
+
+        return state
+
+    }
+
+
     setAccountSource = (state,data)=>{
         let accountSource = data.map((o,i)=>{
             return {id: i+1,value:o.code,name:o.gradeName}

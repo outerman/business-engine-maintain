@@ -3,7 +3,6 @@ import * as mkComponents from 'mk-component'
 import myConfig  from './config'
 
 import interface_data_card from './apps/acm-voucher/apps/interface-data-card/index.js'
-import inventory_property_tree from './apps/acm-voucher/apps/inventory-property-tree/index.js'
 import invoice_rule from './apps/acm-voucher/apps/invoice-rule/index.js'
 import invoice_rule2 from './apps/acm-voucher/apps/invoice-rule2/index.js'
 import acm_voucher from './apps/acm-voucher/index.js'
@@ -18,7 +17,6 @@ import mk_app_root from './apps/root/index.js'
 const apps = {
 		
 	[interface_data_card.name]: interface_data_card,	
-	[inventory_property_tree.name]: inventory_property_tree,	
 	[invoice_rule.name]: invoice_rule,	
 	[invoice_rule2.name]: invoice_rule2,	
 	[acm_voucher.name]: acm_voucher,	

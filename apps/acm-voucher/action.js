@@ -4,7 +4,7 @@ import config from './config'
 import * as consts from './consts'
 import { Map,fromJS } from 'immutable'
 import * as util from './util'
-import { Tree,Input ,DataGrid,Select} from 'mk-component'
+import { Tree,Input ,DataGrid,Select,TreeSelect} from 'mk-component'
 const TreeNode = Tree.TreeNode
 
 class action {
@@ -763,25 +763,46 @@ class action {
 
 
     }
+    treeSelectNode (inventoryPropertyList){
+        if(!inventoryPropertyList) return []
+        let ret = [],
+            list = inventoryPropertyList.toJS()
 
-    // 弹框 设置可选存货属性
-    setInventoryProperty = async ()=>{
-        if(!this.isBizCheck()) return
 
-        let {metaAction} = this,
-            inventoryPropertyList = metaAction.gf('data.dataSources.inventoryPropertyList').toJS()
-        const ret = await metaAction.modal('show',{
-            title:'设置可选存货',
-            width:400,
-            children:metaAction.loadApp('inventory-property-tree',{
-                store:this.component.props.store,
-                initData:{inventoryPropertyList}
-            })
+        list.map((o,i)=>{
+            if(o.detailList){
+                ret.push(
+                    <TreeSelect.TreeNode value = {o.name} key = {`1-${i}`} title = {o.name} >
+                        {
+                            o.detailList.map((oo,idx)=>{
+                                return <TreeSelect.TreeNode value = {oo.name} key = {`1-${i}-${idx}`} title = {oo.name} />
+                            })
+                        }
+
+                    </TreeSelect.TreeNode>
+                )
+            }else{
+                ret.push(<TreeSelect.TreeNode value = {o.name} key = {`1-${i}`} title = {o.name} />)
+            }
+
         })
-        if(ret){
-            debugger
-        }
 
+        return ret
+    }
+    getInventoryTreeNode= ()=>{
+        let {metaAction} = this,
+            inventoryPropertyList = metaAction.gf('data.dataSources.inventoryPropertyList'),
+            treeSelectNode = this.treeSelectNode(inventoryPropertyList)
+
+        return treeSelectNode
+    }
+
+
+    // 设置可选存货属性
+    setInventoryProperty = (val)=>{
+        if(!this.isBizCheck()) return
+        debugger
+        this.injections.reduce('setInventoryProperty',val)
     }
 
     // 弹框 界面元数据
@@ -876,13 +897,8 @@ class action {
         if (ret) {
             let list =this.metaAction.gf('data.rule.list').toJS()
             list.push(ret.value.list)
-            // this.injectFuns.reduce('addInvoiceRule',ret.value.list)
+
             this.injections.reduce('initRuleList',list)
-            // this.metaAction.sf('data.rule.list',fromJS(list))
-            // this.metaAction.sfs({
-            //     'data.other.educationDataSource': fromJS(response),
-            //     'data.form.education': fromJS(ret)
-            // })
         }
     }
 
