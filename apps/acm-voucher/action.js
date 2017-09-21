@@ -58,8 +58,8 @@ class action {
     addBusiness = async () =>{
 		let selectInOrOutType = this.metaAction.gf('data.selectInOrOutType'),
 			treeType = this.metaAction.gf('data.businessTypeList').toJS(),
-			ret = {}
-		if(!selectInOrOutType)
+			ret = {}, reg = /-/
+		if(reg.test(selectInOrOutType))
             return this.metaAction.toast('error','请先选择收支分类')
 			
         const rets = await this.metaAction.modal('show', {
@@ -89,12 +89,12 @@ class action {
     }
     handleSelect=(checkedNode,selectedNode)=>{
         if(selectedNode.node.props.className === 'z-tree-parent'){//点父级  不查询
-			let reg = /-/
-			if(reg.test(selectedNode.node.props.eventKey)) {
-				return this.injections.reduce('selectInOrOutType')
-			} else {
+//			let reg = /-/
+//			if(reg.test(selectedNode.node.props.eventKey)) {
+//				return this.injections.reduce('selectInOrOutType')
+//			} else {
 				return this.injections.reduce('selectInOrOutType', selectedNode.node.props.eventKey)
-			}
+//			}
         }
 
         let code = selectedNode.node.props['data-code']
