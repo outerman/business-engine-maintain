@@ -11,11 +11,29 @@ class action {
     onInit = ({ component, injections }) => {
         this.component = component
         this.injections = injections
-        injections.reduce('init')
+		this.initData = component.props.initData
+		
+		if(this.component.props.setOkListener)
+			this.component.props.setOkListener(this.onOk)
+		
+        injections.reduce('init', this.initData)
     }
 
     btnClick = () => {
         this.injections.reduce('modifyContent')
+    }
+	
+	handleChange = (key) => (e) => {
+		this.injections.reduce("changeData", key, e.target.value)
+	}
+
+    onOk = () => {
+        let list = this.metaAction.gf('data').toJS()
+		
+		list.isShow = true
+		list.treeCode = list.code
+		
+        return {result: true, value:list}
     }
 }
 

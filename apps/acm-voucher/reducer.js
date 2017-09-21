@@ -19,9 +19,6 @@ class reducer {
         const content = this.metaReducer.gf(state, 'data.content')
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
-    addBusiness = (state)=>{
-        return state
-    }
     initTree = (state,data, businessTypeList)=>{
         state = this.metaReducer.sf(state, 'data.businessTypeList', fromJS(businessTypeList))
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
@@ -167,6 +164,10 @@ class reducer {
         state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule.list)))
         return state
     }
+	selectInOrOutType = (state, selectInOrOutType) => {
+		state = this.metaReducer.sf(state, 'data.selectInOrOutType', selectInOrOutType)
+		return state
+	}
 }
 
 function parseSelected (other,dataSources,list){

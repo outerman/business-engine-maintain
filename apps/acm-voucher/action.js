@@ -37,13 +37,13 @@ class action {
     queryTree = async () => {
         let response = await this.webapi.businessTypeTemplate.init(),
             ret = {}
-
+		let data = JSON.parse(JSON.stringify(response))
         //收支数据
-        ret.incomeTypes = util.enumToArray(response.paymentsTypeList)
+        ret.incomeTypes = util.enumToArray(data.paymentsTypeList)
         //业务类型
-        ret.bizTypes = util.enumToArray(response.businessTypeList)
+        ret.bizTypes = util.enumToArray(data.businessTypeList)
         //左树数据
-        ret.types = util.typesToTree(response.businessTypeList)
+        ret.types = util.typesToTree(data.businessTypeList)
         // response.filter = filter
 
         this.injections.reduce('initTree', ret, response.businessTypeList)
@@ -52,24 +52,49 @@ class action {
     btnClick = () => {
         this.injections.reduce('modifyContent')
     }
+	addBusinessType = async () => {
+		
+	}
     addBusiness = async () =>{
-
-        const ret = await this.metaAction.modal('show', {
+		let selectInOrOutType = this.metaAction.gf('data.selectInOrOutType'),
+			treeType = this.metaAction.gf('data.businessTypeList').toJS(),
+			ret = {}
+		if(!selectInOrOutType)
+            return this.metaAction.toast('error','请先选择收支分类')
+			
+        const rets = await this.metaAction.modal('show', {
             title: '业务类型分类新增',
-            width: 200,
-            children: this.metaAction.loadApp('createCategory', {})
+            width: 300,
+            children: this.metaAction.loadApp('createCategory', {
+                store: this.component.props.store,
+                initData: {selectInOrOutType}
+            })
         })
-        if(ret) {
-            const response = await this.webapi.businessTypeTemplate.createCategory(ret)
+        if(rets.result) {
+            const response = await this.webapi.businessTypeTemplate.createCategory(rets.value)
 
-            // this.injections.reduce('addBusiness')
+			this.metaAction.toast('success', '创建成功!')
+
+			treeType.map((o, i) => {
+				if(o.id == response.paymentsType) {
+					treeType.splice(i + 1, 0, response)
+				}
+			})
+
+			ret.types = util.typesToTree(treeType)
+			this.injections.reduce('initTree', ret, this.metaAction.gf('data.businessTypeList').toJS())
         }
     }
     onSearch = (val)=>{
     }
     handleSelect=(checkedNode,selectedNode)=>{
         if(selectedNode.node.props.className === 'z-tree-parent'){//点父级  不查询
-            return
+			let reg = /-/
+			if(reg.test(selectedNode.node.props.eventKey)) {
+				return this.injections.reduce('selectInOrOutType')
+			} else {
+				return this.injections.reduce('selectInOrOutType', selectedNode.node.props.eventKey)
+			}
         }
 
         let code = selectedNode.node.props['data-code']
@@ -274,46 +299,38 @@ class action {
        
         if(response.isActualMove) {
             this.metaAction.toast('success','移动成功!')
-            treeType.map(o => {
-                if(o.code == response.source.code) {
-                    o.code = response.source.treeCode
-                }
-                if(o.subTypes) {
-
-                }
-            })
-            let moveTypeInfo = []
+//            let moveTypeInfo = []
             let sortTypeFuns1 = (treeType) => {
                 treeType.map((o, i) => {
-                    if(o.subTypes) {
-                        sortTypeFuns1(o.subTypes)
-                    } else {
+//                    if(o.subTypes) {
+//                        sortTypeFuns1(o.subTypes)
+//                    } else {
                         if(o.code == response.source.code) {
-                            o.code = response.source.treeCode
-                            moveTypeInfo.push(o)
-                            treeType.splice(i, 1)
+                            o.treeCode = response.source.treeCode
+//                            moveTypeInfo.push(o)
+//                            treeType.splice(i, 1)
                         }
                         
-                    }                   
+//                    }                   
                 })
             }
-            let sortTypeFuns2 = (treeType) => {
-                treeType.map((o, i) => {
-                    if(o.subTypes) {
-                        sortTypeFuns2(o.subTypes)
-                    } else {
-                        if(o.code == moveCodeInfo['data-code']) {
-                            if(option.previous.code) {
-                                treeType.splice(i + 1, 0, moveTypeInfo[0])
-                            } else if(option.next.code) {
-                                treeType.splice(i, 0, moveTypeInfo[0])
-                            }
-                        }
-                    }                   
-                })
-            }
+//            let sortTypeFuns2 = (treeType) => {
+//                treeType.map((o, i) => {
+//                    if(o.subTypes) {
+//                        sortTypeFuns2(o.subTypes)
+//                    } else {
+//                        if(o.code == moveCodeInfo['data-code']) {
+//                            if(option.previous && option.previous.code) {
+//                                treeType.splice(i + 1, 0, moveTypeInfo[0])
+//                            } else if(option.next && option.next.code) {
+//                                treeType.splice(i, 0, moveTypeInfo[0])
+//                            }
+//                        }
+//                    }                   
+//                })
+//            }
             sortTypeFuns1(treeType)
-            sortTypeFuns2(treeType)
+//            sortTypeFuns2(treeType)
             ret.types = util.typesToTree(treeType)
             this.injections.reduce('initTree', ret, this.metaAction.gf('data.businessTypeList').toJS())
         }
@@ -471,7 +488,7 @@ class action {
                     this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`).toJS():
                     {}
             }else{
-                option = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)?
+                option = this.met333aAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)?
                     this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`).toJS():
                     []
                 dataSource = consts[columnKey]

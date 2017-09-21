@@ -36,8 +36,8 @@ export function enumToArray(data) {
 }
 export function typesToTree (types) {
 	let ret = [],
-		findParent = (code) => {
-		return ret.find(o => o.code == code.substring(0, 2))
+		findParent = (treeCode) => {
+		return ret.find(o => o.treeCode == treeCode.substring(0, 2))
 	}
 
 	for (let t of types) {
@@ -45,12 +45,14 @@ export function typesToTree (types) {
 		//if( t.isShow === false )
 		//  continue
 
-		if (t.code.length == 2)
+		if (t.treeCode.length == 2)
 			ret.push(t)
-		if (t.code.length == 6) {
+		if (t.treeCode.length == 6) {
 			//if(isUseful(t.id))
 			//   continue
-
+			if(t.isCategory && !t.subTypes) 
+				t.subTypes = []
+				
 			let parent = ret[ret.length - 1]
 			if (!parent.subTypes)
 				parent.subTypes = []
@@ -58,12 +60,12 @@ export function typesToTree (types) {
 			parent.subTypes.push(t)
 		}
 
-		if (t.code.length == 10) {
+		if (t.treeCode.length == 10) {
 			//if(isUseful(t.id))
 			//    continue
 			if (!ret[ret.length - 1].subTypes) {
-				// da.setMessage({ type: 'error', mode: 'message', content: `编码${t.code}业务类型找不到父级，请联系元数据维护人员` })(injectFuns)
-				alert(`编码${t.code}业务类型找不到父级，请联系元数据维护人员`)
+				// da.setMessage({ type: 'error', mode: 'message', content: `编码${t.treeCode}业务类型找不到父级，请联系元数据维护人员` })(injectFuns)
+				alert(`编码${t.treeCode}业务类型找不到父级，请联系元数据维护人员`)
 				return
 			}
 			let parent = ret[ret.length - 1].subTypes[ret[ret.length - 1].subTypes.length - 1]

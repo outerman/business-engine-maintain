@@ -17,6 +17,11 @@ export function getMeta() {
 					name:'add',
 					component:'Button',
 					children:'新增业务',
+					onClick:'{{$addBusinessType}}'
+				},{
+					name:'add1',
+					component:'Button',
+					children:'新增分类',
 					onClick:'{{$addBusiness}}'
 				}]
 

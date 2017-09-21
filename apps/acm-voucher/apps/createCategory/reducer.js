@@ -9,8 +9,9 @@ class reducer {
         this.config = config.current
     }
 
-    init = (state, option) => {
+    init = (state, initData) => {
         const initState = getInitState()
+		initState.data.paymentsType = initData.selectInOrOutType
         return this.metaReducer.init(state, initState)
     }
 
@@ -18,6 +19,11 @@ class reducer {
         const content = this.metaReducer.gf(state, 'data.content')
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
+	
+	changeData = (state, key, value) => {
+		state = this.metaReducer.sf(state, 'data.' + key, value)
+		return state
+	}
 }
 
 export default function creator(option) {

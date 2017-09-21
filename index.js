@@ -2,6 +2,7 @@ import { config, start, componentFactory } from 'mk-meta-engine'
 import * as mkComponents from 'mk-component'
 import myConfig  from './config'
 
+import createCategory from './apps/acm-voucher/apps/createCategory/index.js'
 import interface_data_card from './apps/acm-voucher/apps/interface-data-card/index.js'
 import invoice_rule from './apps/acm-voucher/apps/invoice-rule/index.js'
 import invoice_rule2 from './apps/acm-voucher/apps/invoice-rule2/index.js'
@@ -16,6 +17,7 @@ import mk_app_root from './apps/root/index.js'
 
 const apps = {
 		
+	[createCategory.name]: createCategory,	
 	[interface_data_card.name]: interface_data_card,	
 	[invoice_rule.name]: invoice_rule,	
 	[invoice_rule2.name]: invoice_rule2,	

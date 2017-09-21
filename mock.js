@@ -1,4 +1,5 @@
 
+import './apps/acm-voucher/apps/createCategory/mock.js';
 import './apps/acm-voucher/apps/interface-data-card/mock.js';
 import './apps/acm-voucher/apps/invoice-rule/mock.js';
 import './apps/acm-voucher/apps/invoice-rule2/mock.js';
