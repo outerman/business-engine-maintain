@@ -21,7 +21,7 @@ export function getMeta() {
 				},{
 					name:'add1',
 					component:'Button',
-					children:'{{data.addOrDelBussiness}}',
+					children:'{{data.other.addOrDelBussiness}}',
 					onClick:'{{$addBusiness}}'
 				}]
 
@@ -1142,8 +1142,8 @@ export function getInitState() {
 				businessType:{
 				}
 			},
-			addOrDelBussiness: '新增分类',
 			other:{
+				addOrDelBussiness: '新增分类',
 				inventoryProperty:[]
 			},
 			standard:18,

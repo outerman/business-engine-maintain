@@ -24,9 +24,6 @@ class reducer {
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
         return state
     }
-    initTree = (state,data)=>{
-        return this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
-    }
 
     setInventoryProperty = (state,value)=>{
         let inventoryPropertyList = value.map(o=>{
@@ -178,8 +175,13 @@ class reducer {
         state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule.list)))
         return state
     }
-	selectInOrOutType = (state, selectInOrOutType) => {
-		state = this.metaReducer.sf(state, 'data.selectInOrOutType', selectInOrOutType)
+	selectInOrOutInfo = (state, selectInOrOutInfo) => {
+		state = this.metaReducer.sf(state, 'data.selectInOrOutInfo', selectInOrOutInfo)
+		if(selectInOrOutInfo['data-code'].length == 6) {
+			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '删除分类')
+		} else {
+			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '新增分类')
+		}
 		return state
 	}
 }

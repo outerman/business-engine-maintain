@@ -14,6 +14,7 @@ export default {
         update:(option)=> fetch.post('/v1/businessTypeTemplate/update',option),
         move: (option) => fetch.post('/v1/businessTypeTemplate/move', option),
         createCategory: (option) => fetch.post('/v1/businessType/createCategory', option),
+        businessDelete: (option) => fetch.post('/v1/businessTypeTemplate/delete', option),
     },
 
     tree: {
