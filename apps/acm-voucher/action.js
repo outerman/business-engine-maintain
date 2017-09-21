@@ -763,7 +763,7 @@ class action {
 
 
     }
-    treeSelectNode (inventoryPropertyList){
+    treeSelectNode =(inventoryPropertyList)=>{
         if(!inventoryPropertyList) return []
         let ret = [],
             list = inventoryPropertyList.toJS()
