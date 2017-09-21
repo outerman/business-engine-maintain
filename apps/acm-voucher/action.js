@@ -375,15 +375,16 @@ class action {
     }
     cellClick = (ps, columnKey,type) => (e) => {
         e.stopPropagation()
-        let {metaAction} = this,
-        code = metaAction.gf('data.templateData.businessType.code')
+        let {metaAction} = this
+
 
         if(type == 'rule'){
-            if(!code) return metaAction.toast('error','请选择业务类型')
+            if(!this.isBizCheck()) return
+
             return metaAction.sf('data.rule.other.focusCellInfo', { rowIndex: ps.rowIndex, columnKey })
         }
         if(columnKey === 'invoiceType'){
-            if(!code) return metaAction.toast('error','请选择业务类型')
+            if(!this.isBizCheck()) return
 
             let item  = metaAction.gf(`data.interface.list.${ps.rowIndex}`).toJS()
 
@@ -397,6 +398,9 @@ class action {
 
     }
     handleChange = (a,b,c,d)=>{
+        if(!this.isBizCheck()) return
+
+
         // console.log(a,b,c,d)
     }
 
@@ -663,12 +667,11 @@ class action {
         return this.metaAction.toast('error','尚未开发')
     }
     handleSave = async()=>{
+        if(!this.isBizCheck()) return
+
         let metaAction = this.metaAction,
             templateData = metaAction.gf('data.templateData').toJS(),
-            interfaceData = metaAction.gf('data.interface').toJS(),
-            code = metaAction.gf('data.templateData.businessType.code')
-
-        if(!code) return metaAction.toast('error','请选择业务类型')
+            interfaceData = metaAction.gf('data.interface').toJS()
 
         let ruleData = metaAction.gf('data.rule').toJS(),
             tacticsList = this.parseTacticsList(templateData,interfaceData),
@@ -823,11 +826,79 @@ class action {
         }
     }
 
+    // business set
+
+    bizAttrChange = (key)=>(val,path)=>{
+        if(!this.isBizCheck()) return
+
+        this.metaAction.sf(`data.templateData.businessType.${key}`,val.target.value)
+
+        debugger
+    }
+
+    taxPropertyChange = (val,path)=>{
+        if(!this.isBizCheck()) return
+
+        let taxPropertyList = consts.taxPropertyList,
+            item = taxPropertyList.filter(o=>{
+                return o.attrCode == val
+            })[0]
+
+        this.metaAction.sfs({
+            'data.taxProperty.attrCode':val,
+            'data.taxProperty.attrName':item.attrName
+        })
+
+
+    }
+    onRightChange =(key)=>(val)=>{
+        if(!this.isBizCheck()) return
+        this.metaAction.sf(`data.templateData.businessType.${key}`,val)
+    }
+
+    handleReportChange =(val)=>{
+        if(!this.isBizCheck()) return
+        this.metaAction.sf(`data.templateData.businessType.report`,val)
+    }
+
+    isBizCheck = ()=>{//   检测是否选择业务类型
+        let {metaAction} = this
+
+        if(!metaAction.gf('data.templateData.businessType.code')){
+            metaAction.toast('error','请先选择业务类型')
+            return
+        }else{
+            return true
+        }
+
+
+    }
+
+    // 弹框 设置可选存货属性
+    setInventoryProperty = async ()=>{
+        if(!this.isBizCheck()) return
+
+        let {metaAction} = this,
+            inventoryPropertyList = metaAction.gf('data.dataSources.inventoryPropertyList').toJS()
+        const ret = await metaAction.modal('show',{
+            title:'设置可选存货',
+            width:400,
+            children:metaAction.loadApp('inventory-property-tree',{
+                store:this.component.props.store,
+                initData:{inventoryPropertyList}
+            })
+        })
+        if(ret){
+            debugger
+        }
+
+    }
+
     // 弹框 界面元数据
     addInvoiceType = async (data,rowIndex) => {
+        if(!this.isBizCheck()) return
+
         let {metaAction} = this
-        if(!metaAction.gf('data.templateData.businessType.code'))
-            return metaAction.toast('error','请先选择业务类型')
 
         if(data.target) data = undefined
         const ret = await metaAction.modal('show', {
@@ -861,8 +932,7 @@ class action {
     // 弹框 新增规则1（多个添加）
     newInvoiceRule = async ()=>{
         return this.metaAction.toast('error','功能尚未开发')
-        if(!this.metaAction.gf('data.templateData.businessType.code'))
-            return this.metaAction.toast('error','请先选择业务类型')
+        if(!this.isBizCheck()) return
 
         const ret = await this.metaAction.modal('show', {
             title: '新增/编辑凭证规则：',
@@ -882,9 +952,7 @@ class action {
     }
     // 弹框 新增规则2
     newInvoiceRule2 = async ()=>{
-        let metaAction = this.metaAction
-        if(!this.metaAction.gf('data.templateData.businessType.code'))
-            return this.metaAction.toast('error','请先选择业务类型')
+        if(!this.isBizCheck()) return
 
         let dataSources ={
             influence:consts.influence,

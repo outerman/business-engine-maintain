@@ -56,14 +56,11 @@ class reducer {
         return state
     }
     saveData = (state,data) =>{
-        // let dataSources = this.metaReducer.gf(state,'data.dataSources').toJS(),
-            // temp = this.getDataSource(data)
 
-        // for(let o in temp){
-        //     dataSources[o] = temp[o]
-        // }
+        let inventoryPropertyList = JSON.parse(JSON.stringify(data.inventoryPropertyList))
+
         state = this.metaReducer.sf(state,'data.store',fromJS(data))
-        // state = this.metaReducer.sf(state,'data.dataSources',fromJS(dataSources))
+        state = this.metaReducer.sf(state,'data.dataSources.inventoryPropertyList',fromJS(inventoryPropertyList))
         return  state
     }
     getDataSource = (data) =>{
@@ -210,10 +207,6 @@ function parseSelected (other,dataSources,list){
                         return oo.value == o.extendAttr
                     })
                 }
-
-
-
-
             }
         }
 

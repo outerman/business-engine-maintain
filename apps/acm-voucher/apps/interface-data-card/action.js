@@ -176,9 +176,8 @@ class action {
                     defaultIndustry.push('信息技术')
                     break
             }
-
-            return defaultIndustry
         })
+        return  defaultIndustry
     }
     industryChange = (checkedValues)=>{
         let industryList = []
