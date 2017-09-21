@@ -53,12 +53,13 @@ class action {
         this.injections.reduce('modifyContent')
     }
 	addBusinessType = async () => {
-		
+
 	}
     addBusiness = async () =>{
 		let selectInOrOutInfo = this.metaAction.gf('data.selectInOrOutInfo'),
 			treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			ret = {}, reg = /-/
+
 		if(reg.test(selectInOrOutInfo.eventKey)){
 			if(selectInOrOutInfo['data-code'].length != 6) {
             	return this.metaAction.toast('error','请先选择收支分类')
@@ -84,6 +85,11 @@ class action {
 			}
 		}
 			
+
+		if(reg.test(selectInOrOutType))
+            return this.metaAction.toast('error','请先选择收支分类')
+
+
         const rets = await this.metaAction.modal('show', {
             title: '业务类型分类新增',
             width: 300,
@@ -291,7 +297,7 @@ class action {
                 //     "code": ""
                 //   },
                 //   "next": { //-- 目标位置后一个业务类型，previous 有值以 previous 为准
-                //     "code": "" 
+                //     "code": ""
                 //   },
                 //   "parent": { //-- 目标位置上级业务类型
                 //     "code": ""
@@ -313,7 +319,7 @@ class action {
         }
 
         let response = await this.webapi.businessTypeTemplate.move(option)
-       
+
         if(response.isActualMove) {
             this.metaAction.toast('success','移动成功!')
 //            let moveTypeInfo = []
@@ -327,8 +333,8 @@ class action {
 //                            moveTypeInfo.push(o)
 //                            treeType.splice(i, 1)
                         }
-                        
-//                    }                   
+
+//                    }
                 })
             }
 //            let sortTypeFuns2 = (treeType) => {
@@ -343,7 +349,7 @@ class action {
 //                                treeType.splice(i, 0, moveTypeInfo[0])
 //                            }
 //                        }
-//                    }                   
+//                    }
 //                })
 //            }
             sortTypeFuns1(treeType)
@@ -509,7 +515,7 @@ class action {
                     this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`).toJS():
                     {}
             }else{
-                option = this.met333aAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)?
+                option = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)?
                     this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`).toJS():
                     []
                 dataSource = consts[columnKey]
