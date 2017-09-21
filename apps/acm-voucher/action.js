@@ -764,6 +764,26 @@ class action {
 
     }
 
+    // 弹框 设置可选存货属性
+    setInventoryProperty = async ()=>{
+        if(!this.isBizCheck()) return
+
+        let {metaAction} = this,
+            inventoryPropertyList = metaAction.gf('data.dataSources.inventoryPropertyList').toJS()
+        const ret = await metaAction.modal('show',{
+            title:'设置可选存货',
+            width:400,
+            children:metaAction.loadApp('inventory-property-tree',{
+                store:this.component.props.store,
+                initData:{inventoryPropertyList}
+            })
+        })
+        if(ret){
+            debugger
+        }
+
+    }
+
     // 弹框 界面元数据
     addInvoiceType = async (data,rowIndex) => {
         if(!this.isBizCheck()) return

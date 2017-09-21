@@ -169,7 +169,7 @@ export function getMeta() {
 						children:[{
 							name:'item-r-3-1',
 							component:'Button',
-							// onChange:'{{$onChange}}',
+							onClick:'{{$setInventoryProperty}}',
 							children:'设置可选存货'
 						}]
 					}]
