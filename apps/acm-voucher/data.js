@@ -19,7 +19,7 @@ export function getMeta() {
 					children:'新增业务',
 					onClick:'{{$addBusinessType}}'
 				},{
-					name:'add1',
+					name:'data.other.addOrDelBus',
 					component:'Button',
 					children:'{{data.other.addOrDelBussiness}}',
 					onClick:'{{$addBusiness}}'
@@ -53,6 +53,7 @@ export function getMeta() {
 		},{
 			name: 'right',
 			component: 'Card',
+			_visible: '{{data.other.rightVisible == "right"}}',
 			className:'acm-voucher-right',
 			children:[{
 				name:'right-header',
@@ -225,6 +226,34 @@ export function getMeta() {
 					onClick:'{{$handleSave}}',
 					children:'保存'
 				}]
+			}]
+		}, {
+			name: 'right1',
+			component: 'Card',
+			_visible: '{{data.other.rightVisible == "right1"}}',
+			className:'acm-voucher-right1',
+			children:[{
+				name: 'delOrmodifyBus',
+				component: '::div',
+				children:['业务类型名称', {
+					name: 'busName',
+					component: 'Input',
+					size: 'small',
+					value: '{{data.right1.busName}}',
+					onChange: '{{$handleChange("busName")}}'
+				}]
+			}, {
+				name: 'busNameSave',
+				component: 'Button',
+				className: 'acm-voucher-busNameSave-btn',
+				onClick:'{{$busNameSave}}',
+				children: '保存'
+			}, {
+				name: 'busNameDel',
+				component: 'Button',
+				className: 'acm-voucher-busNameDel-btn',
+				onClick:'{{$busNameDel}}',
+				children: '删除'
 			}]
 		}]
 	}
@@ -1144,7 +1173,12 @@ export function getInitState() {
 			},
 			other:{
 				addOrDelBussiness: '新增分类',
+				addOrDelBus: 'add',
+				rightVisible: 'right',
 				inventoryProperty:[]
+			},
+			right1: {
+				busName: ''
 			},
 			standard:18,
 			interface:{

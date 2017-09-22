@@ -176,11 +176,21 @@ class reducer {
         return state
     }
 	selectInOrOutInfo = (state, selectInOrOutInfo) => {
-		state = this.metaReducer.sf(state, 'data.selectInOrOutInfo', selectInOrOutInfo)
-		if(selectInOrOutInfo['data-code'].length == 6) {
+		state = this.metaReducer.sf(state, 'data.other.selectInOrOutInfo', selectInOrOutInfo)
+		let treeType = this.metaReducer.gf(state, 'data.businessTypeList'), isTypeClass
+		treeType.map(o => {
+			if(o.get('code') == selectInOrOutInfo['data-code']) {
+				isTypeClass = o.get('isCategory')
+			}
+		})
+		if(selectInOrOutInfo['data-code'].length == 6 && isTypeClass) {
 			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '删除分类')
+			state = this.metaReducer.sf(state, 'data.other.addOrDelBus', 'del')
+			state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right1')
 		} else {
 			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '新增分类')
+			state = this.metaReducer.sf(state, 'data.other.addOrDelBus', 'add')
+			state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right')
 		}
 		return state
 	}
