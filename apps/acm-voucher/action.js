@@ -61,7 +61,7 @@ class action {
 			treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			treeType1 = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			ret = {}, reg = /-/, isTypeClass
-		
+
 		if(addOrDelBus == 'del'){
 			treeType.map(o => {
 				if(o.code == selectInOrOutInfo['data-code']) {
@@ -90,17 +90,17 @@ class action {
 					})
 					ret.types = util.typesToTree(treeType)
 					this.injections.reduce('initTree', ret, treeType1)
-					return 
+					return
 				}
 			} else {
 				return this.metaAction.toast('error','请先选择业务分类')
 			}
 		} else if(addOrDelBus == 'add') {
-			
+
 			if(!selectInOrOutInfo || reg.test(selectInOrOutInfo.eventKey)) {
 				return this.metaAction.toast('error','请先选择收支分类')
 			}
-			
+
 			const rets = await this.metaAction.modal('show', {
 				title: '业务类型分类新增',
 				width: 300,
@@ -131,17 +131,17 @@ class action {
 		}
     }
 	busNameSave = async() => {
-		
+
 	}
 	busNameDel = async() => {
-		
+
 	}
     onSearch = (val)=>{
     }
     handleSelect=(checkedNode,selectedNode)=>{
 		this.injections.reduce('selectInOrOutInfo', selectedNode.node.props)
         if(selectedNode.node.props.className === 'z-tree-parent'){//点父级  不查询
-			return 
+			return
         }
 
         let code = selectedNode.node.props['data-code']
@@ -346,38 +346,38 @@ class action {
 
         if(response.isActualMove) {
             this.metaAction.toast('success','移动成功!')
-//            let moveTypeInfo = []
+        //    let moveTypeInfo = []
             let sortTypeFuns1 = (treeType) => {
                 treeType.map((o, i) => {
-//                    if(o.subTypes) {
-//                        sortTypeFuns1(o.subTypes)
-//                    } else {
+                //    if(o.subTypes) {
+                    //    sortTypeFuns1(o.subTypes)
+                //    } else {
                         if(o.code == response.source.code) {
                             o.treeCode = response.source.treeCode
-//                            moveTypeInfo.push(o)
-//                            treeType.splice(i, 1)
+                        //    moveTypeInfo.push(o)
+                        //    treeType.splice(i, 1)
                         }
 
-//                    }
+                //    }
                 })
             }
-//            let sortTypeFuns2 = (treeType) => {
-//                treeType.map((o, i) => {
-//                    if(o.subTypes) {
-//                        sortTypeFuns2(o.subTypes)
-//                    } else {
-//                        if(o.code == moveCodeInfo['data-code']) {
-//                            if(option.previous && option.previous.code) {
-//                                treeType.splice(i + 1, 0, moveTypeInfo[0])
-//                            } else if(option.next && option.next.code) {
-//                                treeType.splice(i, 0, moveTypeInfo[0])
-//                            }
-//                        }
-//                    }
-//                })
-//            }
+        //    let sortTypeFuns2 = (treeType) => {
+            //    treeType.map((o, i) => {
+                //    if(o.subTypes) {
+                    //    sortTypeFuns2(o.subTypes)
+                //    } else {
+                    //    if(o.code == moveCodeInfo['data-code']) {
+                        //    if(option.previous && option.previous.code) {
+        //                        treeType.splice(i + 1, 0, moveTypeInfo[0])
+        //                    } else if(option.next && option.next.code) {
+        //                        treeType.splice(i, 0, moveTypeInfo[0])
+        //                    }
+        //                }
+        //            }
+        //        })
+        //    }
             sortTypeFuns1(treeType)
-//            sortTypeFuns2(treeType)
+        //    sortTypeFuns2(treeType)
             ret.types = util.typesToTree(treeType)
             this.injections.reduce('initTree', ret, this.metaAction.gf('data.businessTypeList').toJS())
         }
