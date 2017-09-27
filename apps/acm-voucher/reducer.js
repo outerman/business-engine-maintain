@@ -159,8 +159,10 @@ class reducer {
 
         return dataSources
     }
+
     initTemplate = (state,templateData,typeName) =>{
         state = this.metaReducer.sf(state,'data.typeName',typeName)
+        state = this.metaReducer.sf(state,'data.other.codeEditable',false)
         state = this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
         return state
     }
@@ -174,6 +176,26 @@ class reducer {
         state = this.metaReducer.sf(state,'data.rule.list',fromJS(data.rule.list))
         state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule.list)))
         return state
+    }
+    newBusiness = (state) =>{
+        state = this.metaReducer.sf(state,'data.other.codeEditable',true)
+        state = this.metaReducer.sf(state,'data.typeName','1')
+        state = this.metaReducer.sf(state,'data.templateData',fromJS(this.newBusinessData(state)))
+        state = this.metaReducer.sf(state,'data.interface.list',fromJS([]))
+        state = this.metaReducer.sf(state,'data.rule.list',fromJS([]))
+        state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right')
+
+        return state
+    }
+    newBusinessData =(state)=>{
+        debugger
+        // let templateData = this.metaReducer.gf(state,'data.templateData').toJS()
+        let templateData = {
+            businessType:{
+            }
+        }
+
+        return templateData
     }
 	selectInOrOutInfo = (state, selectInOrOutInfo) => {
 		state = this.metaReducer.sf(state, 'data.other.selectInOrOutInfo', selectInOrOutInfo)

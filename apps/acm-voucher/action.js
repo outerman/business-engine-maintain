@@ -52,9 +52,7 @@ class action {
     btnClick = () => {
         this.injections.reduce('modifyContent')
     }
-	addBusinessType = async () => {
 
-	}
     addBusiness = async () =>{
 		let selectInOrOutInfo = this.metaAction.gf('data.other.selectInOrOutInfo'),
 			addOrDelBus = this.metaAction.gf('data.other.addOrDelBus'),
@@ -141,45 +139,46 @@ class action {
     handleSelect=(checkedNode,selectedNode)=>{
 		this.injections.reduce('selectInOrOutInfo', selectedNode.node.props)
         if(selectedNode.node.props.className === 'z-tree-parent'){//点父级  不查询
-			return
+			return //this.setNewBusiness(selectedNode.node.props)
         }
 
         let code = selectedNode.node.props['data-code']
         this.queryTemplate(code)
     }
+    getTypeName = (code)=>{
+        let typeName = '1'
+        if(!code) return typeName
+
+        return code.substr(0,1)
+    }
+
+
+    newBusiness = ()=>{
+        this.initTemplate()
+    }
+
     queryTemplate = async (code)=>{
-        let response = await this.webapi.businessTypeTemplate.query({code}),
-            typeName = '收入'
+        let response = await this.webapi.businessTypeTemplate.query({code})
         // console.log(response)
 
 
 
         // let response2 = await this.webapi.businessTypeTemplate.update(response)
         // return
-        switch (response.businessType.code.substr(0,1)) {
-            case '1':
-                typeName = '收入'
-                break;
-            case '2':
-                typeName = '支出'
-                break;
-            case '3':
-                typeName = '成本/折旧和摊销'
-                break;
-            case '4':
-                typeName = '存取现金/内部账户互转'
-                break;
-            case '5':
-                typeName = '收款/付款'
-                break;
-            case '6':
-                typeName = '请会计处理'
-                break;
-            default:
+
+        this.initTemplate(response,code)
+
+
+    }
+    initTemplate = (response,code)=>{
+        let typeName = this.getTypeName(code)
+        if(response){
+            this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
+            this.injections.reduce('initForm',this.transData4List(response))
+        }else{
+            this.injections.reduce('newBusiness',typeName)
         }
 
-        this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
-        this.injections.reduce('initForm',this.transData4List(response))
     }
     handleCheck = () => {
 
@@ -647,68 +646,7 @@ class action {
                 />
             )
         }
-        /*  //不提供编辑功能
-        if(type == 'select'){
-            let dataSource = this.metaAction.gf(`data.interface.dataSources.${columnKey}`).toJS()
 
-            return (
-                <Select
-                    showSearch
-                    style={{ width: 200 }}
-                    placeholder={showValue}
-                    value = {this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`)}
-                    onChange = {::this.interfaceChange(columnKey,ps)}
-                    optionFilterProp="children"
-                    optionLabelProp="children">
-                    {
-                        dataSource.map(o=>{
-                            return <Select.Option
-                                value={o.id}>
-                                {o.name}
-                            </Select.Option>
-                        })
-                    }
-                </Select>
-            )
-        }
-        if(type == 'multiple'){
-            let dataSource = []
-            if(columnKey == 'normalRate'||columnKey == 'smallRate'){
-                dataSource = this.metaAction.gf(`data.interface.dataSources.taxRate`).toJS()
-            }else{
-                this.metaAction.gf(`data.interface.dataSources.${columnKey}`).toJS()
-            }
-            return (
-                <Select
-                    mode = 'multiple'
-                    style={{ width: 200 }}
-                    placeholder={showValue}
-                    value = {this.metaAction.gf(`data.interface.list.${ps.rowIndex}.${columnKey}`)}
-                    onChange = {::this.interfaceChange(columnKey,ps)}
-                    optionFilterProp="children"
-                    optionLabelProp="children">
-                    {
-                        dataSource.map(o=>{
-                            return <Select.Option
-                                value={o.id}>
-                                { o.name}
-                            </Select.Option>
-                        })
-                    }
-                </Select>
-            )
-        }
-
-
-        return (
-                <Input
-                   className='mk-app-editable-table-cell'
-                   onChange={this.nameChange(ps)}
-                   value={cellValue}
-                   ref={o => this.refName = o}
-                />
-            )
-        */
     }
     handlePreview = ()=>{
         return this.metaAction.toast('error','尚未开发')
@@ -877,8 +815,11 @@ class action {
 
     bizAttrChange = (key)=>(val,path)=>{
         if(!this.isBizCheck()) return
-
-        this.metaAction.sf(`data.templateData.businessType.${key}`,val.target.value)
+        let value = val.target.value
+        if(key == 'code'){
+            value = this.metaAction.gf('data.typeName')+"0"+val.target.value
+        }
+        this.metaAction.sf(`data.templateData.businessType.${key}`,value)
 
         debugger
     }
@@ -892,26 +833,36 @@ class action {
             })[0]
 
         this.metaAction.sfs({
-            'data.taxProperty.attrCode':val,
-            'data.taxProperty.attrName':item.attrName
+            'data.templateData.taxProperty.attrCode':val,
+            'data.templateData.taxProperty.attrName':item.attrName
         })
 
 
     }
-    onRightChange =(key)=>(val)=>{
+    onRightChange =(key)=>(e)=>{
         if(!this.isBizCheck()) return
-        this.metaAction.sf(`data.templateData.businessType.${key}`,val)
+        this.metaAction.sf(`data.templateData.businessType.${key}`,e.target.checked)
+    }
+    onRightIsShowChange = (e)=>{
+        if(!this.isBizCheck()) return
+        debugger
+        this.metaAction.sf(`data.templateData.businessType.isShow`,e.target.checked)
     }
 
     handleReportChange =(val)=>{
         if(!this.isBizCheck()) return
         this.metaAction.sf(`data.templateData.businessType.report`,val)
     }
+    handleTypeNameChange = (val)=>{
+        let code = this.metaAction.gf('data.templateData.businessType.code')?this.metaAction.gf('data.templateData.businessType.code').substr(2):''
+        this.metaAction.sf(`data.typeName`,val)
+        this.metaAction.sf(`data.templateData.businessType.code`,val+"0"+ code)
+    }
 
     isBizCheck = ()=>{//   检测是否选择业务类型
         let {metaAction} = this
 
-        if(!metaAction.gf('data.templateData.businessType.code')){
+        if(!metaAction.gf('data.typeName')){
             metaAction.toast('error','请先选择业务类型')
             return
         }else{
@@ -965,7 +916,7 @@ class action {
     // 弹框 界面元数据
     addInvoiceType = async (data,rowIndex) => {
         if(!this.isBizCheck()) return
-
+        debugger
         let {metaAction} = this
 
         if(data.target) data = undefined

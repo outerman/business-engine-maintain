@@ -14,7 +14,7 @@ class action {
         this.initData = component.props.initData
 
         this.injections = injections
-
+        debugger
         if (this.component.props.setOkListener)
             this.component.props.setOkListener(this.onOk)
 
@@ -129,7 +129,7 @@ class action {
         let initForm = this.initData.form,
             defaultVat = []
 
-        if(!initForm) return ['一般纳税人']
+        if(!initForm) return []
         if(initForm.vatTaxpayerNormal) defaultVat.push('一般纳税人')
         if(initForm.vatTaxpayerSmall) defaultVat.push('小规模纳税人')
 

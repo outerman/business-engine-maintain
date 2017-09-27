@@ -17,7 +17,7 @@ export function getMeta() {
 					name:'add',
 					component:'Button',
 					children:'新增业务',
-					onClick:'{{$addBusinessType}}'
+					onClick:'{{$newBusiness	}}'
 				},{
 					name:'data.other.addOrDelBus',
 					component:'Button',
@@ -64,31 +64,77 @@ export function getMeta() {
 					className:'acm-voucher-right-header-l',
 					component:'::ul',
 					children:[{
+						name:'item3',
+						component:'::li',
+						children:['业务类型:',{
+							name:'itme3-1',
+							component:'Select',
+							component:'Select',
+							value:'{{data.typeName||"1"}}',
+							disabled:'{{!data.other.codeEditable}}',
+							style:{ width: 120 },
+							onChange:'{{$handleTypeNameChange}}',
+							children:[{
+								name:'option0',
+								component:'Select.Option',
+								value:'1',
+								children:'收入'
+							},{
+								name:'option0',
+								component:'Select.Option',
+								value:'2',
+								children:'支出'
+							},{
+								name:'option0',
+								component:'Select.Option',
+								value:'3',
+								children:'成本/折旧和摊销'
+							},{
+								name:'option0',
+								component:'Select.Option',
+								value:'4',
+								children:'存取现金/内部账户互转'
+							},{
+								name:'option0',
+								component:'Select.Option',
+								value:'5',
+								children:'收款/付款'
+							},{
+								name:'option0',
+								component:'Select.Option',
+								value:'6',
+								children:'请会计处理'
+							}]
+							// children:'{{data.typeName}}'
+						}]
+					},{
 						name:'item1',
 						component:'::li',
 						children:['业务编码:',{
-							name:'itme1-1',
+							name:'itme1-0',
 							component:'::span',
-							children:'{{data.templateData.businessType.code}}'
+							children:'{{data.typeName+"0"}}'
+						},{
+							name:'itme1-1',
+							component:'Input',
+							size:'small',
+							width:100,
+							disabled:'{{!data.other.codeEditable}}',
+							onChange:'{{$bizAttrChange("code")}}',
+							value:'{{data.templateData.businessType.code && data.templateData.businessType.code.substr(2)}}'
+							// children:'{{data.templateData.businessType.code}}'
 						}]
 					},{
 						name:'item2',
 						component:'::li',
 						children:['排序编码:',{
 							name:'itme2-1',
-							component:'Input',
-							size:'small',
-							width:100,
-							onChange:'{{$bizAttrChange("treeCode")}}',
-							value:'{{data.templateData.businessType.treeCode}}'
-						}]
-					},{
-						name:'item3',
-						component:'::li',
-						children:['业务类型:',{
-							name:'itme3-1',
 							component:'::span',
-							children:'{{data.typeName}}'
+							// size:'small',
+							// width:100,
+							// onChange:'{{$bizAttrChange("treeCode")}}',
+							// value:'{{data.templateData.businessType.treeCode}}'
+							children:'{{data.templateData.businessType.treeCode}}'
 						}]
 					},{
 						name:'item4',
@@ -1174,7 +1220,7 @@ export function getInitState() {
 			other:{
 				addOrDelBussiness: '新增分类',
 				addOrDelBus: 'add',
-				rightVisible: 'right',
+				rightVisible: '',
 				inventoryProperty:[]
 			},
 			right1: {
