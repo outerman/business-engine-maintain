@@ -88,7 +88,32 @@ class action {
 		}
     }
 	busNameSave = async() => {
-
+		let selectInOrOutInfo = this.metaAction.gf('data.other.selectInOrOutInfo'),
+			treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
+			treeType1 = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
+			name = this.metaAction.gf('data.right1.busName'),
+			ret = {}, params = {}
+		
+		params.code = selectInOrOutInfo['data-code']
+		params.name = name
+		params.isShow = true
+		
+		const response = await this.webapi.businessTypeTemplate.updateCategory(params)
+		
+		this.metaAction.toast('success', '修改成功')
+		
+		treeType.map((o, i) => {
+			if(o.code == selectInOrOutInfo['data-code']) {
+				o.name = name
+			}
+		})
+		treeType1.map((o, i) => {
+			if(o.code == selectInOrOutInfo['data-code']) {
+				o.name = name
+			}
+		})
+		ret.types = util.typesToTree(treeType)
+		return this.injections.reduce('initTree', ret, treeType1)		
 	}
 	busNameDel = async() => {
 
@@ -428,10 +453,11 @@ class action {
 
     }
     handleChange = (key)=>(a,b,c,d)=>{
-        if(!this.isBizCheck()) return
-
-
-        // console.log(a,b,c,d)
+		if(key == 'busName') {
+			return this.injections.reduce("changeData", key, a.target.value)
+		} else {
+			if(!this.isBizCheck()) return
+		}
     }
 
     handleInfluenceChange = (columnKey,ps,dataSource)=>(val)=>{

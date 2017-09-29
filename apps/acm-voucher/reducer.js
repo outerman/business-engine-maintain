@@ -14,6 +14,11 @@ class reducer {
         const initState = getInitState()
         return this.metaReducer.init(state, initState)
     }
+	
+	changeData = (state, key, value) => {
+		state = this.metaReducer.sf(state, 'data.right1.' + key, value)
+		return state
+	}
 
     modifyContent = (state) => {
         const content = this.metaReducer.gf(state, 'data.content')
@@ -235,6 +240,7 @@ class reducer {
 		})
 		if(selectInOrOutInfo['data-code'].length == 6 && isTypeClass) {
 //			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '删除分类')
+			state = this.metaReducer.sf(state, 'data.right1.busName', selectInOrOutInfo.title)
 			state = this.metaReducer.sf(state, 'data.other.addOrDelBus', 'del')
 			state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right1')
 		} else {
