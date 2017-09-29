@@ -9,8 +9,8 @@ export function getMeta() {
 			children: [{
 				name: 'code',
 				component: '::li',
-				children: ['编码:', {
-					name: 'code-1',
+				children: ['业务分类编码:', {
+					name: 'name-1',
 					component: 'Input',
 					size: 'small',
 					value: '{{data.code}}',
@@ -19,12 +19,29 @@ export function getMeta() {
 			}, {
 				name: 'name',
 				component: '::li',
-				children: ['名称:', {
+				children: ['业务分类名称:', {
 					name: 'name-1',
 					component: 'Input',
 					size: 'small',
 					value: '{{data.name}}',
 					onChange: '{{$handleChange("name")}}'
+				}]
+			}, {
+				name: 'class',
+				component: '::li',
+				children: ['所属大类:', {
+					name: 'class-1',
+					component: 'Select',
+					style:{ width: 160 },
+					defaultValue: '{{data.classDataSource[0].id}}',
+					onChange: '{{$handleChange("paymentsType")}}',
+					children: [{
+						name: 'option0',
+						component: 'Select.Option',
+						value: '{{data.classDataSource? data.classDataSource[_rowIndex].id:""}}',
+						children: '{{data.classDataSource? data.classDataSource[_rowIndex].name:""}}',
+						_power: 'for in data.classDataSource'
+					}]
 				}]
 			}]
 		}]
@@ -35,7 +52,9 @@ export function getInitState() {
 	return {
 		data: {
 			code: '',
-			name: ''
+			name: '',
+			paymentsType: '10000',
+			classDataSource: []
 		}
 	}
 }
