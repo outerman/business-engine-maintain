@@ -150,13 +150,27 @@ export function getMeta() {
 					},{
 						name:'item5',
 						component:'::li',
-						className:'{{data.typeName == "收入"? "":"hidden"}}',
-						children:['涉税属性:',{
+						className:'{{data.typeName == "1"? "":"hidden"}}',
+						children:['涉税属性:','一般',{
 							name:'itme4-1',
 							component:'Select',
 							value:'{{data.templateData.taxProperty? data.templateData.taxProperty.attrCode:"1"}}',
 							style:{ width: 120 },
-							onChange:'{{$taxPropertyChange}}',
+							onChange:'{{$taxPropertyChange()}}',
+							children:[
+							{
+								name:'option0',
+								component:'Select.Option',
+								value:'{{data.dataSources.taxPropertyList[_rowIndex].attrCode}}',
+								children:'{{data.dataSources.taxPropertyList[_rowIndex].attrName}}',
+								_power:  'for in data.dataSources.taxPropertyList'
+							}]
+						},'小规模',{
+							name:'itme4-2',
+							component:'Select',
+							value:'{{data.templateData.taxProperty? data.templateData.taxProperty.smallScaleAttrCode:"1"}}',
+							style:{ width: 120 },
+							onChange:'{{$taxPropertyChange("small")}}',
 							children:[
 							{
 								name:'option0',

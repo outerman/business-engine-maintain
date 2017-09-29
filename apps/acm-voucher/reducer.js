@@ -165,7 +165,7 @@ class reducer {
         state = this.metaReducer.sf(state,'data.other.codeEditable',false)
         state = this.metaReducer.sf(state,'data.other.isHide',!templateData.businessType.isShow)
         state = this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
-
+        state = this.metaReducer.sf(state,'data.other.status',false)
         return state
     }
     initForm = (state,data) =>{
@@ -182,24 +182,47 @@ class reducer {
     newBusiness = (state,typeName) =>{
         state = this.metaReducer.sf(state,'data.other.codeEditable',true)
         state = this.metaReducer.sf(state,'data.typeName','1')
-        state = this.metaReducer.sf(state,'data.templateData',fromJS(this.newBusinessData(state)))
+        state = this.metaReducer.sf(state,'data.templateData',fromJS(this.newBusinessData(state,typeName)))
         state = this.metaReducer.sf(state,'data.interface.list',fromJS([]))
         state = this.metaReducer.sf(state,'data.rule.list',fromJS([]))
         state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right')
-
+        state = this.metaReducer.sf(state,'data.other.status',true)
         return state
     }
-    newBusinessData =(state)=>{
+    newBusinessData =(state,typeName)=>{
+        let paymentsType = 10000
         // let templateData = this.metaReducer.gf(state,'data.templateData').toJS()
         let templateData = {
             businessType:{
+                isShow:true,
+                paymentsType: getPaymentsType(typeName)
             },
             docTemplateList:[],
             inventoryPropertyList:[],
             tacticsList:[],
             taxProperty:{}
         }
-
+        function getPaymentsType(typeName){
+            let ret = 10000
+            switch (typeName) {
+                case '1':
+                    ret = 10000
+                    break;
+                case '2':
+                    ret = 10001
+                    break;
+                case '3':
+                    ret = 10002
+                    break;
+                case '4':
+                    ret = 10003
+                    break;
+                case '5':
+                    ret = 10004
+                    break;
+            }
+            return ret
+        }
         return templateData
     }
 	selectInOrOutInfo = (state, selectInOrOutInfo) => {

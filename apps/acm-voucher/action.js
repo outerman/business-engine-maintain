@@ -91,20 +91,20 @@ class action {
 
 	}
 	busNameDel = async() => {
-		
+
 		let selectInOrOutInfo = this.metaAction.gf('data.other.selectInOrOutInfo'),
 			treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			treeType1 = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			ret = {}
-		
+
 		const delBusiness = await this.metaAction.modal('confirm', {
 			title: '警告',
 			content: '确定进行删除?'
 		})
 		const response = await this.webapi.businessTypeTemplate.businessDelete({code: selectInOrOutInfo['data-code']})
-		
+
 		this.metaAction.toast('success', '删除成功')
-		
+
 		treeType.map((o, i) => {
 			if(o.code == selectInOrOutInfo['data-code']) {
 				treeType.splice(i, 1)
@@ -641,7 +641,8 @@ class action {
         debugger
         let metaAction = this.metaAction,
             templateData = metaAction.gf('data.templateData').toJS(),
-            interfaceData = metaAction.gf('data.interface').toJS()
+            interfaceData = metaAction.gf('data.interface').toJS(),
+            status = this.metaAction.gf('data.other.status')
 
         let ruleData = metaAction.gf('data.rule').toJS(),
             tacticsList = this.parseTacticsList(templateData,interfaceData),
@@ -657,9 +658,16 @@ class action {
 
         // return true
 
-        let response = await this.webapi.businessTypeTemplate.update(templateData)
 
 
+
+        let response
+
+        if(status){
+            response = await this.webapi.businessTypeTemplate.create(templateData)
+        }else{
+            response = await this.webapi.businessTypeTemplate.update(templateData)
+        }
 
         let typeName = response.businessType.code.substr(0,1)
 
@@ -869,7 +877,7 @@ class action {
 
     }
 
-    taxPropertyChange = (val,path)=>{
+    taxPropertyChange =(key)=> (val,path)=>{
         if(!this.isBizCheck()) return
 
         let taxPropertyList = consts.taxPropertyList,
@@ -877,12 +885,17 @@ class action {
                 return o.attrCode == val
             })[0]
 
-        this.metaAction.sfs({
-            'data.templateData.taxProperty.attrCode':val,
-            'data.templateData.taxProperty.attrName':item.attrName
-        })
-
-
+        if(key === 'small'){
+            this.metaAction.sfs({
+                'data.templateData.taxProperty.smallScaleAttrCode':val,
+                'data.templateData.taxProperty.smallScaleAttrName':item.attrName
+            })
+        }else{
+            this.metaAction.sfs({
+                'data.templateData.taxProperty.attrCode':val,
+                'data.templateData.taxProperty.attrName':item.attrName
+            })
+        }
     }
     onRightChange =(key)=>(e)=>{
         if(!this.isBizCheck()) return
