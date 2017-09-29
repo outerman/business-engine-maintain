@@ -155,7 +155,7 @@ class reducer {
                 })
             })
         }
-        dataSources.industryIdList = data.industryList.map(o=>{
+        dataSources.industryIdList = data.industryIdList.map(o=>{
             return o.enumItemName
         })
 
@@ -168,7 +168,9 @@ class reducer {
     initTemplate = (state,templateData,typeName) =>{
         state = this.metaReducer.sf(state,'data.typeName',typeName)
         state = this.metaReducer.sf(state,'data.other.codeEditable',false)
+        state = this.metaReducer.sf(state,'data.other.isHide',!templateData.businessType.isShow)
         state = this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
+
         return state
     }
     initForm = (state,data) =>{
@@ -182,7 +184,7 @@ class reducer {
         state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule.list)))
         return state
     }
-    newBusiness = (state) =>{
+    newBusiness = (state,typeName) =>{
         state = this.metaReducer.sf(state,'data.other.codeEditable',true)
         state = this.metaReducer.sf(state,'data.typeName','1')
         state = this.metaReducer.sf(state,'data.templateData',fromJS(this.newBusinessData(state)))
@@ -193,11 +195,14 @@ class reducer {
         return state
     }
     newBusinessData =(state)=>{
-        debugger
         // let templateData = this.metaReducer.gf(state,'data.templateData').toJS()
         let templateData = {
             businessType:{
-            }
+            },
+            docTemplateList:[],
+            inventoryPropertyList:[],
+            tacticsList:[],
+            taxProperty:{}
         }
 
         return templateData

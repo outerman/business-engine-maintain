@@ -14,7 +14,7 @@ class action {
         this.initData = component.props.initData
 
         this.injections = injections
-        debugger
+
         if (this.component.props.setOkListener)
             this.component.props.setOkListener(this.onOk)
 
@@ -25,7 +25,7 @@ class action {
         this.injections.reduce('modifyContent')
     }
     getInvoiceDefaultValue = () => {
-        return this.initData.form && this.initData.form.invoiceType || 200000000000050
+        return this.initData.form && this.initData.form.invoiceType || undefined
     }
     getInvoiceOptions = () => {
         let invoiceType = this.initData.dataSources.invoiceType,
@@ -46,7 +46,7 @@ class action {
             form = this.initData.form,
             taxRate = this.initData.dataSources.taxRate
         if(!form) {
-            return ['0%']
+            return defaultRate
         }
         if(!form[key] || !form[key].length) return defaultRate
         form[key].map(o=>{
@@ -67,34 +67,13 @@ class action {
 
         return res
     }
-    // getBankAccountOption = ()=>{
-    //     let accountSource = this.initData.accountSource,
-    //         res = []
-    //
-    //     accountSource.map(o=>{
-    //         res.push(o.name)
-    //     })
-    //
-    //     return res
-    // }
-    // bankAccountChange = (checkedValues)=>{
-    //     let bankAccount = [],
-    //         accountTypeList = this.component.props.initData.accountTypeList
-    //
-    //     checkedValues.map(o=>{
-    //         bankAccounts.push(accountTypeList.filter(oo=>{
-    //             return oo.enumItemName === o
-    //         })[0].enumItemId)
-    //     })
-    //
-    //     this.injections.reduce('editForm',{bankAccount})
-    // }
+
     getDefaultSettlement = ()=>{
         let defaultSettlement = [],
             settlementType = this.initData.dataSources.settlement,
             settlement = this.initData.form && this.initData.form.settlement
 
-        if(!settlement || !settlement.length) return settlementType[0].name
+        if(!settlement || !settlement.length) return defaultSettlement
 
         settlement.map(o=>{
             defaultSettlement.push(settlementType.filter(oo=>{
@@ -119,7 +98,7 @@ class action {
             settlement.push(
                 settlementTypes.filter(oo=>{
                     return oo.name == o
-                })[0]
+                })[0].id
             )
         })
 
@@ -155,11 +134,14 @@ class action {
 
         this.injections.reduce('editForm',{vatTaxpayerSmall,vatTaxpayerNormal})
     }
-    getDefaultIndustry = ()=>{
-        let initForm = this.initData.form,
+    getDefaultIndustry = (industryIdList)=>{
+        let initForm =  this.initData.form,
             defaultIndustry = []
 
-        if(!initForm) return ['工业']
+        if(!initForm) return []
+        if(industryIdList){
+            initForm.industryIdList = industryIdList
+        }
 
         initForm.industryIdList.map(o=>{
             switch (o) {
@@ -180,26 +162,26 @@ class action {
         return  defaultIndustry
     }
     industryChange = (checkedValues)=>{
-        let industryList = []
+        let industryIdList = []
 
         checkedValues.map(o=>{
             switch (o) {
                 case '工业':
-                    industryList.push(1)
+                    industryIdList.push(1)
                     break
                 case '商贸':
-                    industryList.push(2)
+                    industryIdList.push(2)
                     break
                 case '服务':
-                    industryList.push(3)
+                    industryIdList.push(3)
                     break
                 case '信息技术':
-                    industryList.push(4)
+                    industryIdList.push(4)
                     break
             }
         })
 
-        this.injections.reduce('editForm',{industryList})
+        this.injections.reduce('editForm',{industryIdList})
     }
     detailRadioChange = (key) => (e)=>{
         this.injections.reduce('editForm',{[key]:e.target.value})
@@ -256,6 +238,7 @@ class action {
     onOk = () => {
         let {metaAction} = this,
             list = metaAction.gf('data.form').toJS()
+
 
         return {result:true,value:{list}}
     }

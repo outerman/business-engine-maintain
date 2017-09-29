@@ -24,7 +24,6 @@ class reducer {
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
     editForm = (state,option) =>{
-        debugger
         for (let attr in option){
             state = this.metaReducer.sf(state,'data.form.'+attr,option[attr])
         }

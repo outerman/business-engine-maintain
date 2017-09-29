@@ -17,7 +17,7 @@ export function getMeta() {
 					name:'add',
 					component:'Button',
 					children:'新增业务',
-					onClick:'{{$newBusiness	}}'
+					onClick:'{{$newBusiness}}'
 				},{
 					name:'data.other.addOrDelBus',
 					component:'Button',
@@ -70,7 +70,7 @@ export function getMeta() {
 							name:'itme3-1',
 							component:'Select',
 							component:'Select',
-							value:'{{data.typeName||"1"}}',
+							value:'{{data.typeName ||"1"}}',
 							disabled:'{{!data.other.codeEditable}}',
 							style:{ width: 120 },
 							onChange:'{{$handleTypeNameChange}}',
@@ -203,8 +203,9 @@ export function getMeta() {
 						children:[{
 							name:'item-r-1-1',
 							component:'Checkbox',
-							checked:'{{data.templateData.businessType.isShow}}',
-							onChange:'{{$onRightChange("isShow")}}',
+							// defaultChecked:'{{!data.templateData.businessType.isShow}}',
+							value:'{{data.other.isHide}}',
+							onChange:'{{$onRightChange("isHide")}}',
 							children:'隐藏业务'
 						}]
 					},{
