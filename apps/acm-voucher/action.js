@@ -171,7 +171,7 @@ class action {
 
     }
     initTemplate = (response,code)=>{
-        let typeName = this.getTypeName(code)
+        let typeName = this.getTypeName(code).substr(0,1)
         if(response){
             this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
             this.injections.reduce('initForm',this.transData4List(response))
@@ -609,7 +609,7 @@ class action {
             }
             if(cellValue && cellValue.size){
                 let aVal = []
-
+                // console.log(cellValue.toJS())
                 cellValue.map(o=>{
                     aVal.push(
                         dataSource.filter(oo=>{
@@ -654,6 +654,7 @@ class action {
     handleSave = async()=>{
         if(!this.isBizCheck()) return
 
+        debugger
         let metaAction = this.metaAction,
             templateData = metaAction.gf('data.templateData').toJS(),
             interfaceData = metaAction.gf('data.interface').toJS()
@@ -670,93 +671,133 @@ class action {
 
         // delete templateData.businessType.typeName
 
+        // return true
 
         let response = await this.webapi.businessTypeTemplate.update(templateData)
 
 
 
-        let typeName = '收入'
-        // console.log(response)
-        switch (response.businessType.code.substr(0,1)) {
-            case '1':
-                typeName = '收入'
-                break;
-            case '2':
-                typeName = '支出'
-                break;
-            case '3':
-                typeName = '成本/折旧和摊销'
-                break;
-            case '4':
-                typeName = '存取现金/内部账户互转'
-                break;
-            case '5':
-                typeName = '收款/付款'
-                break;
-            case '6':
-                typeName = '请会计处理'
-                break;
-            default:
-        }
+        let typeName = response.businessType.code.substr(0,1)
 
         this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
         this.injections.reduce('initForm',this.transData4List(response))
 
     }
     parseTacticsList = (templateData,interfaceData)=>{
-        let tacticsList = []
-        interfaceData.list.map((o,i)=>{// interfaceData
+        let tacticsList = [],
+            list = interfaceData.list
+
+
+        list.map((o,i)=>{// interfaceData
             tacticsList[i] = {}
             tacticsList[i].invoiceId = o.invoiceType
             tacticsList[i].industryIdList = o.industryIdList
-            tacticsList[i].details = templateData.tacticsList[i].details
-            debugger
-            tacticsList[i].details = tacticsList[i].details.map(oo=>{// templateData
-                oo.flag = !isNaN(o[this.getColumnsById(oo.columnsId)])?o[this.getColumnsById(oo.columnsId)]: oo.flag
-                if(o.columnsName){
-                    oo.columnsName = o.columnsName
-                }
-                if(oo.columnsId == 14){
-                    let specialList = []
-                    o.settlement.map((ooo,oooIdx)=>{
-                        specialList.push({
-                            columnsId: 12,
-                            isDefault: 0,
-                            optionValue:ooo,
-                            idList:oo.specialList[oooIdx].idList
+
+
+
+
+
+            if(templateData.tacticsList[i] && templateData.tacticsList[i].details){
+                tacticsList[i].details = templateData.tacticsList[i].details
+                tacticsList[i].details = tacticsList[i].details.map(oo=>{// templateData
+                    oo.flag = !isNaN(o[this.getColumnsById(oo.columnsId)])?o[this.getColumnsById(oo.columnsId)]: oo.flag
+                    if(o.columnsName){
+                        oo.columnsName = o.columnsName
+                    }
+                    if(oo.columnsId == 14){
+                        let specialList = []
+                        o.settlement.map((ooo,oooIdx)=>{
+                            specialList.push({
+                                columnsId: 12,
+                                isDefault: 0,
+                                optionValue:ooo,
+                                idList:oo.specialList[oooIdx].idList
+                            })
                         })
-                    })
-                    specialList[0].isDefault = 1
-                    oo.specialList = specialList
-                }
-                if(oo.columns == 16){
-                    let specialList = []
-                    o.normalRate.map((ooo,oooIdx)=>{
-                        specialList.push({
-                            "columnsId": 16,
-                            "isDefault": 0,
-                            "vatTaxpayer": 41,
-                            "optionValue": ooo,
-                            idList:oo.specialList[oooIdx].idList
+                        specialList[0].isDefault = 1
+                        oo.specialList = specialList
+                    }
+                    if(oo.columns == 16){
+                        let specialList = []
+                        o.normalRate.map((ooo,oooIdx)=>{
+                            specialList.push({
+                                "columnsId": 16,
+                                "isDefault": 0,
+                                "vatTaxpayer": 41,
+                                "optionValue": ooo,
+                                idList:oo.specialList[oooIdx].idList
+                            })
                         })
-                    })
-                    specialList[0].isDefault = 1
-                    oo.specialList = specialList
+                        o.smallRate.map((ooo,oooIdx)=>{
+                            specialList.push({
+                                "columnsId": 16,
+                                "isDefault": 0,
+                                "vatTaxpayer": 42,
+                                "optionValue": ooo,
+                                idList:oo.specialList[oooIdx]?oo.specialList[oooIdx].idList:undefined
+                            })
+                        })
+                        specialList[0].isDefault = 1
+                        oo.specialList = specialList
+                    }
+                    return oo
+                })
+
+            }else{
+                tacticsList[i].details = []
+                for(let attr in o){
+                    if(
+                        attr == 'industryIdList'||
+                        attr == 'normalRate'||
+                        attr == 'smallRate'||
+                        attr == 'invoiceType'||
+                        attr == 'settlement'
+                    ){
+                        continue
+                    }
+                    let specialList = [],
+                        temp = {
+                            columnsId:consts.columns[attr].id,
+                            flag:o[attr]
+                        }
+                    if(attr == 'taxRate'){
+                        o.normalRate && o.normalRate.map((ooo,oooIdx)=>{
+                            specialList.push({
+                                "columnsId": 16,
+                                "isDefault": oooIdx ? 1:0,
+                                "vatTaxpayer": 41,
+                                "optionValue": ooo
+                            })
+                        })
+                        o.smallRate && o.smallRate.map((ooo,oooIdx)=>{
+                            specialList.push({
+                                "columnsId": 16,
+                                "isDefault": oooIdx ? 1:0,
+                                "vatTaxpayer": 42,
+                                "optionValue": ooo
+                            })
+                        })
+                        temp.specialList = specialList
+                    }
+                    if(attr == 'bankAccount'){
+                        o.settlement && o.settlement.map((ooo,oooIdx)=>{
+                            specialList.push({
+                                columnsId: 12,
+                                isDefault: oooIdx? 1:0,
+                                optionValue:ooo
+                            })
+                        })
+                        temp.specialList = specialList
+                    }
+                    tacticsList[i].details.push(temp)
                 }
-                return oo
-            })
+            }
         })
-
-
         return tacticsList
     }
     parseDocTemplateList = (templateData,ruleData)=>{
         let accountingStandardId = this.metaAction.gf('data.standard'),
-            idx = templateData.docTemplateList.map((o,i)=>{
-                if(o.accountingStandardId == accountingStandardId){
-                    return i
-                }
-            })[0],
+
             docTemplate = ruleData.list.map((o,i)=>{
                 let item = {}
 
@@ -799,7 +840,27 @@ class action {
 
                 return item
             })
-            templateData.docTemplateList[idx].details = docTemplate
+            if(templateData.docTemplateList.length){
+                let idxs = templateData.docTemplateList.map((o,i)=>{
+                    if(o.accountingStandardId == accountingStandardId){
+                        return i
+                    }
+                })
+                if(idxs.length){
+                    templateData.docTemplateList[idxs[0]].details = docTemplate
+                }else{// 无此准则
+                    templateData.docTemplateList.push({
+                        accountingStandardId,
+                        details:docTemplate
+                    })
+                }
+            }else{ // 新增
+                templateData.docTemplateList.push({
+                    accountingStandardId,
+                    details:docTemplate
+                })
+            }
+
             return templateData.docTemplateList
     }
     getColumnsById = (id)=>{
@@ -818,10 +879,10 @@ class action {
         let value = val.target.value
         if(key == 'code'){
             value = this.metaAction.gf('data.typeName')+"0"+val.target.value
+            this.metaAction.sf('data.templateData.businessType.treeCode',value)
         }
         this.metaAction.sf(`data.templateData.businessType.${key}`,value)
 
-        debugger
     }
 
     taxPropertyChange = (val,path)=>{
@@ -841,11 +902,17 @@ class action {
     }
     onRightChange =(key)=>(e)=>{
         if(!this.isBizCheck()) return
-        this.metaAction.sf(`data.templateData.businessType.${key}`,e.target.checked)
+        if(key == 'isHide'){
+
+            this.metaAction.sf(`data.templateData.businessType.${key}`,!e.target.checked)
+            this.metaAction.sf(`data.other.isHide`,e.target.checked)
+        }else{
+            this.metaAction.sf(`data.templateData.businessType.${key}`,e.target.checked)
+        }
+
     }
     onRightIsShowChange = (e)=>{
         if(!this.isBizCheck()) return
-        debugger
         this.metaAction.sf(`data.templateData.businessType.isShow`,e.target.checked)
     }
 
@@ -855,8 +922,12 @@ class action {
     }
     handleTypeNameChange = (val)=>{
         let code = this.metaAction.gf('data.templateData.businessType.code')?this.metaAction.gf('data.templateData.businessType.code').substr(2):''
-        this.metaAction.sf(`data.typeName`,val)
-        this.metaAction.sf(`data.templateData.businessType.code`,val+"0"+ code)
+
+        this.metaAction.sfs({
+            'data.typeName':val,
+            'data.templateData.businessType.code':val+"0"+ code,
+            'data.templateData.businessType.treeCode':val+"0"+ code
+        })
     }
 
     isBizCheck = ()=>{//   检测是否选择业务类型
@@ -909,14 +980,12 @@ class action {
     // 设置可选存货属性
     setInventoryProperty = (val)=>{
         if(!this.isBizCheck()) return
-        debugger
         this.injections.reduce('setInventoryProperty',val)
     }
 
     // 弹框 界面元数据
     addInvoiceType = async (data,rowIndex) => {
         if(!this.isBizCheck()) return
-        debugger
         let {metaAction} = this
 
         if(data.target) data = undefined

@@ -34,7 +34,7 @@ export function getMeta() {
 					name:'industryIdList',
 					component:'Checkbox.Group',
 					options:['工业','商贸','服务','信息技术'],
-					value:'{{$getDefaultIndustry()}}',
+					defaultValue:'{{$getDefaultIndustry(data.form.industryIdList)}}',
 					onChange:'{{$industryChange}}'
 				}]
 			}]
@@ -115,8 +115,7 @@ function getAmountAndtaxChild(){
 			},{
 				name:'amountRadio',
 				component:'Radio.Group',
-				defaultValue:'{{data.form.noTaxAmount}}',
-				// value:'{{data.form.noTaxAmount}}',
+				value:'{{data.form.noTaxAmount}}',
 				onChange:'{{$detailRadioChange("noTaxAmount")}}',
 				children:[{
 					name:'amountRadio0',
@@ -146,7 +145,6 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxRadio',
 				component:'Radio.Group',
-				defaultValue:0,
 				value:'{{data.form.tax}}',
 				onChange:'{{$detailRadioChange("tax")}}',
 				children:[{
@@ -177,7 +175,6 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxAndAmountRadio',
 				component:'Radio.Group',
-				defaultValue:0,
 				value:'{{data.form.amount}}',
 				onChange:'{{$detailRadioChange("amount")}}',
 				children:[{
@@ -208,7 +205,6 @@ function getAmountAndtaxChild(){
 			},{
 				name:'deductibleAmountRadio',
 				component:'Radio.Group',
-				defaultValue:0,
 				value:'{{data.form.deductibleInputTax}}',
 				onChange:'{{$detailRadioChange("deductibleInputTax")}}',
 				children:[{
@@ -239,7 +235,7 @@ function getAmountAndtaxChild(){
 			},{
 				name:'taxRate',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.taxRate}}',
 				onChange:'{{$detailRadioChange("taxRate")}}',
 				children:[{
@@ -297,7 +293,7 @@ function getDeductibleChild(){
 			},{
 				name:'certificationRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.isQualification}}',
 				onChange:'{{$detailRadioChange("isQualification")}}',
 				children:[{
@@ -328,7 +324,7 @@ function getDeductibleChild(){
 			},{
 				name:'certificationMonthRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.certificationMonth}}',
 				onChange:'{{$detailRadioChange("certificationMonth")}}',
 				children:[{
@@ -359,7 +355,7 @@ function getDeductibleChild(){
 			},{
 				name:'deductibleRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.isDeduct}}',
 				onChange:'{{$detailRadioChange("isDeduct")}}',
 				children:[{
@@ -390,7 +386,7 @@ function getDeductibleChild(){
 			},{
 				name:'invoiceDateRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.billingDate}}',
 				onChange:'{{$detailRadioChange("billingDate")}}',
 				children:[{
@@ -421,7 +417,7 @@ function getDeductibleChild(){
 			},{
 				name:'imAndRefundRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.drawbackPolicy}}',
 				onChange:'{{$detailRadioChange("drawbackPolicy")}}',
 				children:[{
@@ -459,7 +455,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'departmentRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.department}}',
 				onChange:'{{$detailRadioChange("department")}}',
 				children:[{
@@ -490,7 +486,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'employeeMonthRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.employee}}',
 				onChange:'{{$detailRadioChange("employee")}}',
 				children:[{
@@ -521,7 +517,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'customerRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.customer}}',
 				onChange:'{{$detailRadioChange("customer")}}',
 				children:[{
@@ -552,7 +548,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'investorRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.investor}}',
 				onChange:'{{$detailRadioChange("investor")}}',
 				children:[{
@@ -583,7 +579,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'byInvestorRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.byInvestor}}',
 				onChange:'{{$detailRadioChange("byInvestor")}}',
 				children:[{
@@ -614,7 +610,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'creditorRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.creditor}}',
 				onChange:'{{$detailRadioChange("creditor")}}',
 				children:[{
@@ -645,7 +641,7 @@ function getDepartAndEmployeeChild(){
 			},{
 				name:'obligorRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.obligor}}',
 				onChange:'{{$detailRadioChange("obligor")}}',
 				children:[{
@@ -683,7 +679,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'goodsRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.goods}}',
 				onChange:'{{$detailRadioChange("goods")}}',
 				children:[{
@@ -714,7 +710,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'assetsTypeMonthRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.assetsType}}',
 				onChange:'{{$detailRadioChange("assetsType")}}',
 				children:[{
@@ -745,7 +741,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'assetsRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.assets}}',
 				onChange:'{{$detailRadioChange("assets")}}',
 				children:[{
@@ -776,7 +772,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'quantityRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.number}}',
 				onChange:'{{$detailRadioChange("number")}}',
 				children:[{
@@ -807,7 +803,7 @@ function getGoodsAndAmountChild(){
 			},{
 				name:'priceRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.price}}',
 				onChange:'{{$detailRadioChange("price")}}',
 				children:[{
@@ -845,7 +841,7 @@ function getBankAccountChild(){
 			},{
 				name:'bankAccountRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.bankAccount}}',
 				onChange:'{{$detailRadioChange("bankAccount")}}',
 				children:[{
@@ -886,7 +882,7 @@ function getBankAccountChild(){
 			},{
 				name:'othBankAccountSetRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.incomeAccount}}',
 				onChange:'{{$detailRadioChange("incomeAccount")}}',
 				children:[{
@@ -924,7 +920,7 @@ function getAuxInfoChild(){
 			},{
 				name:'invoiceCodeRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.invoiceNO}}',
 				onChange:'{{$detailRadioChange("invoiceNO")}}',
 				children:[{
@@ -955,7 +951,7 @@ function getAuxInfoChild(){
 			},{
 				name:'billNumberRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.billNumber}}',
 				onChange:'{{$detailRadioChange("billNumber")}}',
 				children:[{
@@ -986,7 +982,7 @@ function getAuxInfoChild(){
 			},{
 				name:'penaltyTypeMonthRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.penaltyType}}',
 				onChange:'{{$detailRadioChange("penaltyType")}}',
 				children:[{
@@ -1017,7 +1013,7 @@ function getAuxInfoChild(){
 			},{
 				name:'loanTermRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.loanTerm}}',
 				onChange:'{{$detailRadioChange("loanTerm")}}',
 				children:[{
@@ -1048,7 +1044,7 @@ function getAuxInfoChild(){
 			},{
 				name:'abstractRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.abstract}}',
 				onChange:'{{$detailRadioChange("abstract")}}',
 				children:[{
@@ -1079,7 +1075,7 @@ function getAuxInfoChild(){
 			},{
 				name:'projectRadio',
 				component:'Radio.Group',
-				defaultValue:0,
+
 				value:'{{data.form.project}}',
 				onChange:'{{$detailRadioChange("project")}}',
 				children:[{
@@ -1117,7 +1113,7 @@ for(let i=0 ; i< 10;i++){
 		},{
 			name:'ext'+i+'Radio',
 			component:'Radio.Group',
-			defaultValue:0,
+
 			value:'{{data.form.ext'+i+'}}',
 			onChange:'{{$detailRadioChange("ext'+i+'")}}',
 			children:[{
@@ -1146,9 +1142,9 @@ for(let i=0 ; i< 10;i++){
 				children:'显示标题:'
 			},{
 				name:'edit'+i,
-				onChange:'{{$extTittleChange("extTitle'+i+'")}}',
+				onChange:'{{$extTittleChange("ext'+i+'Title")}}',
 				component:'Input',
-				value:'{{data.form.extTitle'+i+'}}',
+				value:'{{data.form.ext'+i+'Title}}',
 				width:100
 			}]
 		}]
@@ -1166,7 +1162,8 @@ for(let i=0; i<5;i++){
 		},{
 			name:'stringExt'+i+'Radio',
 			component:'Radio.Group',
-			defaultValue:0,
+
+			value:'{{data.form.stringExt'+i+'}}',
 			onChange:'{{$detailRadioChange("stringExt'+i+'")}}',
 			children:[{
 				name:'stringExt'+0+'Radio0',
@@ -1194,9 +1191,9 @@ for(let i=0; i<5;i++){
 				children:'显示标题:'
 			},{
 				name:'stringEdit'+i,
-				onChange:'{{$extTittleChange("stringExtTitle'+i+'")}}',
+				onChange:'{{$extTittleChange("stringExt'+i+'Title")}}',
 				component:'Input',
-				value:'{{data.form.stringExtTitle'+i+'}}',
+				value:'{{data.form.stringExt'+i+'Title}}',
 				width:100
 			}]
 		}]
