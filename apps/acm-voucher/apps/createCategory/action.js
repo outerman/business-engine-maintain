@@ -24,16 +24,24 @@ class action {
     }
 	
 	handleChange = (key) => (e) => {
-		this.injections.reduce("changeData", key, e.target.value)
+		let value = e
+		if(key == 'name' || key == 'code') {
+			value = e.target.value
+		}
+		this.injections.reduce("changeData", key, value)
 	}
 
     onOk = () => {
-        let list = this.metaAction.gf('data').toJS()
+        let list = this.metaAction.gf('data').toJS(),
+			data = {}
 		
-		list.isShow = true
-		list.treeCode = list.code
+		data.isShow = true
+		data.name = list.name
+		data.code = list.code
+		data.treeCode = list.code
+		data.paymentsType = list.paymentsType
 		
-        return {result: true, value:list}
+        return {result: true, value:data}
     }
 }
 

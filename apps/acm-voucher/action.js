@@ -54,85 +54,69 @@ class action {
     }
 
     addBusiness = async () =>{
-		let selectInOrOutInfo = this.metaAction.gf('data.other.selectInOrOutInfo'),
-			addOrDelBus = this.metaAction.gf('data.other.addOrDelBus'),
-			treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
+		let treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			treeType1 = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
-			ret = {}, reg = /-/, isTypeClass
+			ret = {},
+			classDataSource = consts.incomeType
 
-		if(addOrDelBus == 'del'){
-			treeType.map(o => {
-				if(o.code == selectInOrOutInfo['data-code']) {
-					isTypeClass = o.isCategory
+		const rets = await this.metaAction.modal('show', {
+			title: '业务类型分类新增',
+			width: 300,
+			children: this.metaAction.loadApp('createCategory', {
+				store: this.component.props.store,
+				initData: {classDataSource}
+			})
+		})
+		if(rets.result) {
+			const response = await this.webapi.businessTypeTemplate.createCategory(rets.value)
+
+			this.metaAction.toast('success', '创建成功!')
+
+			treeType.map((o, i) => {
+				if(o.id == response.paymentsType) {
+					treeType.splice(i + 1, 0, response)
 				}
 			})
-			if(selectInOrOutInfo && selectInOrOutInfo['data-code'].length == 6 && isTypeClass) {
-				const delBusiness = await this.metaAction.modal('confirm', {
-					title: '警告',
-					content: '确定进行删除?'
-				})
-				if(delBusiness) {
-					const response = await this.webapi.businessTypeTemplate.businessDelete({code: selectInOrOutInfo['data-code']})
-
-					this.metaAction.toast('success', '删除成功')
-
-					treeType.map((o, i) => {
-						if(o.code == selectInOrOutInfo['data-code']) {
-							treeType.splice(i, 1)
-						}
-					})
-					treeType1.map((o, i) => {
-						if(o.code == selectInOrOutInfo['data-code']) {
-							treeType1.splice(i, 1)
-						}
-					})
-					ret.types = util.typesToTree(treeType)
-					this.injections.reduce('initTree', ret, treeType1)
-					return
+			treeType1.map((o, i) => {
+				if(o.id == response.paymentsType) {
+					treeType1.splice(i + 1, 0, response)
 				}
-			} else {
-				return this.metaAction.toast('error','请先选择业务分类')
-			}
-		} else if(addOrDelBus == 'add') {
-
-			if(!selectInOrOutInfo || reg.test(selectInOrOutInfo.eventKey)) {
-				return this.metaAction.toast('error','请先选择收支分类')
-			}
-
-			const rets = await this.metaAction.modal('show', {
-				title: '业务类型分类新增',
-				width: 300,
-				children: this.metaAction.loadApp('createCategory', {
-					store: this.component.props.store,
-					initData: {selectInOrOutType: selectInOrOutInfo.eventKey}
-				})
 			})
-			if(rets.result) {
-				const response = await this.webapi.businessTypeTemplate.createCategory(rets.value)
 
-				this.metaAction.toast('success', '创建成功!')
-
-				treeType.map((o, i) => {
-					if(o.id == response.paymentsType) {
-						treeType.splice(i + 1, 0, response)
-					}
-				})
-				treeType1.map((o, i) => {
-					if(o.id == response.paymentsType) {
-						treeType1.splice(i + 1, 0, response)
-					}
-				})
-
-				ret.types = util.typesToTree(treeType)
-				this.injections.reduce('initTree', ret, treeType1)
-			}
+			ret.types = util.typesToTree(treeType)
+			this.injections.reduce('initTree', ret, treeType1)
 		}
     }
 	busNameSave = async() => {
 
 	}
 	busNameDel = async() => {
-
+		
+		let selectInOrOutInfo = this.metaAction.gf('data.other.selectInOrOutInfo'),
+			treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
+			treeType1 = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
+			ret = {}
+		
+		const delBusiness = await this.metaAction.modal('confirm', {
+			title: '警告',
+			content: '确定进行删除?'
+		})
+		const response = await this.webapi.businessTypeTemplate.businessDelete({code: selectInOrOutInfo['data-code']})
+		
+		this.metaAction.toast('success', '删除成功')
+		
+		treeType.map((o, i) => {
+			if(o.code == selectInOrOutInfo['data-code']) {
+				treeType.splice(i, 1)
+			}
+		})
+		treeType1.map((o, i) => {
+			if(o.code == selectInOrOutInfo['data-code']) {
+				treeType1.splice(i, 1)
+			}
+		})
+		ret.types = util.typesToTree(treeType)
+		return this.injections.reduce('initTree', ret, treeType1)
 	}
     onSearch = (val)=>{
     }

@@ -206,11 +206,11 @@ class reducer {
 			}
 		})
 		if(selectInOrOutInfo['data-code'].length == 6 && isTypeClass) {
-			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '删除分类')
+//			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '删除分类')
 			state = this.metaReducer.sf(state, 'data.other.addOrDelBus', 'del')
 			state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right1')
 		} else {
-			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '新增分类')
+//			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '新增分类')
 			state = this.metaReducer.sf(state, 'data.other.addOrDelBus', 'add')
 			state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right')
 		}

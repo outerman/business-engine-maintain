@@ -11,7 +11,15 @@ class reducer {
 
     init = (state, initData) => {
         const initState = getInitState()
-		initState.data.paymentsType = initData.selectInOrOutType
+		let classDataSource = [
+			initData.classDataSource.sr,
+			initData.classDataSource.zc,
+			initData.classDataSource.cbzjtx,
+			initData.classDataSource.cqxj,
+			initData.classDataSource.sk,
+			initData.classDataSource.kj
+		]
+		initState.data.classDataSource = classDataSource
         return this.metaReducer.init(state, initState)
     }
 
