@@ -296,13 +296,19 @@ export function getMeta() {
 			children:[{
 				name: 'delOrmodifyBus',
 				component: '::div',
-				children:['业务类型名称:', {
+				className: 'acm-voucher-right1-title',
+				children: ['业务类型名称:', {
 					name: 'busName',
 					component: 'Input',
 					size: 'small',
 					value: '{{data.right1.busName}}',
 					onChange: '{{$handleChange("busName")}}'
 				}]
+			}, {
+				name: 'tips',
+				component: '::div',
+				className: 'acm-voucher-right1-tips',
+				children: ['（只有没有下级业务的空分类，才能删除、移动所属大类）']
 			}, {
 				name: 'busNameSave',
 				component: 'Button',
