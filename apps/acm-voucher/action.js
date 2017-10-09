@@ -354,38 +354,14 @@ class action {
 
         if(response.isActualMove) {
             this.metaAction.toast('success','移动成功!')
-        //    let moveTypeInfo = []
-            let sortTypeFuns1 = (treeType) => {
+            let sortTypeFuns = (treeType) => {
                 treeType.map((o, i) => {
-                //    if(o.subTypes) {
-                    //    sortTypeFuns1(o.subTypes)
-                //    } else {
-                        if(o.code == response.source.code) {
-                            o.treeCode = response.source.treeCode
-                        //    moveTypeInfo.push(o)
-                        //    treeType.splice(i, 1)
-                        }
-
-                //    }
+					if(o.code == response.source.code) {
+						o.treeCode = response.source.treeCode
+					}
                 })
             }
-        //    let sortTypeFuns2 = (treeType) => {
-            //    treeType.map((o, i) => {
-                //    if(o.subTypes) {
-                    //    sortTypeFuns2(o.subTypes)
-                //    } else {
-                    //    if(o.code == moveCodeInfo['data-code']) {
-                        //    if(option.previous && option.previous.code) {
-        //                        treeType.splice(i + 1, 0, moveTypeInfo[0])
-        //                    } else if(option.next && option.next.code) {
-        //                        treeType.splice(i, 0, moveTypeInfo[0])
-        //                    }
-        //                }
-        //            }
-        //        })
-        //    }
-            sortTypeFuns1(treeType)
-        //    sortTypeFuns2(treeType)
+            sortTypeFuns(treeType)
             ret.types = util.typesToTree(treeType)
             this.injections.reduce('initTree', ret, this.metaAction.gf('data.businessTypeList').toJS())
         }
