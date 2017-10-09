@@ -296,7 +296,7 @@ export function getMeta() {
 			children:[{
 				name: 'delOrmodifyBus',
 				component: '::div',
-				children:['业务类型名称', {
+				children:['业务类型名称:', {
 					name: 'busName',
 					component: 'Input',
 					size: 'small',
