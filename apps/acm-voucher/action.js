@@ -93,15 +93,15 @@ class action {
 			treeType1 = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			name = this.metaAction.gf('data.right1.busName'),
 			ret = {}, params = {}
-		
+
 		params.code = selectInOrOutInfo['data-code']
 		params.name = name
 		params.isShow = true
-		
+
 		const response = await this.webapi.businessTypeTemplate.updateCategory(params)
-		
+
 		this.metaAction.toast('success', '修改成功')
-		
+
 		treeType.map((o, i) => {
 			if(o.code == selectInOrOutInfo['data-code']) {
 				o.name = name
@@ -113,7 +113,7 @@ class action {
 			}
 		})
 		ret.types = util.typesToTree(treeType)
-		return this.injections.reduce('initTree', ret, treeType1)		
+		return this.injections.reduce('initTree', ret, treeType1)
 	}
 	busNameDel = async() => {
 
@@ -664,7 +664,6 @@ class action {
     handleSave = async()=>{
         if(!this.isBizCheck()) return
 
-        debugger
         let metaAction = this.metaAction,
             templateData = metaAction.gf('data.templateData').toJS(),
             interfaceData = metaAction.gf('data.interface').toJS(),
@@ -688,6 +687,9 @@ class action {
 
 
         let response
+        if(!templateData.taxProperty.attrCode){
+            delete(templateData.taxProperty)
+        }
 
         if(status){
             response = await this.webapi.businessTypeTemplate.create(templateData)
@@ -697,6 +699,7 @@ class action {
 
         let typeName = response.businessType.code.substr(0,1)
 
+        i
         this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
         this.injections.reduce('initForm',this.transData4List(response))
 
@@ -944,12 +947,40 @@ class action {
         this.metaAction.sf(`data.templateData.businessType.report`,val)
     }
     handleTypeNameChange = (val)=>{
-        let code = this.metaAction.gf('data.templateData.businessType.code')?this.metaAction.gf('data.templateData.businessType.code').substr(2):''
+        let code = this.metaAction.gf('data.templateData.businessType.code')?
+            this.metaAction.gf('data.templateData.businessType.code').substr(2):'',
+            paymentsType = 10000
+
+        switch (val) {
+            case '1':
+                paymentsType = 10000
+                break
+            case '2':
+                paymentsType = 10001
+                break
+            case '3':
+                paymentsType = 10002
+                break
+            case '4':
+                paymentsType = 10003
+                break
+            case '5':
+                paymentsType = 10004
+                break
+            case '6':
+                paymentsType = 10005
+                break
+        }
+
+
+
+
 
         this.metaAction.sfs({
             'data.typeName':val,
             'data.templateData.businessType.code':val+"0"+ code,
-            'data.templateData.businessType.treeCode':val+"0"+ code
+            'data.templateData.businessType.treeCode':val+"0"+ code,
+            'data.templateData.businessType.paymentsType':paymentsType
         })
     }
 
