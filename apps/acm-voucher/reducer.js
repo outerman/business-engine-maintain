@@ -14,7 +14,7 @@ class reducer {
         const initState = getInitState()
         return this.metaReducer.init(state, initState)
     }
-	
+
 	changeData = (state, key, value) => {
 		state = this.metaReducer.sf(state, 'data.right1.' + key, value)
 		return state
@@ -27,6 +27,7 @@ class reducer {
     initTree = (state,data, businessTypeList)=>{
         state = this.metaReducer.sf(state, 'data.businessTypeList', fromJS(businessTypeList))
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
+        
         return state
     }
 
@@ -166,11 +167,13 @@ class reducer {
     }
 
     initTemplate = (state,templateData,typeName) =>{
+
         state = this.metaReducer.sf(state,'data.typeName',typeName)
         state = this.metaReducer.sf(state,'data.other.codeEditable',false)
         state = this.metaReducer.sf(state,'data.other.isHide',!templateData.businessType.isShow)
         state = this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
         state = this.metaReducer.sf(state,'data.other.status',false)
+
         return state
     }
     initForm = (state,data) =>{
@@ -200,7 +203,8 @@ class reducer {
         let templateData = {
             businessType:{
                 isShow:true,
-                paymentsType: getPaymentsType(typeName)
+                paymentsType: getPaymentsType(typeName),
+                report:0
             },
             docTemplateList:[],
             inventoryPropertyList:[],

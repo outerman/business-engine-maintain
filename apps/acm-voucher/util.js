@@ -50,9 +50,9 @@ export function typesToTree1 (types) {
 		if (t.treeCode.length == 6) {
 			//if(isUseful(t.id))
 			//   continue
-			if(t.isCategory && !t.subTypes) 
+			if(t.isCategory && !t.subTypes)
 				t.subTypes = []
-				
+
 			let parent = ret[ret.length - 1]
 			if (!parent.subTypes)
 				parent.subTypes = []
@@ -81,13 +81,13 @@ export function typesToTree1 (types) {
 export function typesToTree (typesOld) {
 	let ret = [],
 		types = sortArr(typesOld,'treeCode')
-	
+
 	types.map(o => {
 		if(o.treeCode.length == 2) {
 			ret.push(o)
 		}
 	})
-	
+
 	ret.map(x => {
 		if(x.isCategory && !x.subTypes) {
 			x.subTypes = []
@@ -101,7 +101,7 @@ export function typesToTree (typesOld) {
 			}
 		})
 	})
-	
+
 	ret.map(x => {
 		x.subTypes.map(c => {
 			if(c.isCategory && !c.subTypes) {
@@ -117,7 +117,7 @@ export function typesToTree (typesOld) {
 			})
 		})
 	})
-	
+
 	return ret
 }
 

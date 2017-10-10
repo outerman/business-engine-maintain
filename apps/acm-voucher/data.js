@@ -34,7 +34,8 @@ export function getMeta() {
 					className:'acm-voucher-left-search',
 					component:'Input.Search',
 					placeholder: "请输入业务类型名称",
-                    onSearch:'{{$onSearch}}'
+                    onSearch:'{{$onSearch}}',
+					onChange:'{{$onSearchChange}}'
 				},{
 					name:'tree',
 					className:'acm-voucher-left-tree',
@@ -154,7 +155,7 @@ export function getMeta() {
 						children:['涉税属性:','一般',{
 							name:'itme4-1',
 							component:'Select',
-							value:'{{data.templateData.taxProperty? data.templateData.taxProperty.attrCode:"1"}}',
+							value:'{{data.templateData.taxProperty? data.templateData.taxProperty.attrCode:""}}',
 							style:{ width: 120 },
 							onChange:'{{$taxPropertyChange()}}',
 							children:[
@@ -168,7 +169,7 @@ export function getMeta() {
 						},'小规模',{
 							name:'itme4-2',
 							component:'Select',
-							value:'{{data.templateData.taxProperty? data.templateData.taxProperty.smallScaleAttrCode:"1"}}',
+							value:'{{data.templateData.taxProperty? data.templateData.taxProperty.smallScaleAttrCode:""}}',
 							style:{ width: 120 },
 							onChange:'{{$taxPropertyChange("small")}}',
 							children:[
@@ -218,7 +219,7 @@ export function getMeta() {
 							name:'item-r-1-1',
 							component:'Checkbox',
 							// defaultChecked:'{{!data.templateData.businessType.isShow}}',
-							value:'{{data.other.isHide}}',
+							checked:'{{data.other.isHide}}',
 							onChange:'{{$onRightChange("isHide")}}',
 							children:'隐藏业务'
 						}]
@@ -1326,7 +1327,7 @@ export function getInitState() {
 				    // "ext5Title": "数值",
 				    // "customer": 2,
 				    // "ext6Title": "数值"
-				},{},{},{}]
+				}]
 			},
 			rule:{
 				other:{
@@ -1347,7 +1348,7 @@ export function getInitState() {
 					extendAttr:[]
 
 				},
-				list:[{},{},{},{}
+				list:[
 				// 	{
 				//     // "orgId": 0,
 				//     // "flag": "B",

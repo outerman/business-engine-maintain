@@ -37,16 +37,15 @@ class action {
     queryTree = async () => {
         let response = await this.webapi.businessTypeTemplate.init(),
             ret = {}
-		let data = JSON.parse(JSON.stringify(response))
         //收支数据
-        ret.incomeTypes = util.enumToArray(data.paymentsTypeList)
+        ret.incomeTypes = util.enumToArray(JSON.parse(JSON.stringify(response)).paymentsTypeList)
         //业务类型
-        ret.bizTypes = util.enumToArray(data.businessTypeList)
+        ret.bizTypes = util.enumToArray(JSON.parse(JSON.stringify(response)).businessTypeList)
         //左树数据
-        ret.types = util.typesToTree(data.businessTypeList)
+        ret.types = util.typesToTree(JSON.parse(JSON.stringify(response)).businessTypeList)
         // response.filter = filter
 
-        this.injections.reduce('initTree', ret, response.businessTypeList)
+        this.injections.reduce('initTree', ret, JSON.parse(JSON.stringify(response)).businessTypeList)
         this.injections.reduce('saveData',response)
     }
     btnClick = () => {
@@ -83,7 +82,8 @@ class action {
 				}
 			})
 
-			ret.types = util.typesToTree(treeType)
+			ret.types = util.typesToTree(JSON.parse(JSON.stringify(treeType)))
+
 			this.injections.reduce('initTree', ret, treeType1)
 		}
     }
@@ -108,11 +108,11 @@ class action {
 			}
 		})
 		treeType1.map((o, i) => {
-			if(o.code == selectInOrOutInfo['data-code']) {
-				o.name = name
-			}
+			if(o.code == selectInOrOutInfo['data-code']) o.name = name
 		})
-		ret.types = util.typesToTree(treeType)
+
+		ret.types = util.typesToTree(JSON.parse(JSON.stringify(treeType)))
+
 		return this.injections.reduce('initTree', ret, treeType1)
 	}
 	busNameDel = async() => {
@@ -140,10 +140,28 @@ class action {
 				treeType1.splice(i, 1)
 			}
 		})
-		ret.types = util.typesToTree(treeType)
+		ret.types = util.typesToTree(JSON.parse(JSON.stringify(treeType)))
 		return this.injections.reduce('initTree', ret, treeType1)
 	}
     onSearch = (val)=>{
+        let treeTypes = this.metaAction.gf('data.businessTypeList').toJS(),
+            re = new RegExp(val),
+            searchedTreeTypes = treeTypes.filter(o=>{
+                return (re.test(o.name) || o.code.length == 2)
+            })
+
+
+
+        if(searchedTreeTypes.length){
+
+            let types = util.typesToTree(JSON.parse(JSON.stringify(searchedTreeTypes)))
+
+            this.injections.reduce('initTree', {types}, treeTypes)
+        }
+
+    }
+    onSearchChange = (e)=>{
+        this.onSearch(e.target.value)
     }
     handleSelect=(checkedNode,selectedNode)=>{
 		this.injections.reduce('selectInOrOutInfo', selectedNode.node.props)
@@ -287,13 +305,13 @@ class action {
 
         })
 
-        if(interfaceDataList.length<4){
-            let a = 4 - interfaceDataList.length
-
-            for(let i = 0;i <a;i++){
-                interfaceDataList.push({})
-            }
-        }
+        // if(interfaceDataList.length<4){
+        //     let a = 4 - interfaceDataList.length
+        //
+        //     for(let i = 0;i <a;i++){
+        //         interfaceDataList.push({})
+        //     }
+        // }
         resData.interface = {
             other:{
                 focusCellInfo:undefined
@@ -307,12 +325,12 @@ class action {
             },
             list:(standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[]))
         }
-        if(resData.rule.list.length<4){
-            let a = 4 - resData.rule.list.length
-            for(let i = 0;i<a;i++){
-                resData.rule.list.push({})
-            }
-        }
+        // if(resData.rule.list.length<4){
+        //     let a = 4 - resData.rule.list.length
+        //     for(let i = 0;i<a;i++){
+        //         resData.rule.list.push({})
+        //     }
+        // }
         return resData
 
     }
@@ -362,7 +380,7 @@ class action {
                 })
             }
             sortTypeFuns(treeType)
-            ret.types = util.typesToTree(treeType)
+            ret.types = util.typesToTree(JSON.parse(JSON.stringify(treeType)))
             this.injections.reduce('initTree', ret, this.metaAction.gf('data.businessTypeList').toJS())
         }
     }
@@ -663,7 +681,7 @@ class action {
 
 
         let response
-        if(!templateData.taxProperty.attrCode){
+        if(templateData.taxProperty && !templateData.taxProperty.attrCode){
             delete(templateData.taxProperty)
         }
 
@@ -675,7 +693,6 @@ class action {
 
         let typeName = response.businessType.code.substr(0,1)
 
-        i
         this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
         this.injections.reduce('initForm',this.transData4List(response))
 
@@ -906,7 +923,7 @@ class action {
         if(!this.isBizCheck()) return
         if(key == 'isHide'){
 
-            this.metaAction.sf(`data.templateData.businessType.${key}`,!e.target.checked)
+            this.metaAction.sf(`data.templateData.businessType.isShow`,!e.target.checked)
             this.metaAction.sf(`data.other.isHide`,e.target.checked)
         }else{
             this.metaAction.sf(`data.templateData.businessType.${key}`,e.target.checked)
@@ -1047,7 +1064,7 @@ class action {
         }
 
     }
-    // 弹框 新增规则1（多个添加）
+    // 弹框 新增规则1（多个添加)
     newInvoiceRule = async ()=>{
         return this.metaAction.toast('error','功能尚未开发')
         if(!this.isBizCheck()) return
