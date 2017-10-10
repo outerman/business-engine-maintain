@@ -12,6 +12,7 @@ export default {
         query:(option)=> fetch.post('/v1/businessTypeTemplate/query',option),
         accountQuery:(option) => fetch.post('/v1/account/query',option),
         update:(option)=> fetch.post('/v1/businessTypeTemplate/update',option),
+        delete:(option)=> fetch.post('/v1/businessTypeTemplate/delete',option),
         create:(option)=> fetch.post('/v1/businessTypeTemplate/create',option),
         delete:(option)=> fetch.post('/v1/businessTypeTemplate/delete',option),
         move: (option) => fetch.post('/v1/businessTypeTemplate/move', option),

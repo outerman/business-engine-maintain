@@ -655,6 +655,18 @@ class action {
     handlePreview = ()=>{
         return this.metaAction.toast('error','尚未开发')
     }
+
+    handleDelete = async()=>{
+        let code = this.metaAction.gf('data.templateData.businessType.code')
+
+        let response = await this.webapi.businessTypeTemplate.delete({code})
+
+
+        this.metaAction.toast('success','删除成功')
+        this.metaAction.sf('data.other.rightVisible',false)
+        this.queryTree()
+    }
+
     handleSave = async()=>{
         if(!this.isBizCheck()) return
 
@@ -677,9 +689,6 @@ class action {
 
         // return true
 
-
-
-
         let response
         if(templateData.taxProperty && !templateData.taxProperty.attrCode){
             delete(templateData.taxProperty)
@@ -687,12 +696,20 @@ class action {
 
         if(status){
             response = await this.webapi.businessTypeTemplate.create(templateData)
+
+            if(response.businessType){
+                this.metaAction.toast('success','新增成功！')
+            }
         }else{
             response = await this.webapi.businessTypeTemplate.update(templateData)
+            if(response.businessType){
+                this.metaAction.toast('success','修改成功！')
+            }
         }
 
-        let typeName = response.businessType.code.substr(0,1)
 
+        let typeName = response.businessType.code.substr(0,1)
+        this.queryTree()
         this.injections.reduce('initTemplate',JSON.parse(JSON.stringify(response)),typeName)
         this.injections.reduce('initForm',this.transData4List(response))
 
@@ -706,10 +723,6 @@ class action {
             tacticsList[i] = {}
             tacticsList[i].invoiceId = o.invoiceType
             tacticsList[i].industryIdList = o.industryIdList
-
-
-
-
 
             if(templateData.tacticsList[i] && templateData.tacticsList[i].details){
                 tacticsList[i].details = templateData.tacticsList[i].details
