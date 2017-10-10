@@ -27,7 +27,7 @@ class reducer {
     initTree = (state,data, businessTypeList)=>{
         state = this.metaReducer.sf(state, 'data.businessTypeList', fromJS(businessTypeList))
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
-        
+
         return state
     }
 
@@ -247,7 +247,7 @@ class reducer {
 			state = this.metaReducer.sf(state, 'data.right1.busName', selectInOrOutInfo.title)
 			state = this.metaReducer.sf(state, 'data.other.addOrDelBus', 'del')
 			state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right1')
-		} else {
+		} else if(selectInOrOutInfo['data-code'].length != 2 ) {
 //			state = this.metaReducer.sf(state, 'data.other.addOrDelBussiness', '新增分类')
 			state = this.metaReducer.sf(state, 'data.other.addOrDelBus', 'add')
 			state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right')
