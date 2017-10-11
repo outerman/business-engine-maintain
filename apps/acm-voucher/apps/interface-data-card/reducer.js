@@ -13,7 +13,7 @@ class reducer {
         const initState = getInitState()
 
         initState.data.dataSources = initData.dataSources
-        initState.data.form = initData.form||{}
+        initState.data.form = initData.form||initState.data.form
         initState.data.other = {}
 
         return this.metaReducer.init(state, initState)

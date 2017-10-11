@@ -73,7 +73,7 @@ export const inventoryAttr = [
 export const taxType = [
 	{id:0,value:0,name:'默认'},
 	{id:1, value:true, name:'一般计税'},
-	{id:2, value:false, name:'建议计税'}
+	{id:2, value:false, name:'简易计税'}
 ]
 export const qualification = [
 	{id:0,value:0,name:'默认'},
@@ -81,7 +81,7 @@ export const qualification = [
 	{id:2,value:false,name:'否'}
 ]
 export const punishmentAttr = [
-	{id:0,value:0,name:'默认'},
+	{id:0, value:0,name:'默认'},
 	{id:1, value:75,name:'其他罚款'},
 	{id:2, value:123,name:'行政罚款'},
 	{id:3, value:124,name:'违约金'},

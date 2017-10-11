@@ -486,7 +486,7 @@ class action {
             option = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)
 
         var showValue = cellValue
-
+        
         if(type == 'text'){
             showValue = cellValue
         }else{
@@ -508,7 +508,7 @@ class action {
                     showValue = cellValue
                 }else{
                     showValue = consts[consts.extendAttr[id]].filter(oo=>{
-                        return oo.value == cellValue
+                        return oo.id == cellValue
                     })[0]
                     showValue = showValue? showValue.name:cellValue
                 }
@@ -740,7 +740,7 @@ class action {
                                 columnsId: 12,
                                 isDefault: 0,
                                 optionValue:ooo,
-                                idList:oo.specialList[oooIdx].idList
+                                idList:oo.specialList[oooIdx]? oo.specialList[oooIdx].idList:undefined
                             })
                         })
                         specialList[0].isDefault = 1
@@ -754,7 +754,7 @@ class action {
                                 "isDefault": 0,
                                 "vatTaxpayer": 41,
                                 "optionValue": ooo,
-                                idList:oo.specialList[oooIdx].idList
+                                idList:oo.specialList[oooIdx]? oo.specialList[oooIdx].idList:undefined
                             })
                         })
                         o.smallRate.map((ooo,oooIdx)=>{
@@ -833,14 +833,14 @@ class action {
                 item.fundSource = o.fundSource
                 item.flag = o.flag
                 item.isSettlement = o.isSettlement
-                item.taxType = !(o.taxType =='简易计税')
-                item.vatTaxpayer = o.vatTaxpayer == '一般纳税人' ?41:42
+                item.taxType = o.taxType
+                item.vatTaxpayer = o.vatTaxpayer
                 item.accountName = o.accountName
                 item.influence = o.influence
 
                 item.accountCode = o.accountCode
                 item.orgId = o.orgId
-                item.direction = !(o.direction == '借')
+                item.direction = o.direction
                 if(o.departmentAttr){
                     item.departmentAttr = o.departmentAttr
                 }
@@ -853,7 +853,7 @@ class action {
 
                 if(item.influence){
                     let id = consts.influence.filter(oo=>{
-                            return oo.value === item.influence
+                            return oo.value == item.influence
                         })[0].id
                     if(consts.extendAttr[id]){
                             item.extendAttr = consts[consts.extendAttr[id]].filter(oo=>{
@@ -870,13 +870,14 @@ class action {
                 return item
             })
             if(templateData.docTemplateList.length){
-                let idxs = templateData.docTemplateList.map((o,i)=>{
+                let idxs
+                templateData.docTemplateList.map((o,i)=>{
                     if(o.accountingStandardId == accountingStandardId){
-                        return i
+                        idxs = i
                     }
                 })
-                if(idxs.length){
-                    templateData.docTemplateList[idxs[0]].details = docTemplate
+                if(!isNaN(idxs)){
+                    templateData.docTemplateList[idxs].details = docTemplate
                 }else{// 无此准则
                     templateData.docTemplateList.push({
                         accountingStandardId,

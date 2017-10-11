@@ -82,7 +82,12 @@ export function getMeta() {
 				name:'item-label',
 				component:'::span',
 				className:'item-label',
-				children:'金额来源：'
+				children:[{
+					name:'required',
+					component:'::span',
+					className:'required',
+					children:'*'
+				},'金额来源：']
 			},{
 				name:'amountTypeInput',
 				component:'Input',
@@ -90,6 +95,18 @@ export function getMeta() {
 
 				onChange:'{{$handleChange("fundSource")}}',
 				width:100
+			},{
+				name:'question-Icon',
+				component:'Popover',
+				// content:'不含税金额, 税额, 税额*1/3, 金额, 认证：价税合计金额：不含税金额, 认证：0：税额,抵扣：税额：0',
+				content:'{{$getcontent()}}',
+				title:'金额来源提示',
+				children:[{
+					name:'question-Icon',
+					component:'Icon',
+					style:{'fontSize':'16px','color':'#aaa','marginLeft':'5px'},
+					type:'question-circle-o'
+				}]
 			}]
 		},{
 			name: 'subject',
@@ -167,6 +184,8 @@ export function getMeta() {
 	}
 }
 
+
+
 export function getInitState() {
 	return {
 		data: {
@@ -180,8 +199,8 @@ export function getInitState() {
 			},
 			form:{
 				flag:'A',
-				influence:'departmentAttr' ,
-				direction:false,
+				influence:'' ,
+				direction: false,
 				accountCode:'1001',
 				accountName:'库存现金',
 				isSettlement:true,

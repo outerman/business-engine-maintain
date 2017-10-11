@@ -49,7 +49,7 @@ class reducer {
             return {id: i+1,value:o.code,name:o.gradeName}
         })
 
-        accountSource.unshift({id:0,value:0,name:'默认'})
+        // accountSource.unshift({id:0,value:0,name:'默认'}) // 科目不需要默认，是必填
 
         state = this.metaReducer.sf(state, 'data.dataSources.accountSource', fromJS(accountSource))
         state = this.metaReducer.sf(state, 'data.rule.other.account', fromJS([accountSource[0]]))
@@ -59,7 +59,7 @@ class reducer {
         if(columnKey !=='extendAttr' ){
             val = selected.value
         }
-        state = this.metaReducer.sf(state,`data.rule.list.${ps.rowIndex}.${columnKey}`,val)
+        state = this.metaReducer.sf(state,`data.rule.list.${ps.rowIndex}.${columnKey}`,selected.value)
         if(columnKey == 'accountName'||columnKey == 'accountCode'){
             state = this.metaReducer.sf(state,`data.rule.other.account.${ps.rowIndex}`,fromJS(selected))
         }else{
@@ -282,7 +282,7 @@ function parseSelected (other,dataSources,list){
 
             ){
                 other[attr][i] = consts[attr].filter(oo=>{
-                    return oo.value == o[attr]
+                    return oo.value === o[attr]
                 })[0]
             }
             if(attr == 'extendAttr'){

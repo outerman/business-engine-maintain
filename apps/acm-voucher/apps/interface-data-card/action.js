@@ -1,6 +1,7 @@
 import React from 'react'
 import { action as MetaAction, AppLoader } from 'mk-meta-engine'
 import { Select } from 'mk-component'
+
 import config from './config'
 
 class action {
@@ -25,7 +26,7 @@ class action {
         this.injections.reduce('modifyContent')
     }
     getInvoiceDefaultValue = () => {
-        return this.initData.form && this.initData.form.invoiceType || undefined
+        return this.initData.form && this.initData.form.invoiceType || 200000000000050
     }
     getInvoiceOptions = () => {
         let invoiceType = this.initData.dataSources.invoiceType,

@@ -23,10 +23,21 @@ class action {
     onOk = () => {
         let list = this.metaAction.gf('data.form').toJS()
         // let extendAttr = list.punishmentAttr || list.borrowAttr || list.assetAttr
+        if(this.requiredCheck(list)){
+            return {result:true,value:{list}}
+        }else{
+            return false
+        }
 
-        return {result:true,value:{list}}
+
     }
-
+    requiredCheck =(list)=>{
+        if(!list.fundSource){
+            this.metaAction.toast('error','金额来源不能为空')
+            return false
+        }
+        return true
+    }
     btnClick = () => {
         this.injections.reduce('modifyContent')
     }
@@ -71,6 +82,26 @@ class action {
             key = 'extendAttr'
         }
         this.metaAction.sf(`data.form.${key}`,e.target.value)
+    }
+    openTips = ()=>{
+        debugger
+    }
+    getcontent =()=>{
+    	return (
+    		<div>
+    		    <p>认证</p>
+    			<p>抵扣</p>
+    			<p>不含税金额</p>
+    			<p>价税合计金额</p>
+                <p>不含税金额</p>
+    		    <p>税额</p>
+    			<p>税额*1/3</p>
+                <p>0~7</p>
+                <p>认证：抵扣#不含税金额#价税合计金额：不含税金额</p>
+                <p>抵扣：税额：0</p>
+    		</div>
+
+    	)
     }
     getSelect =(o,dataSources)=>{
         let dataSource = dataSources[o],

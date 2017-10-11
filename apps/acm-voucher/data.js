@@ -256,12 +256,6 @@ export function getMeta() {
 							children:'{{$getInventoryTreeNode()}}'
 							// treeData:'{{data.dataSources.inventoryPropertyList}}'
 						}]
-					},{
-						name:'delete',
-						component:'Button',
-						className:'biz-delete',
-						children:'删除此业务类型',
-						onClick:'{{$handleDelete}}'
 					}]
 				}]
 			},{
@@ -293,6 +287,11 @@ export function getMeta() {
 					component:'Button',
 					onClick:'{{$handleSave}}',
 					children:'保存'
+				},{
+					name:'delete',
+					component:'Button',
+					children:'删除',
+					onClick:'{{$handleDelete}}'
 				}]
 			}]
 		}, {
