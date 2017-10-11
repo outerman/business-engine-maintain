@@ -339,6 +339,7 @@ class action {
         let sourceCode = info.dragNode.props['data-code'],
             moveCodeInfo = info.node.props,
             treeType = this.metaAction.gf('data.businessTypeList').toJS(),
+            treeType1 = this.metaAction.gf('data.businessTypeList').toJS(),
             option = {
                 "source": { //-- 需要移动的业务类型
                     "code": "" //-- 编码
@@ -380,8 +381,9 @@ class action {
                 })
             }
             sortTypeFuns(treeType)
+            sortTypeFuns(treeType1)
             ret.types = util.typesToTree(JSON.parse(JSON.stringify(treeType)))
-            this.injections.reduce('initTree', ret, this.metaAction.gf('data.businessTypeList').toJS())
+            this.injections.reduce('initTree', ret, treeType1)
         }
     }
 
