@@ -119,6 +119,7 @@ export function getMeta() {
 							name:'itme1-1',
 							component:'Input',
 							size:'small',
+							type:'number',
 							width:100,
 							disabled:'{{!data.other.codeEditable}}',
 							onChange:'{{$bizAttrChange("code")}}',
@@ -377,6 +378,33 @@ function getInterfaceMeta(){
 					children: '票据类型'
 				},
 				cell: "{{$cellGetter('invoiceType')}}",
+			},{
+				name: 'oprate',
+				component: 'DataGrid.Column',
+				columnKey: 'oprate',
+				fixed: true,
+				width: 30,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: ''
+				},
+				cell: {
+					name: 'cell',
+					component: 'DataGrid.Cell',
+					_power: '({rowIndex})=>rowIndex',
+					children: [{
+						name: 'del',
+						component: 'Icon',
+						showStyle: 'showy',
+						type: 'delete',
+						style: {
+							fontSize: 18
+						},
+						title: 'delete',
+						onClick: '{{$deleteRow}}'
+					}]
+				}
 			},{
 				name: 'noTaxAmount',
 				component: 'DataGrid.Column',
@@ -1036,7 +1064,7 @@ function getRuleMeta(){
 			name: 'table',
 			component:'DataGrid',
 			headerHeight: 30,
-			rowsCount: '{{data.rule.list.length}}',
+			rowsCount: '{{data.standard==19? data.rule.list19.length:data.rule.list18.length}}',
 			rowHeight: 30,
 			readonly: false,
 			// enableSequence: true,
@@ -1056,6 +1084,33 @@ function getRuleMeta(){
 					children: '科目分组'
 				},
 				cell: "{{$cellGetterRule('flag','text')}}",
+			},{
+				name: 'oprate',
+				component: 'DataGrid.Column',
+				columnKey: 'oprate',
+				fixed: true,
+				width: 30,
+				header: {
+					name: 'header',
+					component: 'DataGrid.Cell',
+					children: ''
+				},
+				cell: {
+					name: 'cell',
+					component: 'DataGrid.Cell',
+					_power: '({rowIndex})=>rowIndex',
+					children: [{
+						name: 'del',
+						component: 'Icon',
+						showStyle: 'showy',
+						type: 'delete',
+						style: {
+							fontSize: 18
+						},
+						title: 'delete',
+						onClick: '{{$deleteRuleRow}}'
+					}]
+				}
 			},{
 				name: 'influence',
 				component: 'DataGrid.Column',
@@ -1343,23 +1398,41 @@ export function getInitState() {
 			rule:{
 				other:{
 					focusCellInfo:undefined,
-					account:[],
-					influence:[],
-					vatTaxpayer:[],
-					departmentAttr:[],
-					personAttr:[],
-					inventoryAttr:[],
-					taxType:[],
-					qualification:[],
-					punishmentAttr:[],
-					borrowAttr:[],
-					assetAttr:[],
-					direction:[],
-					isSettlement:[],
-					extendAttr:[]
+					dataSource18:{
+						account:[],
+						influence:[],
+						vatTaxpayer:[],
+						departmentAttr:[],
+						personAttr:[],
+						inventoryAttr:[],
+						taxType:[],
+						qualification:[],
+						punishmentAttr:[],
+						borrowAttr:[],
+						assetAttr:[],
+						direction:[],
+						isSettlement:[],
+						extendAttr:[]
+					},
+					dataSource19:{
+						account:[],
+						influence:[],
+						vatTaxpayer:[],
+						departmentAttr:[],
+						personAttr:[],
+						inventoryAttr:[],
+						taxType:[],
+						qualification:[],
+						punishmentAttr:[],
+						borrowAttr:[],
+						assetAttr:[],
+						direction:[],
+						isSettlement:[],
+						extendAttr:[]
+					}
 
 				},
-				list:[
+				list18:[
 				// 	{
 				//     // "orgId": 0,
 				//     // "flag": "B",
@@ -1374,7 +1447,8 @@ export function getInitState() {
 				//     // "industryIdList": [2],
 				//     // "idList": [498927]
 				// }
-				]
+				],
+				list19:[]
 			}
 		}
 	}

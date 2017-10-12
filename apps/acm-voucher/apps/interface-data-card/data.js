@@ -1223,7 +1223,6 @@ export function getInitState() {
 				'invoiceType': 200000000000050,
 				'bankAccount':0,
 				'settlement':[],
-				'stringExt':0,
 				'noTaxAmount':0,
 			    "stringExt0": 0,
 			    "ext7Title": "",

@@ -230,17 +230,17 @@ class action {
     handleStandardChange = (e)=>{
         this.metaAction.sf('data.standard', e.target.value)
 
-        let ruleData = this.metaAction.gf('data.templateData').toJS().docTemplateList,
-            ruleList = []
-        if(ruleData){
-            if(e.target.value == 18){
-                ruleList = ruleData[0]? ruleData[0].details:[]
-            }else{
-                ruleList = ruleData[1]? ruleData[1].details:[]
-            }
-
-            this.injections.reduce('initRuleList',ruleList)
-        }
+        // let ruleData = this.metaAction.gf('data.templateData').toJS().docTemplateList,
+        //     ruleList = []
+        // if(ruleData){
+        //     if(e.target.value == 18){
+        //         ruleList = ruleData[0]? ruleData[0].details:[]
+        //     }else{
+        //         ruleList = ruleData[1]? ruleData[1].details:[]
+        //     }
+        //
+        //     this.injections.reduce('initRuleList',ruleList)
+        // }
     }
     transData4List = (res,typeName)=> {
         res = JSON.parse(JSON.stringify(res))
@@ -323,7 +323,8 @@ class action {
             other:{
                 focusCellInfo:undefined
             },
-            list:(standard == 18? (ruleData[0]? ruleData[0].details:[]):(ruleData[1]? ruleData[1].details:[]))
+            list18:ruleData[0]? ruleData[0].details:[],
+            list19:ruleData[1]? ruleData[1].details:[]
         }
         // if(resData.rule.list.length<4){
         //     let a = 4 - resData.rule.list.length
@@ -472,35 +473,58 @@ class action {
         this.injections.reduce('setAccountSource',val)
     }
     nameChange =(ps,columnKey)=>(e)=>{
-        this.metaAction.sf(`data.rule.list.${ps.rowIndex}.${columnKey}`,e.target.value)
+        let standard = this.metaAction.gf('data.standard')
+        this.metaAction.sf(`data.rule.list${standard}.${ps.rowIndex}.${columnKey}`,e.target.value)
 
         // console.log(ps)
     }
     interfaceChange = (columnKey,ps)=>(val)=>{
         this.metaAction.sf(`data.interface.list.${ps.rowIndex}.${columnKey}`,val)
     }
+    deleteRow = (e,path)=>{
+        let list = this.metaAction.gf('data.interface.list').toJS()
+        if(confirm('确定删除')){
+            list.splice(path.rowIndex,1)
+            this.metaAction.sf('data.interface.list',fromJS(list))
+        }
+    }
+    deleteRuleRow = (e,path)=>{
+        debugger
+        let standard = this.metaAction.gf('data.standard'),
+            list = this.metaAction.gf('data.rule.list'+standard).toJS()
+
+
+        if(confirm('确定删除')){
+            list.splice(path.rowIndex,1)
+            this.injections.reduce('initRuleList',list)
+            // this.metaAction.sf('data.rule.list'+standard,fromJS(list))
+        }
+    }
     cellGetterRule = (columnKey,type) => (ps) => {
-        let metaAction = this.metaAction
-        var cellValue = this.metaAction.gf(`data.rule.list.${ps.rowIndex}.${columnKey}`)
-        let list =  this.metaAction.gf(`data.rule.list.${ps.rowIndex}`),
-            option = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)
+        let metaAction = this.metaAction,
+            standard = this.metaAction.gf('data.standard')
+
+        let cellValue = this.metaAction.gf(`data.rule.list${standard}.${ps.rowIndex}.${columnKey}`)
+
+        let list = this.metaAction.gf(`data.rule.list${standard}.${ps.rowIndex}`),
+            option = this.metaAction.gf(`data.rule.other.dataSource${standard}.${columnKey}.${ps.rowIndex}`)
 
         var showValue = cellValue
-        
+
         if(type == 'text'){
             showValue = cellValue
         }else{
             option && (showValue = option.get('name'))
             if(columnKey == 'accountName' ){
-                let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+                let account = this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`)
                 account && (showValue = account.get('name'))
             }
             if(columnKey == 'accountCode' ){
-                let account = this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)
+                let account = this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`)
                 account && (showValue = account.get('value'))
             }
             if(columnKey == 'extendAttr'){
-                let influenceOption = this.metaAction.gf(`data.rule.other.influence.${ps.rowIndex}`),
+                let influenceOption = this.metaAction.gf(`data.rule.other.dataSource${standard}.influence.${ps.rowIndex}`),
                 id = influenceOption ? influenceOption.get('id'):''
                 if(!consts.extendAttr[id]) return <span>不存在扩展因素</span>
 
@@ -540,24 +564,24 @@ class action {
                 dataSource = this.metaAction.gf(`data.dataSources.accountSource`)?
                     this.metaAction.gf(`data.dataSources.accountSource`).toJS():
                     []
-                option =this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`)?
-                    this.metaAction.gf(`data.rule.other.account.${ps.rowIndex}`).toJS():
+                option =this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`)?
+                    this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`).toJS():
                     {}
             }else{
-                option = this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`)?
-                    this.metaAction.gf(`data.rule.other.${columnKey}.${ps.rowIndex}`).toJS():
+                option = this.metaAction.gf(`data.rule.other.dataSource${standard}.${columnKey}.${ps.rowIndex}`)?
+                    this.metaAction.gf(`data.rule.other.dataSource${standard}.${columnKey}.${ps.rowIndex}`).toJS():
                     []
                 dataSource = consts[columnKey]
             }
             if(columnKey == 'extendAttr' ){
-                let influenceOption = this.metaAction.gf(`data.rule.other.influence.${ps.rowIndex}`),
+                let influenceOption = this.metaAction.gf(`data.rule.other.dataSource${standard}.influence.${ps.rowIndex}`),
                     id = influenceOption ? influenceOption.get('id'):''
 
                 if(!consts.extendAttr[id]) return <span>不存在扩展因素</span>
 
                 dataSource = consts[consts.extendAttr[id]]
-                option = this.metaAction.gf(`data.rule.other.${consts.extendAttr[id]}.${ps.rowIndex}`)?
-                    this.metaAction.gf(`data.rule.other.${consts.extendAttr[id]}.${ps.rowIndex}`):{}
+                option = this.metaAction.gf(`data.rule.other.dataSource${standard}.${consts.extendAttr[id]}.${ps.rowIndex}`)?
+                    this.metaAction.gf(`data.rule.other.dataSource${standard}.${consts.extendAttr[id]}.${ps.rowIndex}`):{}
 
                 if(id == 12){// 公式
                     return (
@@ -675,16 +699,25 @@ class action {
         let metaAction = this.metaAction,
             templateData = metaAction.gf('data.templateData').toJS(),
             interfaceData = metaAction.gf('data.interface').toJS(),
-            status = this.metaAction.gf('data.other.status')
+            status = this.metaAction.gf('data.other.status'),
+            standard = this.metaAction.gf('data.standard')
 
         let ruleData = metaAction.gf('data.rule').toJS(),
             tacticsList = this.parseTacticsList(templateData,interfaceData),
-            docTemplateList = this.parseDocTemplateList(templateData,ruleData)
-
-
+            docTemplateList18 = this.parseDocTemplateList(ruleData.list18),
+            docTemplateList19 = this.parseDocTemplateList(ruleData.list19)
 
         templateData.tacticsList = tacticsList
-        templateData.docTemplateList = docTemplateList
+        templateData.docTemplateList = [
+            {
+                accountingStandardId:18,
+                details:docTemplateList18
+            },
+            {
+                accountingStandardId:19,
+                details:docTemplateList19
+            }
+        ]
 
 
         // delete templateData.businessType.typeName
@@ -780,7 +813,8 @@ class action {
                         attr == 'normalRate'||
                         attr == 'smallRate'||
                         attr == 'invoiceType'||
-                        attr == 'settlement'
+                        attr == 'settlement'||
+                        /Title/.test(attr)
                     ){
                         continue
                     }
@@ -789,6 +823,9 @@ class action {
                             columnsId:consts.columns[attr].id,
                             flag:o[attr]
                         }
+                    if(temp.columnsId>= 1000 && o[attr+'Title']){
+                        temp.columnsName = o[attr+'Title']
+                    }
                     if(attr == 'taxRate'){
                         o.normalRate && o.normalRate.map((ooo,oooIdx)=>{
                             specialList.push({
@@ -818,16 +855,16 @@ class action {
                         })
                         temp.specialList = specialList
                     }
+
                     tacticsList[i].details.push(temp)
                 }
             }
         })
         return tacticsList
     }
-    parseDocTemplateList = (templateData,ruleData)=>{
-        let accountingStandardId = this.metaAction.gf('data.standard'),
-
-            docTemplate = ruleData.list.map((o,i)=>{
+    parseDocTemplateList = (list)=>{
+        debugger
+        let docTemplate = list.map((o,i)=>{
                 let item = {}
 
                 item.fundSource = o.fundSource
@@ -869,29 +906,9 @@ class action {
 
                 return item
             })
-            if(templateData.docTemplateList.length){
-                let idxs
-                templateData.docTemplateList.map((o,i)=>{
-                    if(o.accountingStandardId == accountingStandardId){
-                        idxs = i
-                    }
-                })
-                if(!isNaN(idxs)){
-                    templateData.docTemplateList[idxs].details = docTemplate
-                }else{// 无此准则
-                    templateData.docTemplateList.push({
-                        accountingStandardId,
-                        details:docTemplate
-                    })
-                }
-            }else{ // 新增
-                templateData.docTemplateList.push({
-                    accountingStandardId,
-                    details:docTemplate
-                })
-            }
 
-            return templateData.docTemplateList
+
+            return docTemplate
     }
     getColumnsById = (id)=>{
         let columns = consts.columns
@@ -1135,7 +1152,9 @@ class action {
         })
 
         if (ret) {
-            let list =this.metaAction.gf('data.rule.list').toJS()
+            let standard = this.metaAction.gf('data.standard')
+
+            let list =this.metaAction.gf('data.rule.list'+standard).toJS()
             list.push(ret.value.list)
 
             this.injections.reduce('initRuleList',list)

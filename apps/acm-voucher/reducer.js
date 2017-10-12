@@ -35,7 +35,7 @@ class reducer {
         let inventoryPropertyList = value.map(o=>{
             return {name:o}
         })
-
+        debugger
         state = this.metaReducer.sf(state,'data.other.inventoryProperty',fromJS(value))
         state = this.metaReducer.sf(state,'data.templateData.inventoryPropertyList',fromJS(inventoryPropertyList))
 
@@ -48,31 +48,33 @@ class reducer {
         let accountSource = data.map((o,i)=>{
             return {id: i+1,value:o.code,name:o.gradeName}
         })
-
+        let standard = this.metaReducer.gf(state,'data.standard')
         // accountSource.unshift({id:0,value:0,name:'默认'}) // 科目不需要默认，是必填
 
         state = this.metaReducer.sf(state, 'data.dataSources.accountSource', fromJS(accountSource))
-        state = this.metaReducer.sf(state, 'data.rule.other.account', fromJS([accountSource[0]]))
+        state = this.metaReducer.sf(state, `data.rule.other.dataSource${standard}.account`, fromJS([accountSource[0]]))
         return state
     }
     setRuleList = (state,columnKey,ps,val,selected)=>{
+        let standard = this.metaReducer.gf(state,'data.standard')
         if(columnKey !=='extendAttr' ){
             val = selected.value
         }
-        state = this.metaReducer.sf(state,`data.rule.list.${ps.rowIndex}.${columnKey}`,selected.value)
+        state = this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.${columnKey}`,selected.value)
         if(columnKey == 'accountName'||columnKey == 'accountCode'){
-            state = this.metaReducer.sf(state,`data.rule.other.account.${ps.rowIndex}`,fromJS(selected))
+            state = this.metaReducer.sf(state,`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`,fromJS(selected))
         }else{
-            state = this.metaReducer.sf(state,`data.rule.other.${columnKey}.${ps.rowIndex}`,fromJS(selected))
+            state = this.metaReducer.sf(state,`data.rule.other.dataSource${standard}.${columnKey}.${ps.rowIndex}`,fromJS(selected))
         }
         return state
     }
     initRuleList = (state,initRuleList)=>{
         let other = this.metaReducer.gf(state,'data.rule.other').toJS(),
-            dataSources = this.metaReducer.gf(state,'data.dataSources').toJS()
+            dataSources = this.metaReducer.gf(state,'data.dataSources').toJS(),
+            standard = this.metaReducer.gf(state,'data.standard')
 
-        state = this.metaReducer.sf(state,`data.rule.list`,fromJS(initRuleList))
-        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,initRuleList)))
+        state = this.metaReducer.sf(state,`data.rule.list${standard}`,fromJS(initRuleList))
+        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,initRuleList,standard)))
         return state
     }
     saveData = (state,data) =>{
@@ -168,11 +170,22 @@ class reducer {
 
     initTemplate = (state,templateData,typeName) =>{
 
+        let inventoryPropertyList = templateData.inventoryPropertyList,
+        inventoryProperty = inventoryPropertyList.length? inventoryPropertyList.map(o=>{
+            return o.name
+        }):[]
+
+        state = this.metaReducer.sf(state,'data.other.inventoryProperty',fromJS(inventoryProperty))
+
+
         state = this.metaReducer.sf(state,'data.typeName',typeName)
         state = this.metaReducer.sf(state,'data.other.codeEditable',false)
         state = this.metaReducer.sf(state,'data.other.isHide',!templateData.businessType.isShow)
         state = this.metaReducer.sf(state,'data.templateData',fromJS(templateData))
         state = this.metaReducer.sf(state,'data.other.status',false)
+
+
+
 
         return state
     }
@@ -183,8 +196,9 @@ class reducer {
 
 
         state = this.metaReducer.sf(state,'data.interface.list',fromJS(data.interface.list))
-        state = this.metaReducer.sf(state,'data.rule.list',fromJS(data.rule.list))
-        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule.list)))
+        state = this.metaReducer.sf(state,'data.rule.list18',fromJS(data.rule.list18))
+        state = this.metaReducer.sf(state,'data.rule.list19',fromJS(data.rule.list19))
+        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule)))
         return state
     }
     newBusiness = (state,typeName) =>{
@@ -192,7 +206,8 @@ class reducer {
         state = this.metaReducer.sf(state,'data.typeName','1')
         state = this.metaReducer.sf(state,'data.templateData',fromJS(this.newBusinessData(state,typeName)))
         state = this.metaReducer.sf(state,'data.interface.list',fromJS([]))
-        state = this.metaReducer.sf(state,'data.rule.list',fromJS([]))
+        state = this.metaReducer.sf(state,'data.rule.list18',fromJS([]))
+        state = this.metaReducer.sf(state,'data.rule.list19',fromJS([]))
         state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right')
         state = this.metaReducer.sf(state,'data.other.status',true)
         return state
@@ -256,50 +271,65 @@ class reducer {
 	}
 }
 
-function parseSelected (other,dataSources,list){
+function parseSelected (other,dataSources,rule,standard){
+    let {list18,list19} = rule,
+        {dataSource18,dataSource19} = other
 
-    list.map((o,i)=>{
+    if(standard){
+        other[`dataSource${standard}`] = countDataSource(rule,other[`dataSource${standard}`])
+    }else{
+        other.dataSource18 = countDataSource(list18,dataSource18)
+        other.dataSource19 = countDataSource(list19,dataSource19)
+    }
 
-        for(let attr in o){
-            if(attr == 'accountCode'){
-                other.account[i]  = dataSources.accountSource.filter(oo=>{
-                    return oo.value == o.accountCode
-                })[0]
-            }
-            if(
-                attr == 'influence'||
-                attr == 'vatTaxpayer'||
-                attr == 'departmentAttr'||
-                attr == 'personAttr'||
-                // attr == 'inventoryAttr'||
-                attr == 'taxType'||
-                attr == 'qualification'||
-                attr == 'punishmentAttr'||
-                attr == 'borrowAttr'||
-                attr == 'assetAttr'||
-                attr == 'direction'||
-                attr == 'isSettlement'
 
-            ){
-                other[attr][i] = consts[attr].filter(oo=>{
-                    return oo.value === o[attr]
-                })[0]
-            }
-            if(attr == 'extendAttr'){
-                let influence = o.influence,
-                    id = consts.influence.filter(oo=>{
-                        return oo.value == influence
-                    })[0].id,
-                    extendAttrArr = consts[consts.extendAttr[id]]
-                if(extendAttrArr) {
-                    other.extendAttr[i] = extendAttrArr.filter( oo=>{
-                        return oo.value == o.extendAttr
-                    })
+        function countDataSource (list,dataSource){
+            list.map((o,i)=>{
+
+                for(let attr in o){
+                    if(attr == 'accountCode'){
+                        dataSource.account[i]  = dataSources.accountSource.filter(oo=>{
+                            return oo.value == o.accountCode
+                        })[0]
+                    }
+                    if(
+                        attr == 'influence'||
+                        attr == 'vatTaxpayer'||
+                        attr == 'departmentAttr'||
+                        attr == 'personAttr'||
+                        // attr == 'inventoryAttr'||
+                        attr == 'taxType'||
+                        attr == 'qualification'||
+                        attr == 'punishmentAttr'||
+                        attr == 'borrowAttr'||
+                        attr == 'assetAttr'||
+                        attr == 'direction'||
+                        attr == 'isSettlement'
+
+                    ){
+                        dataSource[attr][i] = consts[attr].filter(oo=>{
+                            return oo.value === o[attr]
+                        })[0]
+                    }
+                    if(attr == 'extendAttr'){
+                        let influence = o.influence,
+                            id = consts.influence.filter(oo=>{
+                                return oo.value == influence
+                            })[0].id,
+                            extendAttrArr = consts[consts.extendAttr[id]]
+                        if(extendAttrArr) {
+                            dataSource.extendAttr[i] = extendAttrArr.filter( oo=>{
+                                return oo.value == o.extendAttr
+                            })
+                        }
+                    }
                 }
-            }
+
+            })
+            return dataSource
         }
 
-    })
+
     return other
 }
 export default function creator(option) {

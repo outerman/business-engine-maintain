@@ -71,7 +71,6 @@ export const inventoryAttr = [
 ]
 
 export const taxType = [
-	{id:0,value:0,name:'默认'},
 	{id:1, value:true, name:'一般计税'},
 	{id:2, value:false, name:'简易计税'}
 ]
