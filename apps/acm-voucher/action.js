@@ -833,7 +833,7 @@ class action {
                         o.normalRate && o.normalRate.map((ooo,oooIdx)=>{
                             specialList.push({
                                 "columnsId": 16,
-                                "isDefault": oooIdx ? 1:0,
+                                "isDefault": !oooIdx ? 1:0,
                                 "vatTaxpayer": 41,
                                 "optionValue": ooo
                             })
@@ -841,7 +841,7 @@ class action {
                         o.smallRate && o.smallRate.map((ooo,oooIdx)=>{
                             specialList.push({
                                 "columnsId": 16,
-                                "isDefault": oooIdx ? 1:0,
+                                "isDefault": !oooIdx ? 1:0,
                                 "vatTaxpayer": 42,
                                 "optionValue": ooo
                             })
@@ -852,7 +852,7 @@ class action {
                         o.settlement && o.settlement.map((ooo,oooIdx)=>{
                             specialList.push({
                                 columnsId: 12,
-                                isDefault: oooIdx? 1:0,
+                                isDefault: !oooIdx? 1:0,
                                 optionValue:ooo
                             })
                         })

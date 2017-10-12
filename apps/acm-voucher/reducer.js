@@ -210,6 +210,8 @@ class reducer {
         state = this.metaReducer.sf(state,'data.rule.list19',fromJS([]))
         state = this.metaReducer.sf(state, 'data.other.rightVisible', 'right')
         state = this.metaReducer.sf(state,'data.other.status',true)
+        state = this.metaReducer.sf(state,'data.other.inventoryProperty',fromJS([]))
+
         return state
     }
     newBusinessData =(state,typeName)=>{
