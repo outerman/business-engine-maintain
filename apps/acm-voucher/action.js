@@ -467,7 +467,6 @@ class action {
     getAccountList =  async()=>{
         let val = await this.webapi.businessTypeTemplate.accountQuery({
                     "isEndNode": true,
-                    "accountTypeId": 88,
                     "status": true
                 })
         this.injections.reduce('setAccountSource',val)
@@ -692,7 +691,11 @@ class action {
         this.metaAction.sf('data.other.rightVisible',false)
         this.queryTree()
     }
-
+    handleRefresh = ()=>{
+        let code = this.metaAction.gf('data.templateData.businessType.code')
+        this.queryTree()
+        if(code) this.queryTemplate(code)
+    }
     handleSave = async()=>{
         if(!this.isBizCheck()) return
 

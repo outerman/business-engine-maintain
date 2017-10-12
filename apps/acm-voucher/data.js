@@ -37,6 +37,16 @@ export function getMeta() {
                     onSearch:'{{$onSearch}}',
 					onChange:'{{$onSearchChange}}'
 				},{
+					name:'refresh',
+					component: 'Icon',
+					className:'refresh',
+					type: 'reload',
+					style: {
+						fontSize: 18
+					},
+					title: 'delete',
+					onClick: '{{$handleRefresh}}'
+				},{
 					name:'tree',
 					className:'acm-voucher-left-tree',
 					checkable:false,
@@ -1250,7 +1260,7 @@ function getRuleMeta(){
 				component: 'DataGrid.Column',
 				columnKey: 'accountCode',
 				flexGrow: 1,
-				width: 100,
+				width: 200,
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',

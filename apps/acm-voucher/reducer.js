@@ -171,7 +171,7 @@ class reducer {
     initTemplate = (state,templateData,typeName) =>{
 
         let inventoryPropertyList = templateData.inventoryPropertyList,
-        inventoryProperty = inventoryPropertyList.length? inventoryPropertyList.map(o=>{
+        inventoryProperty = inventoryPropertyList && inventoryPropertyList.length? inventoryPropertyList.map(o=>{
             return o.name
         }):[]
 

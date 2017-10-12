@@ -121,14 +121,17 @@ export function getMeta() {
 				name:'group',
 				component:'Select',
 				defaultValue:'{{data.dataSources.accountSource[0].id}}',
-				style:{ width: 120 },
+				showSearch:true,
+				filterOption:'{{(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}}',
+				style:{ width: 260 },
+
 				// value:'{{data.other.account.id}}',
 				onChange:'{{$handleSelectChange("account")}}',
 				children:[{
 					name:'option0',
 					component:'Select.Option',
 					value:'{{data.dataSources.accountSource ? data.dataSources.accountSource[_rowIndex].id :""}}',
-					children:'{{data.dataSources.accountSource ? data.dataSources.accountSource[_rowIndex].name:""}}',
+					children:'{{data.dataSources.accountSource ? data.dataSources.accountSource[_rowIndex].value+"-"+data.dataSources.accountSource[_rowIndex].name:""}}',
 					_power:  'for in data.dataSources.accountSource'
 				}]
 			}]
