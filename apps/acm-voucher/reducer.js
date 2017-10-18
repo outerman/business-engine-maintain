@@ -24,12 +24,87 @@ class reducer {
         const content = this.metaReducer.gf(state, 'data.content')
         return this.metaReducer.sf(state, 'data.content', content + '!')
     }
-    initTree = (state,data, businessTypeList)=>{
+    initTree = (state,data, businessTypeList, oldInfo, newInfo)=>{
         state = this.metaReducer.sf(state, 'data.businessTypeList', fromJS(businessTypeList))
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
-
+		if (!oldInfo || !newInfo) 
+			return state
+		let oldEventKey = oldInfo.eventKey,
+			newEventKey = newInfo.eventKey,
+			oldIsParent = oldInfo.className == 'z-tree-parent',
+			newIsParent = newInfo.className == 'z-tree-parent'
+		if(oldEventKey && newEventKey) {
+			let expandedKeys = this.metaReducer.gf(state, 'data.other.expandedKeys')
+			if(parseInt(oldEventKey.split('-')[2]) > parseInt(newEventKey.split('-')[2])) {
+				expandedKeys.toJS().map((o, i) => {
+					if(o.split('-')[2]) {
+						let formatO = o.split('-')
+						//下 -> 上 
+						if((newEventKey.split('-').length != 4 && !newIsParent) && (oldEventKey.split('-').length != 4 && !oldIsParent)) {
+							if((parseInt(oldEventKey.split('-')[2]) > parseInt(o.split('-')[2])) && (parseInt(o.split('-')[2]) > parseInt(newEventKey.split('-')[2]))) {
+								formatO[2] = (parseInt(o.split('-')[2]) + 1) + ''
+								o = formatO.join('-')
+								expandedKeys = expandedKeys.set(i, o)
+							}
+						}
+						//下类 -> 上
+						else if((newEventKey.split('-').length != 4 && !newIsParent) && (oldEventKey.split('-').length == 4 || oldIsParent)) {
+							if(parseInt(o.split('-')[2]) > parseInt(newEventKey.split('-')[2])) {
+								formatO[2] = (parseInt(o.split('-')[2]) + 1) + ''
+								o = formatO.join('-')
+								expandedKeys = expandedKeys.set(i, o)
+							}
+						}
+						//下 -> 上类
+						else if((newEventKey.split('-').length == 4 || newIsParent) && (oldEventKey.split('-').length != 4 && !oldIsParent)) {
+							if(parseInt(oldEventKey.split('-')[2]) < parseInt(o.split('-')[2])) {
+								formatO[2] = (parseInt(o.split('-')[2]) - 1) + ''
+								o = formatO.join('-')
+								expandedKeys = expandedKeys.set(i, o)
+							}
+						} 
+					} 
+				})
+			} else if(parseInt(oldEventKey.split('-')[2]) < parseInt(newEventKey.split('-')[2])) {
+				expandedKeys.toJS().map((o, i) => {
+					if(o.split('-')[2]) {
+						let formatO = o.split('-')
+						//上 -> 下
+						if((newEventKey.split('-').length != 4 && !newIsParent) && (oldEventKey.split('-').length != 4 && !oldIsParent)) {
+							if((parseInt(oldEventKey.split('-')[2]) < parseInt(o.split('-')[2])) && (parseInt(o.split('-')[2]) < parseInt(newEventKey.split('-')[2]))) {
+								formatO[2] = (parseInt(o.split('-')[2]) - 1) + ''
+								o = formatO.join('-')
+								expandedKeys = expandedKeys.set(i, o)
+							}
+						}
+						//上类 -> 下
+						else if((newEventKey.split('-').length != 4 && !newIsParent) && (oldEventKey.split('-').length == 4 || oldIsParent)) {
+							if(parseInt(o.split('-')[2]) > parseInt(newEventKey.split('-')[2])) {
+								formatO[2] = (parseInt(o.split('-')[2]) + 1) + ''
+								o = formatO.join('-')
+								expandedKeys = expandedKeys.set(i, o)
+							}
+						}
+						//上 -> 下类
+						else if((newEventKey.split('-').length == 4 || newIsParent) && (oldEventKey.split('-').length != 4 && !oldIsParent)) {
+							if(parseInt(oldEventKey.split('-')[2]) < parseInt(o.split('-')[2])) {
+								formatO[2] = (parseInt(o.split('-')[2]) - 1) + ''
+								o = formatO.join('-')
+								expandedKeys = expandedKeys.set(i, o)
+							}
+						}
+					} 
+				})
+			}
+			state = this.metaReducer.sf(state, 'data.other.expandedKeys', fromJS(expandedKeys))
+		}
         return state
     }
+	
+	setExpandedKeys = (state, keys) => {
+		state = this.metaReducer.sf(state, 'data.other.expandedKeys', fromJS(keys))
+		return state
+	}
 
     setInventoryProperty = (state,value)=>{
         let inventoryPropertyList = value.map(o=>{

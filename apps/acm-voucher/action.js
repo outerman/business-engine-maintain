@@ -384,9 +384,14 @@ class action {
             sortTypeFuns(treeType)
             sortTypeFuns(treeType1)
             ret.types = util.typesToTree(JSON.parse(JSON.stringify(treeType)))
-            this.injections.reduce('initTree', ret, treeType1)
+            this.injections.reduce('initTree', ret, treeType1, info.dragNode.props, info.node.props)
         }
     }
+	
+	hadleExpand = (expandedKeys, option) => {
+		let ifExpand = option.expanded
+		this.injections.reduce('setExpandedKeys', expandedKeys)
+	}
 
     getTreeNode = (types) =>{
         let parseNade = (types)=>{

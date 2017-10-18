@@ -53,9 +53,12 @@ export function getMeta() {
 					draggable: true,
 					onDrop: '{{$onDrop}}',
 				   	defaultExpandedKeys:['0-0-0', '0-0-1'],
+//					expandedKeys : ["0-0-0"],
+					expandedKeys : '{{data.other.expandedKeys}}',
 				   	defaultSelectedKeys:['0-0-0', '0-0-1'],
 				   	defaultCheckedKeys:['0-0-0', '0-0-1'],
 				   	onSelect:'{{$handleSelect}}',
+					onExpand: '{{$hadleExpand}}',
 					//   	onCheck:'{{$handleCheck}}',
 					component:'Tree',
 					children:'{{$getTreeChild()}}'
@@ -1313,7 +1316,8 @@ export function getInitState() {
 				addOrDelBussiness: '新增分类',
 				addOrDelBus: 'add',
 				rightVisible: '',
-				inventoryProperty:[]
+				inventoryProperty:[],
+				expandedKeys: []
 			},
 			right1: {
 				busName: ''
