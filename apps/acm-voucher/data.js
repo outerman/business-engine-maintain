@@ -44,7 +44,7 @@ export function getMeta() {
 					style: {
 						fontSize: 18
 					},
-					title: 'delete',
+					title: 'refresh',
 					onClick: '{{$handleRefresh}}'
 				},{
 					name:'tree',
@@ -1260,7 +1260,7 @@ function getRuleMeta(){
 				component: 'DataGrid.Column',
 				columnKey: 'accountCode',
 				flexGrow: 1,
-				width: 200,
+				width: 100,
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',
@@ -1272,7 +1272,7 @@ function getRuleMeta(){
 				component: 'DataGrid.Column',
 				columnKey: 'accountName',
 				flexGrow: 1,
-				width: 100,
+				width: 200,
 				header: {
 					name: 'header',
 					component: 'DataGrid.Cell',

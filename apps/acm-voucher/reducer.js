@@ -60,11 +60,15 @@ class reducer {
         if(columnKey !=='extendAttr' ){
             val = selected.value
         }
-        state = this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.${columnKey}`,selected.value)
         if(columnKey == 'accountName'||columnKey == 'accountCode'){
+            state = this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.accountName`,selected.value+'-'+selected.name)
+            state = this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.accountCode`,selected.value)
+
             state = this.metaReducer.sf(state,`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`,fromJS(selected))
         }else{
             state = this.metaReducer.sf(state,`data.rule.other.dataSource${standard}.${columnKey}.${ps.rowIndex}`,fromJS(selected))
+            state = this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.${columnKey}`,selected.value)
+
         }
         return state
     }

@@ -480,20 +480,27 @@ class action {
     interfaceChange = (columnKey,ps)=>(val)=>{
         this.metaAction.sf(`data.interface.list.${ps.rowIndex}.${columnKey}`,val)
     }
-    deleteRow = (e,path)=>{
+    deleteRow = async (e,path)=>{
         let list = this.metaAction.gf('data.interface.list').toJS()
-        if(confirm('确定删除')){
+        let ret = await this.metaAction.modal('confirm', {
+			title: '删除',
+			content: '确定进行删除?'
+		})
+        if(ret){
             list.splice(path.rowIndex,1)
             this.metaAction.sf('data.interface.list',fromJS(list))
         }
     }
-    deleteRuleRow = (e,path)=>{
-        debugger
+    deleteRuleRow = async (e,path)=>{
         let standard = this.metaAction.gf('data.standard'),
             list = this.metaAction.gf('data.rule.list'+standard).toJS()
 
+        let ret = await this.metaAction.modal('confirm', {
+			title: '删除',
+			content: '确定进行删除?'
+		})
 
-        if(confirm('确定删除')){
+        if(ret){
             list.splice(path.rowIndex,1)
             this.injections.reduce('initRuleList',list)
             // this.metaAction.sf('data.rule.list'+standard,fromJS(list))
@@ -516,7 +523,7 @@ class action {
             option && (showValue = option.get('name'))
             if(columnKey == 'accountName' ){
                 let account = this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`)
-                account && (showValue = account.get('name'))
+                account && (showValue =account.get('value')+'-'+ account.get('name'))
             }
             if(columnKey == 'accountCode' ){
                 let account = this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`)
@@ -609,7 +616,7 @@ class action {
                         dataSource.map(o=>{
                             return <Select.Option
                                 value={o.id}>
-                                {columnKey == 'accountCode'?o.value :o.name}
+                                {columnKey == 'accountCode'?o.value :(columnKey == 'accountName'?o.value +'-'+o.name:o.name)}
                             </Select.Option>
                         })
                     }
@@ -776,13 +783,13 @@ class action {
                                 columnsId: 12,
                                 isDefault: 0,
                                 optionValue:ooo,
-                                idList:oo.specialList[oooIdx]? oo.specialList[oooIdx].idList:undefined
+                                idList:(oo.specialList && oo.specialList[oooIdx])? oo.specialList[oooIdx].idList:undefined
                             })
                         })
                         specialList[0].isDefault = 1
                         oo.specialList = specialList
                     }
-                    if(oo.columns == 16){
+                    if(oo.columnsId == 16){
                         let specialList = []
                         o.normalRate.map((ooo,oooIdx)=>{
                             specialList.push({
@@ -790,7 +797,7 @@ class action {
                                 "isDefault": 0,
                                 "vatTaxpayer": 41,
                                 "optionValue": ooo,
-                                idList:oo.specialList[oooIdx]? oo.specialList[oooIdx].idList:undefined
+                                idList:(oo.specialList && oo.specialList[oooIdx])? oo.specialList[oooIdx].idList:undefined
                             })
                         })
                         o.smallRate.map((ooo,oooIdx)=>{
@@ -799,10 +806,10 @@ class action {
                                 "isDefault": 0,
                                 "vatTaxpayer": 42,
                                 "optionValue": ooo,
-                                idList:oo.specialList[oooIdx]?oo.specialList[oooIdx].idList:undefined
+                                idList:(oo.specialList && oo.specialList[oooIdx])?oo.specialList[oooIdx].idList:undefined
                             })
                         })
-                        specialList[0].isDefault = 1
+                        specialList[0] && (specialList[0].isDefault = 1)
                         oo.specialList = specialList
                     }
                     return oo
@@ -866,7 +873,6 @@ class action {
         return tacticsList
     }
     parseDocTemplateList = (list)=>{
-        debugger
         let docTemplate = list.map((o,i)=>{
                 let item = {}
 
