@@ -27,7 +27,7 @@ class reducer {
     initTree = (state,data, businessTypeList, oldInfo, newInfo)=>{
         state = this.metaReducer.sf(state, 'data.businessTypeList', fromJS(businessTypeList))
         state = this.metaReducer.sf(state, 'data.tree', fromJS(data.types))
-		if (!oldInfo || !newInfo) 
+		if (!oldInfo || !newInfo)
 			return state
 		let oldEventKey = oldInfo.eventKey,
 			newEventKey = newInfo.eventKey,
@@ -39,7 +39,7 @@ class reducer {
 				expandedKeys.toJS().map((o, i) => {
 					if(o.split('-')[2]) {
 						let formatO = o.split('-')
-						//下 -> 上 
+						//下 -> 上
 						if((newEventKey.split('-').length != 4 && !newIsParent) && (oldEventKey.split('-').length != 4 && !oldIsParent)) {
 							if((parseInt(oldEventKey.split('-')[2]) > parseInt(o.split('-')[2])) && (parseInt(o.split('-')[2]) > parseInt(newEventKey.split('-')[2]))) {
 								formatO[2] = (parseInt(o.split('-')[2]) + 1) + ''
@@ -62,8 +62,8 @@ class reducer {
 								o = formatO.join('-')
 								expandedKeys = expandedKeys.set(i, o)
 							}
-						} 
-					} 
+						}
+					}
 				})
 			} else if(parseInt(oldEventKey.split('-')[2]) < parseInt(newEventKey.split('-')[2])) {
 				expandedKeys.toJS().map((o, i) => {
@@ -93,14 +93,14 @@ class reducer {
 								expandedKeys = expandedKeys.set(i, o)
 							}
 						}
-					} 
+					}
 				})
 			}
 			state = this.metaReducer.sf(state, 'data.other.expandedKeys', fromJS(expandedKeys))
 		}
         return state
     }
-	
+
 	setExpandedKeys = (state, keys) => {
 		state = this.metaReducer.sf(state, 'data.other.expandedKeys', fromJS(keys))
 		return state
@@ -120,6 +120,7 @@ class reducer {
 
 
     setAccountSource = (state,data)=>{
+        let {metaReducer} = this
         let accountSource = data.map((o,i)=>{
             return {id: i+1,value:o.code,name:o.gradeName}
         })
@@ -127,7 +128,7 @@ class reducer {
         // accountSource.unshift({id:0,value:0,name:'默认'}) // 科目不需要默认，是必填
 
         state = this.metaReducer.sf(state, 'data.dataSources.accountSource', fromJS(accountSource))
-        state = this.metaReducer.sf(state, `data.rule.other.dataSource${standard}.account`, fromJS([accountSource[0]]))
+        // state = this.metaReducer.sf(state, `data.rule.other.dataSource${standard}.account`, fromJS([accountSource[0]]))
         return state
     }
     setRuleList = (state,columnKey,ps,val,selected)=>{

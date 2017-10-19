@@ -559,7 +559,10 @@ class action {
             option && (showValue = option.get('name'))
             if(columnKey == 'accountName' ){
                 let account = this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`)
-                account && (showValue =account.get('value')+'-'+ account.get('name'))
+                account? (showValue =account.get('value')+'-'+ account.get('name')):
+                this.metaAction.gf(`data.rule.list${standard}.${ps.rowIndex}.accountCode`)+'-'+
+                this.metaAction.gf(`data.rule.list${standard}.${ps.rowIndex}.accountName`)
+
             }
             if(columnKey == 'accountCode' ){
                 let account = this.metaAction.gf(`data.rule.other.dataSource${standard}.account.${ps.rowIndex}`)
