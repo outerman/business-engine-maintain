@@ -7,12 +7,12 @@ var _options = {
 		appName: 'mk-app-login',
 		appParams: {}
 	},
-	menu: [{
+	menu: [/*{
 		key: '1',
 		name: '关于',
 		appName: 'mk-app-portal-about',
 		isDefault: true
-	}, {
+	},*/ {
 		key: '2',
 		name: '流水账模板管理',
 		isExpand:true,
@@ -25,7 +25,7 @@ var _options = {
 			name: '模板列表',
 			appName: 'mk-app-complex-table'
 		}]
-	}, {
+	}/*, {
 		key: '309',
 		name: '开发工具',
 		children: [{
@@ -50,7 +50,7 @@ var _options = {
 			appName: 'mk-app-hot-modify-app'
 		}]
 
-	}],
+	}*/],
 	logo
 }
 
