@@ -32,7 +32,7 @@ class action {
 
         injections.reduce('init')
         this.queryTree()
-        this.getAccountList()
+        this.getAccountList(18)
     }
     queryTree = async () => {
         let response = await this.webapi.businessTypeTemplate.init(),
@@ -229,7 +229,7 @@ class action {
     }
     handleStandardChange = (e)=>{
         this.metaAction.sf('data.standard', e.target.value)
-
+        this.getAccountList( e.target.value*1)
         // let ruleData = this.metaAction.gf('data.templateData').toJS().docTemplateList,
         //     ruleList = []
         // if(ruleData){
@@ -387,7 +387,7 @@ class action {
             this.injections.reduce('initTree', ret, treeType1, info.dragNode.props, info.node.props)
         }
     }
-	
+
 	hadleExpand = (expandedKeys, option) => {
 		let ifExpand = option.expanded
 		this.injections.reduce('setExpandedKeys', expandedKeys)
@@ -469,12 +469,43 @@ class action {
 
         this.injections.reduce('setRuleList',columnKey,ps,val,selected)
     }
-    getAccountList =  async()=>{
+    getAccountList =  async(accountingStandardsId)=>{
         let val = await this.webapi.businessTypeTemplate.accountQuery({
-                    "isEndNode": true,
-                    "status": true
+                    accountingStandardsId,
+                    "industryIds":"1,2,3,4"
                 })
-        this.injections.reduce('setAccountSource',val)
+
+
+        this.injections.reduce('setAccountSource',this.formatAccountList(val) )
+    }
+    formatAccountList = (accountList)=>{
+        let account = [],temp = []
+
+        for(let attr in accountList){
+
+
+            temp = !account.length?
+                accountList[attr]:
+                accountList[attr].filter(o=>{
+                    let isRepeat = true
+                    for(let oo of account){
+                        if(o.code == oo.code){
+                            isRepeat = false
+                            break;
+                        }
+
+                    }
+                    return isRepeat
+                })
+            account = account.concat(temp)
+        }
+
+
+
+
+
+
+        return account
     }
     nameChange =(ps,columnKey)=>(e)=>{
         let standard = this.metaAction.gf('data.standard')
