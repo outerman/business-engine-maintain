@@ -25,6 +25,31 @@ var _options = {
 			name: '模板列表',
 			appName: 'mk-app-complex-table'
 		}]
+	}, {
+		key: '309',
+		name: '开发工具',
+		children: [{
+			key: '30901',
+			name: '开发工具整体',
+			appName: 'mk-app-devtools'
+		}, {
+			key: '30902',
+			name: '元数据设计',
+			appName: 'mk-app-meta-design'
+		}, {
+			key: '30903',
+			name: 'webapi文档',
+			appName: 'mk-app-apidoc'
+		}, {
+			key: '30904',
+			name: 'action监控',
+			appName: 'mk-app-trace-action'
+		}, {
+			key: '30905',
+			name: '元数据、状态修改',
+			appName: 'mk-app-hot-modify-app'
+		}]
+
 	}],
 	logo
 }

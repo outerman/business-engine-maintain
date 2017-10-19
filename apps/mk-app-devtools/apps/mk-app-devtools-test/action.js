@@ -6,24 +6,25 @@ class action {
     constructor(option) {
         this.metaAction = option.metaAction
         this.config = config.current
-
-        window.onhashchange = () => {
-            const hash = document.location.hash || ''
-            if (!hash || hash.substr(1) == this.metaAction.gf('data.currentAppName')){
-                return
-            }
-            this.onRedirect({ appName: hash.substr(1) })
-        }
     }
 
     onInit = ({ component, injections }) => {
         this.component = component
         this.injections = injections
+        console.log('test')
         injections.reduce('init')
     }
 
-    onRedirect = ({ appName }) => {
-        this.injections.reduce('redirect', appName)
+    btnClick = async() => {
+        const ret = await this.metaAction.modal('show', {
+            title: 'devtools',
+            width: 900,
+            bodyStyle: {height: 600, overflow: 'auto'},
+            children: this.metaAction.loadApp('mk-app-devtools', {
+                store: this.component.props.store,
+            })
+        })
+        console.log(ret)
     }
 }
 

@@ -2,6 +2,8 @@ import { Map } from 'immutable'
 import { reducer as MetaReducer } from 'mk-meta-engine'
 import config from './config'
 import { getInitState } from './data'
+import common from './common'
+import beautify from 'mk-utils/lib/beautify'
 
 class reducer {
     constructor(option) {
@@ -11,16 +13,11 @@ class reducer {
 
     init = (state, option) => {
         const initState = getInitState()
-
-        setTimeout(() => location.hash = initState.data.currentAppName, 0)
-
+        initState.data.uiMeta = beautify.beautifyJS(initState.data.uiMeta)
+        initState.data.uiData = beautify.beautifyJS(initState.data.uiData)
+        initState.data.uiStyle = beautify.beautifyCSS(initState.data.uiStyle)
+        common.addStyleSheet(initState.data.uiStyle)
         return this.metaReducer.init(state, initState)
-    }
-
-    redirect = (state, appName) => {
-        setTimeout(() => location.hash = appName, 0)
-        state = this.metaReducer.sf(state, 'data.currentAppName', appName)
-        return state
     }
 }
 

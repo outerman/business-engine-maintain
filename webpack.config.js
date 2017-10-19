@@ -27,7 +27,6 @@ plugins.push(new webpack.optimize.CommonsChunkPlugin('vendor'))
 plugins.push(new HtmlWebpackPlugin({
     filename: './index.html', //生成的html存放路径，相对于 path
     template: './index.html', //html模板路径
-    favicon : './assets/img/favicon.ico',
     inject: true, //允许插件修改哪些内容，包括head与body`
 }))
 
@@ -51,8 +50,7 @@ module.exports = {
     module: {
         rules: [{
             test: /\.css$/,
-            exclude: /node_modules/,
-
+            //exclude: /node_modules/,
             use: [{
                 loader: 'style-loader'
             }, {
@@ -74,9 +72,10 @@ module.exports = {
         }, {
             test: /\.(eot|woff|woff2|ttf|svg|png|jpe?g|gif|mp4|webm)(\?\S*)?$/,
             use: {
-                loader: 'file-loader',
+                loader: 'url-loader',
                 options: {
                     name: '[name].[hash:8].[ext]',
+                    limit: 8192
                 }
             }
         }],
@@ -84,8 +83,8 @@ module.exports = {
     devServer: {
         contentBase: './dist/',
         proxy: {
+            // '/v1/*': 'http://127.0.0.1:8000/'
             '/v1/*': 'http://debug.rrtimes.com:8088/'
-            // '/v1/*': 'http://192.168.1.110:8086/'
         }
     },
     plugins: plugins

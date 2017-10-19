@@ -11,6 +11,7 @@ export function getMeta() {
 				name: 'left',
 				component: 'Layout',
 				className: 'mk-app-portal-header-left',
+				_visible: '{{data.isShowMenu}}',
 				children: [{
 					name: 'logo',
 					component: '::img',
@@ -19,21 +20,39 @@ export function getMeta() {
 				}, {
 					name: 'siteName',
 					component: '::h1',
-					children: '北京人人时代科技有限公司'
+					children: '流水账模板'
 				}]
 			}, {
 				name: 'right',
 				component: 'Layout',
 				className: 'mk-app-portal-header-right',
 				children: [{
+					name: 'foldMenu',
+					component: 'Icon',
+					type: `{{data.isShowMenu ? 'menu-fold': 'menu-unfold'}}`,
+					title: `{{data.isShowMenu ? '收起菜单': '展开菜单'}}`,
+					showStyle: 'showy',
+					style: { fontSize: 20 },
+					onClick: '{{$foldMenu}}'
+				}, {
 					name: 'topMenu',
 					component: 'Menu',
 					mode: 'horizontal',
-					theme: 'dark',
-					style: { backgroundColor: '#333' },
+					//theme: 'dark',
+					//style: { backgroundColor: '#333' },
 					onClick: '{{$topMenuClick}}',
 					selectedKeys: [],
-					children: [/*{
+					children: [{
+						name: 'toggleTabs',
+						component: 'Menu.Item',
+						key: 'toggleTabs',
+						children: [{
+							name: 'icon',
+							component: 'Icon',
+							type: 'appstore-o'
+						},
+							"{{data.isTabsStyle ? '正常风格' : '多页签显示风格'}}"]
+					}, {
 						name: 'gitter',
 						component: 'Menu.Item',
 						key: 'gitter',
@@ -51,7 +70,7 @@ export function getMeta() {
 							component: 'Icon',
 							type: 'github'
 						}, '源代码']
-					}, */{
+					}, {
 						name: 'my',
 						component: 'Menu.SubMenu',
 						key: 'my',
@@ -64,13 +83,9 @@ export function getMeta() {
 								component: '::img',
 								className: 'mk-app-portal-header-right-photo',
 								src: '{{$getPhoto()}}'
-							}, {
-								name:'name',
-								component:'::span',
-								children:'{{data.username}}'
-							}]
+							}, "{{data.other.currentUser?data.other.currentUser.nickname:''}}"]
 						},
-						children: [{
+						children: [ {
 							name: 'logout',
 							component: 'Menu.Item',
 							key: 'logout',
@@ -87,27 +102,56 @@ export function getMeta() {
 				name: 'left',
 				component: 'Layout',
 				className: 'mk-app-portal-content-left',
+				_visible: '{{data.isShowMenu}}',
 				children: [{
 					name: 'menu',
 					component: 'Menu',
 					mode: 'inline',
 					theme: 'dark',
-					defaultSelectedKeys: "{{data.menuDefaultSelectedKeys}}",
+					selectedKeys: "{{$getMenuSelectKeys()}}",
 					defaultOpenKeys: "{{data.menuDefaultOpenKeys}}",
 					onClick: '{{$menuClick}}',
 					children: '{{$getMenuChildren()}}'
 				}]
 			}, {
-				name: 'main',
+				name: 'container',
 				component: 'Layout',
-				className: 'mk-app-portal-content-main',
-				_visible: '{{!!data.content.appName}}',
-				children: {
-					name: 'app',
-					component: 'AppLoader',
-					appName: '{{data.content.appName}}',
-					'...': '{{data.content.appParams}}'
-				}
+				children: [{
+					name: 'tabs',
+					component: 'Tabs',
+					className: 'mk-app-portal-content-tabs',
+					type: 'card',
+					type: "editable-card",
+					hideAdd: true,
+					activeKey: '{{data.content && data.content.name}}',
+					onChange: '{{$tabChange}}',
+					onEdit: '{{$tabEdit}}',
+					_visible: '{{ data.isTabsStyle && data.openTabs && data.openTabs.length > 0}}',
+					children: [{
+						name: 'tab1',
+						component: 'Tabs.TabPane',
+						key: '{{data.openTabs[_rowIndex].name}}',
+						tab: '{{data.openTabs[_rowIndex].name}}',
+						_power: 'for in data.openTabs'
+					}]
+				}, {
+					name: 'main',
+					component: 'Layout',
+					className: 'mk-app-portal-content-main',
+					_visible: '{{!!(data.content && data.content.appName)}}',
+					children: {
+						name: 'app',
+						component: 'AppLoader',
+						appName: '{{ data.openTabs && data.openTabs.length > 0 && data.openTabs[_rowIndex].appName }}',
+						onPortalReload: '{{$load}}',
+						setPortalContent: '{{$setContent}}',
+						'...': '{{data.openTabs && data.openTabs.length > 0 && data.openTabs[_rowIndex].appProps}}',
+						isTabStyle: '{{data.isTabsStyle}}',
+						_notRender: '{{ !(data.content && data.content.name == data.openTabs[_rowIndex].name) }}',
+						_power: 'for in data.openTabs',
+
+					}
+				}]
 			}]
 		}]
 	}
@@ -117,10 +161,13 @@ export function getInitState() {
 	return {
 		data: {
 			menu: [],
-			menuDefaultSelectedKeys: [],
+			menuSelectedKeys: [],
 			menuDefaultOpenKeys: [],
 			content: {},
-			username:'我的'
+			openTabs: [],
+			isTabsStyle: false,
+			isShowMenu: true,
+			other: {}
 		}
 	}
 }

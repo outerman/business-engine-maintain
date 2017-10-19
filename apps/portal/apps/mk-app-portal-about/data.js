@@ -1,14 +1,12 @@
 export function getMeta() {
 	return {
 		name: 'root',
-		component: '::div',
+		component: 'Layout',
 		className: 'mk-app-portal-about',
-		children: '{{data.about}}'
+		children: 'about'
 	}
 }
 
 export function getInitState() {
-	return { data: {
-		about:'北京人人时代科技有限公司流水账业务模版管理系统'
-	} }
+	return { data: {} }
 }
