@@ -133,10 +133,21 @@ class reducer {
     }
     setRuleList = (state,columnKey,ps,val,selected)=>{
         let standard = this.metaReducer.gf(state,'data.standard')
+        if(columnKey === 'industryIdList'){
+            // let industryIdList = []
+            // if(val && val.length){
+            //     industryIdList = val.map(o=>{
+            //         return o*1
+            //     })
+            // }
+            // console.log(industryIdList)
+            return this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.${columnKey}`,fromJS(val))
+        }
         if(columnKey !=='extendAttr' ){
             val = selected.value
         }
-        if(columnKey == 'accountName'||columnKey == 'accountCode'){
+
+        if(columnKey === 'accountName'||columnKey === 'accountCode'){
             state = this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.accountName`,selected.value+'-'+selected.name)
             state = this.metaReducer.sf(state,`data.rule.list${standard}.${ps.rowIndex}.accountCode`,selected.value)
 

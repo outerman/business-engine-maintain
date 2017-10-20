@@ -463,6 +463,10 @@ class action {
     }
 
     handleInfluenceChange = (columnKey,ps,dataSource)=>(val)=>{
+        debugger
+        if(columnKey === 'industryIdList'){
+            return this.injections.reduce('setRuleList',columnKey,ps,val)
+        }
         let selected = dataSource.filter(o=>{
             return o.id == val
         })[0]
@@ -582,6 +586,21 @@ class action {
                     showValue = showValue? showValue.name:cellValue
                 }
             }
+            if(columnKey == 'industryIdList'){
+                let industryIdList = []
+                showValue && showValue.map(o=>{
+                    if(o == 1){
+                        industryIdList.push('工业')
+                    }else if (o == 2) {
+                        industryIdList.push('商贸')
+                    }else if (o == 3) {
+                        industryIdList.push('服务')
+                    }else if (o == 4){
+                        industryIdList.push('信息技术')
+                    }
+                })
+                showValue = industryIdList.join(',')
+            }
         }
 
         if (!this.isFocusCell(ps, columnKey,'rule')) {
@@ -640,6 +659,29 @@ class action {
                 }else if (true) {
 
                 }
+            }
+            if(columnKey == 'industryIdList'){
+                let value = []
+                if(cellValue && cellValue.size){
+                    value = cellValue.toJS().map(o=>{
+                        return o+''
+                    })
+                }
+                return (
+                    <Select
+                        mode="multiple"
+                        style={{ width: '100%' }}
+                        placeholder="多选模式"
+                        value = {value}
+                        onChange={::this.handleInfluenceChange(columnKey,ps)}>
+
+                        <Option key={'1'} >工业</Option>
+                        <Option key={'2'} >商贸</Option>
+                        <Option key={'3'} >服务</Option>
+                        <Option key={'4'} >信息技术</Option>
+
+                    </Select>
+                )
             }
             return (
                 <Select
@@ -949,7 +991,7 @@ class action {
                 }
 
 
-                item.industryIdList = o.industryIdList
+                item.industryIdList = o.industryIdList.map(o=>{return o*1})
                 item.idList = o.idList
 
                 return item
