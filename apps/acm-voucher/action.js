@@ -770,14 +770,21 @@ class action {
     }
 
     handleDelete = async()=>{
-        let code = this.metaAction.gf('data.templateData.businessType.code')
+        const ret = await this.metaAction.modal('confirm', {
+			title: '警告',
+			content: '确定删除此业务类型?'
+		})
+        if(ret){
+            let code = this.metaAction.gf('data.templateData.businessType.code')
 
-        let response = await this.webapi.businessTypeTemplate.delete({code})
+            let response = await this.webapi.businessTypeTemplate.delete({code})
 
 
-        this.metaAction.toast('success','删除成功')
-        this.metaAction.sf('data.other.rightVisible',false)
-        this.queryTree()
+            this.metaAction.toast('success','删除成功')
+            this.metaAction.sf('data.other.rightVisible',false)
+            this.queryTree()
+        }
+
     }
     handleRefresh = ()=>{
         let code = this.metaAction.gf('data.templateData.businessType.code')
