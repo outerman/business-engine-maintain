@@ -213,7 +213,7 @@ class action {
     parseRuleList = (ruleList) => {
         // let res = []
         let res = ruleList.map(o=>{
-            o.direction = o.direction? '贷':'借'
+            o.direction = !o.direction? '借':'贷'
             // o.isSettlement = o.isSettlement? '结算方式':'本表'
             o.taxType = o.taxType? '一般计税':'简易计税'
             o.vatTaxpayer = o.vatTaxpayer == 41? '一般纳税人':'小规模纳税人'
@@ -556,6 +556,9 @@ class action {
             option = this.metaAction.gf(`data.rule.other.dataSource${standard}.${columnKey}.${ps.rowIndex}`)
 
         var showValue = cellValue
+        if(columnKey == 'direction'){
+            debugger
+        }
 
         if(type == 'text'){
             showValue = cellValue
@@ -602,6 +605,7 @@ class action {
                 showValue = industryIdList.join(',')
             }
         }
+
 
         if (!this.isFocusCell(ps, columnKey,'rule')) {
             return (

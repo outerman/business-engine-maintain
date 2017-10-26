@@ -281,15 +281,16 @@ class reducer {
         return state
     }
     initForm = (state,data) =>{
-        let metaReducer = this.metaReducer
-        let other = this.metaReducer.gf(state,'data.rule.other').toJS(),
-            dataSources = this.metaReducer.gf(state,'data.dataSources').toJS()
 
+        let metaReducer = this.metaReducer
+        let focusCellInfo = this.metaReducer.gf(state,'data.rule.other.focusCellInfo')
+        let ruleOther = getInitState().data.rule.other,
+            dataSources = this.metaReducer.gf(state,'data.dataSources').toJS()
 
         state = this.metaReducer.sf(state,'data.interface.list',fromJS(data.interface.list))
         state = this.metaReducer.sf(state,'data.rule.list18',fromJS(data.rule.list18))
         state = this.metaReducer.sf(state,'data.rule.list19',fromJS(data.rule.list19))
-        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(other,dataSources,data.rule)))
+        state = this.metaReducer.sf(state,`data.rule.other`,fromJS(parseSelected(ruleOther,dataSources,data.rule)))
         return state
     }
     newBusiness = (state,typeName) =>{
