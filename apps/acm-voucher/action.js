@@ -874,7 +874,7 @@ class action {
                                 idList:(oo.specialList && oo.specialList[oooIdx])? oo.specialList[oooIdx].idList:undefined
                             })
                         })
-                        specialList[0].isDefault = 1
+                        specialList[0] && (specialList[0].isDefault = 1)
                         oo.specialList = specialList
                     }
                     if(oo.columnsId == 16){
