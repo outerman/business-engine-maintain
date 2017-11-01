@@ -87,7 +87,14 @@ class action {
 			this.injections.reduce('initTree', ret, treeType1)
 		}
     }
-	busNameSave = async() => {
+    // sql脚本导出
+    businessTypeTemplateBackup = async ()=>{
+        let ret = await this.webapi.businessTypeTemplate.businessTypeTemplateBackup()
+        if(ret){
+            this.metaAction.toast('success', ret)
+        }
+    }
+    busNameSave = async() => {
 		let selectInOrOutInfo = this.metaAction.gf('data.other.selectInOrOutInfo'),
 			treeType = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
 			treeType1 = this.metaAction.gf('data.businessTypeList') ? this.metaAction.gf('data.businessTypeList').toJS() : [],
@@ -1163,6 +1170,7 @@ class action {
         if(!this.isBizCheck()) return
         this.injections.reduce('setInventoryProperty',val)
     }
+
 
     // 弹框 界面元数据
     addInvoiceType = async (data,rowIndex) => {

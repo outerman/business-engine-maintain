@@ -23,6 +23,11 @@ export function getMeta() {
 					component:'Button',
 					children:'{{data.other.addOrDelBussiness}}',
 					onClick:'{{$addBusiness}}'
+				},{
+					name:'backup',
+					component:'Button',
+					children:'脚本导出',
+					onClick:'{{$businessTypeTemplateBackup}}'
 				}]
 
 			},{
