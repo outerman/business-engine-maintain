@@ -83,7 +83,11 @@ export function getMeta() {
 								component: '::img',
 								className: 'mk-app-portal-header-right-photo',
 								src: '{{$getPhoto()}}'
-							}, "{{data.other.currentUser?data.other.currentUser.nickname:''}}"]
+							}, {
+								name:'nickname',
+								component:'::span',
+								children:"{{data.other.username||''}}"
+							}]
 						},
 						children: [ {
 							name: 'logout',
