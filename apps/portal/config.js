@@ -24,6 +24,10 @@ var _options = {
 			key: '202',
 			name: '模板列表',
 			appName: 'mk-app-complex-table'
+		}, {
+			key: '203',
+			name: '模板管理',
+			appName: 'mk-app-template'
 		}]
 	}/*, {
 		key: '309',

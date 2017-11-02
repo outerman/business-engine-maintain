@@ -13,6 +13,8 @@ import mk_app_root_helloWorld from './apps/mk-app-root/apps/mk-app-root-helloWor
 import mk_app_root from './apps/mk-app-root/index.js'
 import mk_app_portal_about from './apps/portal/apps/mk-app-portal-about/index.js'
 import mk_app_portal from './apps/portal/index.js'
+import mk_app_template from './apps/mk-app-template/index.js'
+import mk_app_imports from './apps/mk-app-import/index.js'
 
 const apps = {
 		
@@ -27,6 +29,8 @@ const apps = {
 	[mk_app_root.name]: mk_app_root,	
 	[mk_app_portal_about.name]: mk_app_portal_about,	
 	[mk_app_portal.name]: mk_app_portal,
+	[mk_app_template.name]:mk_app_template,
+	[mk_app_imports.name]:mk_app_imports,
 }
 
 apps.config = (options) => {
