@@ -8,7 +8,28 @@ import { fetch } from 'mk-utils'
 const post = fetch.post
 
 export default {
-    /*person: {
-        query: (option) => post('/v1/person/query', option)
-    }*/
+	api: {
+		imports: (data, type) => {
+			switch(type){
+				case '2':
+					return post('/v1/businessTypeTemplate/import', data)
+					break
+				case '3':
+					return post('/v1/businessTypeDocRange/import', data)
+					break
+				case '4':
+					return post('/v1/businessTypeTax/import', data)
+					break
+				case '5':
+					return post('/v1/businessTypeInventoryProperty/import', data)
+					break
+				case '6':
+					return post('/v1/taxClassificationCode/import', data)
+					break
+				case '7':
+					return post('/v1/HelpTips/import', data)
+					break
+			}
+		}
+	}
 }

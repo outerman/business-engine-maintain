@@ -2,6 +2,7 @@ import React from 'react'
 import { action as MetaAction, AppLoader } from 'mk-meta-engine'
 import config from './config'
 import webapi from './webapi'
+import { fromJS } from 'immutable'
 import logo3 from '../portal/img/mobanguanli/3.png'
 import logo4 from '../portal/img/mobanguanli/4.png'
 import logo5 from '../portal/img/mobanguanli/5.png'
@@ -53,7 +54,7 @@ class action {
 				this.word = ''
 				break
 		}
-		injections.reduce('init', data)
+		injections.reduce('init', data, fileInfos)
 	}
 	
 	getLogo = () => this.url
@@ -93,7 +94,8 @@ class action {
 						 }
 					 }
 				}
-				this.metaAction.toast('success', '导入文件成功！')
+				this.metaAction.sf('data.fileInfos', fromJS(fileInfos))
+				this.metaAction.toast('success', '上传文件成功！')
 			}
 		}else if (type.file.status === 'error') {
 			this.metaAction.toast('error', `${type.file.name} 上传失败`)
@@ -115,27 +117,51 @@ class action {
 	}
 	
 	importFile = () => {
-		debugger
-		console.log(fileInfos)
 		switch(this.key){
 			case '2':
-				debugger
+				if(fileInfos.info2 && fileInfos.info2.type1 && fileInfos.info2.type2){
+					let data = {}
+					data.metaDataFileName = fileInfos['info'+this.key].type1[0].newName
+					data.docTemplateFileName = fileInfos['info'+this.key].type2[0].newName
+					webapi.api.imports(data, this.key).then(result=>{
+						debugger
+						delete fileInfos['info'+this.key]
+						this.metaAction.sf('data.fileInfos', fromJS(fileInfos))
+					})
+				}else {
+					this.metaAction.toast('warning', '请选择文件！')
+				}
 				break
 			case '3':
-				debugger
+				this.getImportFile(this.key)
 				break
 			case '4':
-				debugger
+				this.getImportFile(this.key)
 				break
 			case '5':
-				debugger
+				this.getImportFile(this.key)
 				break
 			case '6':
-				debugger
+				this.getImportFile(this.key)
 				break
 			case '7':
-				debugger
+				this.getImportFile(this.key)
 				break
+		}
+	}
+	
+	
+	
+	getImportFile = (key) => {
+		if(fileInfos['info'+key]){
+			let data = {}
+			data.fileName = fileInfos['info'+key][0].newName
+			webapi.api.imports(data, key).then(result=>{
+				debugger
+				this.metaAction.sf('data.fileInfos', fromJS(fileInfos))
+			})
+		}else {
+			this.metaAction.toast('warning', '请选择文件！')
 		}
 	}
 }

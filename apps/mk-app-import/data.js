@@ -57,7 +57,13 @@ function getHeaderBtn() {
 			accept:'.xls,.xlsx',
 			className: 'check',
 			beforeUpload: '{{$handleBeforeUpload}}',
-			children: '选择文件'
+			children: '{{data.fileInfos["info"+data.key] ? "重选文件" : "选择文件"}}'
+		},{
+			name: 'fileName',
+			component: 'Layout',
+			className: 'file-name',
+			_visible: '{{true}}',
+			children: '{{data.fileInfos["info"+data.key] && data.key != "2" ? data.fileInfos["info"+data.key][0].oldName : ""}}'
 		}]
 	}
 }
@@ -69,29 +75,47 @@ function getHeaderBtnV() {
 		className: 'checkBtn checkBtn-v',
 		_visible: '{{data.key=="2"}}',
 		children: [{
-			name: 'upload1',
-			component: 'Upload',
-			showUploadList: false,
-			action: '/v1/setEnclosure/enclosureDispose',
-			headers: {token: token},
-			multiple: false,
-			onChange: '{{(file) => $handleImportStatementChange(file, "type1") }}',
-			accept:'.xls,.xlsx',
+			name: 'checkBtnV',
+			component: 'Layout',
 			className: 'check',
-			beforeUpload: '{{$handleBeforeUpload}}',
-			children: '选择界面模版'
+			children: [{
+				name: 'upload1',
+				component: 'Upload',
+				showUploadList: false,
+				action: '/v1/setEnclosure/enclosureDispose',
+				headers: {token: token},
+				multiple: false,
+				onChange: '{{(file) => $handleImportStatementChange(file, "type1") }}',
+				accept:'.xls,.xlsx',
+				beforeUpload: '{{$handleBeforeUpload}}',
+				children: '{{data.fileInfos.info2 && data.fileInfos.info2.type1 ? "重选界面模版" : "选择界面模版"}}'
+			},{
+				name: 'fileName',
+				component: 'Layout',
+				className: 'file-name',
+				children: '{{data.fileInfos.info2 && data.fileInfos.info2.type1 ? data.fileInfos.info2.type1[0].oldName : ""}}'
+			}]
 		},{
-			name: 'upload2',
-			component: 'Upload',
-			showUploadList: false,
-			action: '/v1/setEnclosure/enclosureDispose',
-			headers: {token: token},
-			multiple: false,
-			onChange: '{{(file) => $handleImportStatementChange(file, "type2")}}',
-			accept:'.xls,.xlsx',
+			name: 'checkBtnV',
+			component: 'Layout',
 			className: 'check',
-			beforeUpload: '{{$handleBeforeUpload}}',
-			children: '选择凭证模版'
+			children: [{
+				name: 'upload2',
+				component: 'Upload',
+				showUploadList: false,
+				action: '/v1/setEnclosure/enclosureDispose',
+				headers: {token: token},
+				multiple: false,
+				onChange: '{{(file) => $handleImportStatementChange(file, "type2")}}',
+				accept:'.xls,.xlsx',
+				beforeUpload: '{{$handleBeforeUpload}}',
+				children: '{{data.fileInfos.info2 && data.fileInfos.info2.type2 ? "重选凭证模版" : "选择凭证模版"}}'
+			},{
+				name: 'fileName',
+				component: 'Layout',
+				className: 'file-name',
+				children: '{{data.fileInfos.info2 && data.fileInfos.info2.type2 ? data.fileInfos.info2.type2[0].oldName : ""}}'
+			}]
 		}]
 	}
 }
@@ -99,7 +123,8 @@ function getHeaderBtnV() {
 export function getData() {
 	return {
 		data: {
-			key: ''
+			key: '',
+			fileInfos:{}
 		},
 	}
 }

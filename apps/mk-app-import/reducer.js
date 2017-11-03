@@ -9,9 +9,10 @@ class reducer {
         this.config = config.current
     }
 
-    init = (state, key) => {
+    init = (state, key, fileInfos) => {
         const data = getData()
 	    data.data.key = key
+	    data.data.fileInfos = fileInfos
         return this.metaReducer.init(state, data)
     }
 }
